@@ -911,12 +911,23 @@ D. Nhân tế bào
       <label class="fl" style="margin-top:0">Chọn file đề Word (.docx)</label>
       <div class="docx-drop">
         <input type="file" id="docxFile" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onchange="docxStateReset()">
-        <p class="note" style="margin:8px 0 0">Định dạng file cần có: mỗi câu bắt đầu "Câu n." (hoặc "Câu n:" / "Câu n)"); phương án "A." "B." "C." "D." (hoặc A) B) C) D)); dòng đáp án "Đáp án: X" (chấp nhận "Đáp án X", "Đ/A: X"). Câu Đúng/Sai: 4 ý a) b) c) d), mỗi ý ghi rõ "(Đúng)"/"(Sai)" hoặc kết thúc "— Đúng"/"— Sai".</p>
+        <p class="note" style="margin:8px 0 0">Định dạng file cần có: mỗi câu bắt đầu "Câu n." (hoặc "Câu n:" / "Câu n)"); phương án "A." "B." "C." "D." (hoặc A) B) C) D)); dòng đáp án "Đáp án: X" (chấp nhận "Đáp án X", "Đ/A: X"). Câu Đúng/Sai: 4 ý a) b) c) d), mỗi ý ghi rõ "(Đúng)"/"(Sai)" hoặc kết thúc "— Đúng"/"— Sai". Web cũng nhận <b>đề Toán dạng công thức MathType không ghi số câu</b> (số câu là số tự động của Word), phương án 4 khúc chung một dòng ngăn bằng tab — đáp án nhận qua <b>nhãn phương án được gạch chân</b>, công thức giữ nguyên khối hình đi theo câu.</p>
       </div>
       <div class="row2" style="margin-top:12px">
         <div><label class="fl" style="margin-top:0">Số mã đề muốn tạo</label>
           <select id="docxCodes"><option value="1">1 mã đề</option><option value="2">2 mã đề</option><option value="3">3 mã đề</option><option value="4" selected>4 mã đề</option><option value="5">5 mã đề</option><option value="6">6 mã đề</option><option value="7">7 mã đề</option><option value="8">8 mã đề</option></select></div>
         <div style="display:flex;align-items:flex-end"><button class="btn" onclick="mixDocxStart()">📥 Đọc file & tạo các mã đề</button></div>
+      </div>
+      <div class="row2" style="margin-top:10px">
+        <div><label class="fl" style="margin-top:0">Môn thi (để chọn đúng phiếu làm bài)</label>
+          <select id="docxSubject" onchange="docxPhieuUpdateHint()"><option value="">— Chưa chọn —</option><option>Toán</option><option>Vật lí</option><option>Hoá học</option><option>Sinh học</option><option>Địa lí</option><option>Tiếng Anh</option><option>Lịch sử</option><option>GDCD</option><option>Công nghệ</option><option>Tin học</option><option>Khác</option></select></div>
+        <div><label class="fl" style="margin-top:0">Định dạng mã QR đáp án (để GV quét chấm)</label>
+          <select id="docxQrFormat" onchange="docxQrRefresh()"><option value="QM2025" selected>QM2025 — Chấm thi QM 2025</option><option value="STANDARD_2025">STANDARD_2025 — Chuẩn Bộ 2025</option><option value="TNMAKER">TNMAKER — TNMaker</option><option value="AZOTA">AZOTA — Azota</option><option value="UNT">UNT — UNT Chấm bài</option></select></div>
+      </div>
+      <div class="row2" style="margin-top:10px">
+        <div><label class="fl" style="margin-top:0">Phiếu làm bài (chèn vào trang 1 của mỗi mã đề)</label>
+          <select id="docxPhieu" onchange="docxPhieuUpdateHint()"><option value="AUTO" selected>Tự động theo môn</option><option value="TOAN">Phiếu Toán</option><option value="KHTN_DIA">Phiếu KHTN &amp; Địa</option><option value="NGOAINGU">Phiếu Ngoại ngữ</option><option value="KHXH_CN_TIN">Phiếu KHXH, CN &amp; Tin</option><option value="NONE">Không chèn phiếu</option></select></div>
+        <div style="display:flex;align-items:flex-end"><p class="note" id="docxPhieuHint" style="margin:0"></p></div>
       </div>
       <div class="warnbox" id="docxWarn"></div>
       <div id="docxReport" style="margin-top:12px"></div>
@@ -1380,7 +1391,9 @@ IV. Axit nucleic</textarea>
       <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..." — nhận cả khi không có dòng "Đáp án:" đứng trước). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu. Hoặc bấm <b>🤖 AI sinh câu hỏi</b>: ghi chủ đề và số câu, AI sinh câu đưa vào đúng bảng kiểm tra trực quan đó để thầy duyệt trước khi lưu.</p></div>
     <div class="guide-step"><h3>🔀 4. Trộn đề</h3>
       <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → chọn <b>Số mã đề (1–8, mặc định 4)</b> ở ô cạnh nút trộn → bấm trộn → nhận đủ các mã đề (mỗi mã xáo trộn thứ tự câu và phương án riêng, kèm <b>bảng đáp án riêng của từng mã</b>), tải .docx hoặc bấm <b>💾 Lưu đề đã trộn vào kho</b> để cất vào Kho lưu trữ.</li>
-      <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề. Đề có cấu trúc nhiều PHẦN (I/II/III kiểu thi tốt nghiệp) thì hệ thống chỉ trộn câu <b>trong từng phần</b>, tiêu đề phần giữ nguyên vị trí và số câu đánh lại từ 1 trong mỗi phần; câu <b>trả lời ngắn</b> có đáp án là số (ví dụ "Đáp án: 900") cũng được nhận diện, gỡ khỏi đề và đưa vào bảng đối chiếu; nhãn <b>(Đúng)/(Sai)</b> ở cuối các ý Đ/S cũng được gỡ khỏi đề học sinh (đáp án vẫn lưu trong bảng đối chiếu). Công thức toán/lý/hoá (OMML), hình ảnh, sơ đồ và bảng biểu được giữ nguyên trong file .docx đã trộn.</li></ul></div>
+      <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề. Đề có cấu trúc nhiều PHẦN (I/II/III kiểu thi tốt nghiệp) thì hệ thống chỉ trộn câu <b>trong từng phần</b>, tiêu đề phần giữ nguyên vị trí và số câu đánh lại từ 1 trong mỗi phần; câu <b>trả lời ngắn</b> có đáp án là số (ví dụ "Đáp án: 900") cũng được nhận diện, gỡ khỏi đề và đưa vào bảng đối chiếu; nhãn <b>(Đúng)/(Sai)</b> ở cuối các ý Đ/S cũng được gỡ khỏi đề học sinh (đáp án vẫn lưu trong bảng đối chiếu). Công thức toán/lý/hoá (OMML), hình ảnh, sơ đồ và bảng biểu được giữ nguyên trong file .docx đã trộn.</li>
+      <li><b>Đề Toán MathType / không số câu:</b> web còn nhận file đề không ghi chữ "Câu n." — câu hỏi được nhận diện qua <b>số tự động của Word</b> (đoạn đánh số), phương án 4 khúc chung một dòng ngăn bằng tab, đáp án qua <b>nhãn phương án được gạch chân</b> (ý Đúng ở phần Đúng/Sai cũng gạch chân ở nhãn ý); phần "Lời giải / Đáp số" của câu trả lời ngắn được gỡ khỏi đề học sinh và đưa vào bảng đối chiếu. Công thức MathType đi theo dạng khối hình nguyên khối nên không bị vỡ khi trộn.</li>
+      <li><b>Phiếu làm bài + mã QR đáp án:</b> chọn <b>Môn thi</b> (web tự đoán từ tên file khi đọc đề) — phiếu làm bài được chọn <b>tự động theo môn</b> như bên tronde (Toán → phiếu Toán; Sinh/Lý/Hoá/Địa → phiếu KHTN &amp; Địa; Tiếng Anh → phiếu Ngoại ngữ; Sử/GDCD/Công nghệ/Tin → phiếu KHXH, CN &amp; Tin) và chèn vào <b>trang 1 của mỗi mã đề</b>; thầy muốn mẫu khác thì đổi ở ô Phiếu làm bài. Sau khi xác nhận bảng đối chiếu, mỗi mã đề có một <b>mã QR đáp án</b> (chọn định dạng QM2025 / STANDARD_2025 / TNMaker / Azota / UNT) hiện ngay tại khu vực tải và được nhúng vào file <b>"Tải đáp án + QR (.docx)"</b> để giáo viên quét chấm trên phần mềm.</li></ul></div>
     <div class="guide-step"><h3>✍️ 5. Ôn tập trắc nghiệm</h3>
       <p>Học sinh chọn bài (hoặc Tất cả) → làm từng câu, đúng/sai tô màu và giải thích ngay → cuối bài có tổng kết điểm /10. Dữ liệu lấy từ Ngân hàng câu hỏi.</p></div>
     <div class="guide-step"><h3>🔔 6. Game Rung chuông vàng</h3>
@@ -1461,7 +1474,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v13 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v14 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
@@ -2867,7 +2880,11 @@ var EduDocx = (function(){
         else b.reason = 'Không tìm thấy dòng "Đáp án: X" — giữ nguyên, không đoán đáp án.';
       }
     });
-    return { ok: true, body: body, units: units, blocks: blocks, totalBlocks: blocks.length };
+    var resA = { ok: true, format: 'A', body: body, units: units, blocks: blocks, totalBlocks: blocks.length };
+    /* CỔNG FORMAT B (V14): Format A không thấy câu nào → thử định dạng đề MathType / không số câu
+       (chỉ kích hoạt khi có đoạn numPr + tiêu đề PHẦN hoặc dòng phương án chung — xem detectFormatB) */
+    if (!resA.totalBlocks && detectFormatB(segs)) return parseDocumentB(body, segs);
+    return resA;
   }
 
   function stemText(b){
@@ -2893,6 +2910,7 @@ var EduDocx = (function(){
   function shuffleDocumentXml(xml, seed){
     var parsed = parseDocument(xml);
     if (!parsed.ok) return parsed;
+    if (parsed.format === 'B') return shuffleDocumentXmlB(parsed, seed);
     var rnd = mulberry32((seed >>> 0) || 1), units = parsed.units, placed = units.slice();
     /* Chỉ hoán vị các block trộn được TRONG CÙNG section: vị trí trống của mỗi section được lấp bởi
        chính các block của section đó; neo tiêu đề PHẦN và block cố định giữ nguyên vị trí tương đối.
@@ -2937,7 +2955,336 @@ var EduDocx = (function(){
         keyRows.push({ newNo: newNo, origNo: b.origNo, kind: 'tf', section: b.section || 0, letter: newSubs.map(function(s){ return s.tf; }).join('–'), correctText: excerpt(stemText(b)) });
       }
     });
-    return { ok: true, xml: parsed.body.head + outSegs.join('') + parsed.body.tail, keyRows: keyRows, fixed: fixedList, total: parsed.totalBlocks, mcCount: mcCount, tfCount: tfCount, saCount: saCount };
+    return { ok: true, format: 'A', xml: parsed.body.head + outSegs.join('') + parsed.body.tail, keyRows: keyRows, fixed: fixedList, total: parsed.totalBlocks, mcCount: mcCount, tfCount: tfCount, saCount: saCount };
+  }
+
+  /* ================= FORMAT B (V14) — ĐỀ MATHTYPE / KHÔNG SỐ CÂU (số tự động của Word) =================
+     Ported from tronde (EduMix) — docxParser.ts + shuffleEngine.ts, điều chỉnh TypeScript → JavaScript thuần:
+     - inspectRunProperties (tronde, docxParser.ts ~473): mỗi run mang cờ isUnderline/isRed/isBold đọc từ rPr.
+     - injectFormattingMarkersIntoRuns (tronde ~364): nhãn a)/A. mà run nhãn — kể cả chỉ run chứa dấu ")" —
+       có gạch chân hoặc tô đỏ thì ý/phương án đó là ĐÁP ÁN.
+     - findOrderedFourMarkers (tronde ~2798): tìm 4 mốc nhãn A/B/C/D THEO ĐÚNG THỨ TỰ; ở đây mốc tìm trên
+       dãy phần tử con (atom) của đoạn, các khúc ngăn bởi run chỉ chứa <w:tab/>.
+     - DocxNumberingContext (tronde ~1220): đoạn có <w:numPr> trong pPr là MỐC CÂU HỎI (không giải mã số
+       hiển thị — Word tự đánh số lại theo thứ tự đoạn khi mở file).
+     - shuffleEngine (tronde): trộn câu TRONG TỪNG PHẦN; neo tiêu đề phần và câu cố định giữ nguyên vị trí.
+     - Mẫu từ khoá đáp án ngắn (Đáp án/Đáp số/ĐS/Kết quả + số): dùng chung RE_ANS_NUM đã port ở V13.
+     CÔNG THỨC + HÌNH đi ĐƯỜNG ẢNH: <w:object> MathType cùng khối <mc:AlternateContent>/<mc:Fallback>
+     (chứa ảnh preview) là "khối hình công thức" NGUYÊN TỬ — chỉ di chuyển theo segment/câu của nó,
+     không giải mã MTEF/LaTeX, không sửa, không xoá (bài học ENGINE 2 của tronde: tuyệt đối không xoá
+     mc:Fallback vì ảnh preview MathType nằm trong đó). */
+
+  /* Cờ định dạng của một run đọc từ chuỗi rPr — ported from tronde inspectRunProperties */
+  function runFlagsB(rpr){
+    var u = false, red = false, bold = false;
+    if (rpr){
+      var um = rpr.match(/<w:u(\s[^>]*)?\/?>/);
+      if (um && !/<w:u\s+w:val="(?:none|false|0)"/.test(um[0])) u = true;
+      var cm = rpr.match(/<w:color\s+w:val="([0-9A-Fa-f]{6})"/);
+      if (cm){
+        var hx = cm[1].toUpperCase();
+        if (/^(FF0000|CC0000|C00000|EE0000|FF3333|E00000)$/.test(hx)) red = true;
+        else {
+          var rr = parseInt(hx.slice(0, 2), 16), gg = parseInt(hx.slice(2, 4), 16), bb = parseInt(hx.slice(4, 6), 16);
+          if (rr >= 150 && gg <= 95 && bb <= 95 && rr > gg * 1.8 && rr > bb * 1.8) red = true; /* isRedHexColor của tronde */
+        }
+      }
+      if (/<w:b(\s[^>]*)?\/?>/.test(rpr) && !/<w:b\s+w:val="(?:false|0)"/.test(rpr)) bold = true;
+    }
+    return { u: u, red: red, bold: bold };
+  }
+  function idsOfB(s){ var ids = [], re = /r:(?:id|embed)="([^"]+)"/g, m; while ((m = re.exec(s)) !== null) ids.push(m[1]); return ids; }
+  /* Tách đoạn thành các PHẦN TỬ CON cấp 1 (atom). <w:r> và <mc:AlternateContent> là nguyên tử:
+     findEl đếm lồng nhau CÙNG TÊN nên không bao giờ cắt ngang qua <w:object>/Fallback. */
+  function splitParaAtomsB(pXml){
+    var mOpen = pXml.match(/^<w:p(\s[^>]*)?>/);
+    if (!mOpen) return null;
+    var openTag = mOpen[0], rest = pXml.slice(openTag.length);
+    var closeIdx = rest.lastIndexOf('</w:p>');
+    var innerAll = closeIdx >= 0 ? rest.slice(0, closeIdx) : rest;
+    var pPr = '', inner = innerAll;
+    var pm = innerAll.match(/^<w:pPr>[\s\S]*?<\/w:pPr>/);
+    if (pm){ pPr = pm[0]; inner = innerAll.slice(pPr.length); }
+    var atoms = [], i = 0;
+    while (i < inner.length){
+      if (inner.charAt(i) !== '<'){
+        var nx = inner.indexOf('<', i); if (nx < 0) nx = inner.length;
+        atoms.push({ s: inner.slice(i, nx), kind: 'text' }); i = nx; continue;
+      }
+      var tm = inner.slice(i).match(/^<(\/?)([A-Za-z][\w:.-]*)/);
+      if (!tm){ atoms.push({ s: inner.charAt(i), kind: 'text' }); i++; continue; }
+      if (tm[1] === '/'){ var gt0 = inner.indexOf('>', i); atoms.push({ s: inner.slice(i, gt0 + 1), kind: 'other' }); i = gt0 + 1; continue; }
+      var f = findEl(inner, tm[2], i);
+      if (!f){ var gt1 = inner.indexOf('>', i); atoms.push({ s: inner.slice(i, gt1 + 1), kind: 'other' }); i = gt1 + 1; continue; }
+      atoms.push({ s: inner.slice(f.start, f.end), kind: tm[2] === 'w:r' ? 'r' : (tm[2] === 'mc:AlternateContent' ? 'alt' : 'other') });
+      i = f.end;
+    }
+    atoms.forEach(function(a){
+      a.text = a.kind === 'text' ? decodeXml(a.s) : paraText(a.s);
+      var rm = a.kind === 'r' ? a.s.match(/<w:rPr>[\s\S]*?<\/w:rPr>/) : null;
+      a.flags = runFlagsB(rm ? rm[0] : '');
+      a.ids = idsOfB(a.s);
+      a.isTab = a.kind === 'r' && /<w:tab\s*\/>/.test(a.s) && !a.text && !a.ids.length;
+    });
+    return { openTag: openTag, pPr: pPr, head: openTag + pPr, atoms: atoms };
+  }
+  function hasNumPrB(pXml){
+    var pm = pXml.match(/<w:pPr>[\s\S]*?<\/w:pPr>/);
+    return !!pm && /<w:numPr(?=[\s/>])/.test(pm[0]);
+  }
+  /* Tìm nhãn bắt đầu tại atom i (nhãn có thể bị tách 2 run: "D" + ". ", "a" + ")").
+     fullRe khớp khi gộp đủ nhãn; partRe khớp tiền tố đang gộp dở. Atom chứa đối tượng (có r:id) không bao giờ là nhãn. */
+  function findLabelB(atoms, i, fullRe, partRe){
+    var acc = '', used = [], j = i;
+    while (j < atoms.length){
+      var a = atoms[j];
+      if (a.isTab){ if (!used.length){ j++; continue; } break; }
+      if (a.kind !== 'r' || a.ids.length) break;
+      var cand = acc + a.text;
+      if (fullRe.test(cand)){ used.push(j); return { atoms: used, end: j + 1, text: cand }; }
+      if (partRe.test(cand)){ acc = cand; used.push(j); j++; continue; }
+      break;
+    }
+    return null;
+  }
+  /* Tách đoạn PHƯƠNG ÁN CHUNG 1 DÒNG thành 4 segment theo mốc nhãn A/B/C/D — ported from tronde findOrderedFourMarkers.
+     Mỗi segment: các atom nhãn + các atom nội dung (run công thức/hình giữ nguyên byte). */
+  function splitOptionLineB(pXml){
+    var pa = splitParaAtomsB(pXml);
+    if (!pa) return null;
+    var atoms = pa.atoms, letters = ['A', 'B', 'C', 'D'], segs = [], pos = 0, sepTab = null, prefix = [];
+    for (var k = 0; k < 4; k++){
+      var li = pos, lab = null;
+      while (li < atoms.length){
+        if (atoms[li].isTab){ if (!sepTab) sepTab = atoms[li].s; li++; continue; }
+        lab = findLabelB(atoms, li, new RegExp('^' + letters[k] + '\\.\\s*$'), new RegExp('^' + letters[k] + '\\.?$'));
+        break;
+      }
+      if (!lab) return null;
+      if (k === 0){ for (var q = 0; q < li; q++) prefix.push(atoms[q].s); }
+      var nextStart = atoms.length;
+      if (k < 3){
+        var scan = lab.end;
+        while (scan < atoms.length){
+          var s2 = atoms[scan].isTab ? scan + 1 : scan, candLab = null;
+          if (s2 < atoms.length && atoms[s2].kind === 'r')
+            candLab = findLabelB(atoms, s2, new RegExp('^' + letters[k + 1] + '\\.\\s*$'), new RegExp('^' + letters[k + 1] + '\\.?$'));
+          if (candLab){ nextStart = scan; break; }
+          scan++;
+        }
+      }
+      var content = [];
+      for (var c = lab.end; c < nextStart; c++) content.push(atoms[c]);
+      while (content.length && content[content.length - 1].isTab){ if (!sepTab) sepTab = content[content.length - 1].s; content.pop(); }
+      var marked = lab.atoms.some(function(ai){ return atoms[ai].flags.u || atoms[ai].flags.red; });
+      segs.push({ letter: letters[k], labelIdx: lab.atoms, content: content, marked: marked });
+      pos = nextStart;
+    }
+    var hasTab = !!sepTab || atoms.some(function(a){ return a.isTab || a.text === '\t'; });
+    if (!hasTab) return null; /* cổng: 4 mốc phải ngăn nhau bằng tab (đúng định dạng file MathType) */
+    return { head: pa.head, prefix: prefix, segs: segs, sep: sepTab || '<w:r><w:tab/></w:r>', atoms: atoms };
+  }
+  /* Nhãn ý Đ/S ở đầu đoạn: "a) " — có thể tách run "a" + ")". marked = có run nhãn gạch chân/tô đỏ (luật tronde). */
+  function splitSubLabelB(pXml){
+    var pa = splitParaAtomsB(pXml);
+    if (!pa) return null;
+    var lab = findLabelB(pa.atoms, 0, /^[a-d]\)\s*$/, /^[a-d]\)?$/);
+    if (!lab) return null;
+    return { pa: pa, labelIdx: lab.atoms, letter: lab.text.charAt(0), marked: lab.atoms.some(function(ai){ return pa.atoms[ai].flags.u || pa.atoms[ai].flags.red; }) };
+  }
+  function setRunTextB(runXml, newText){
+    var done = false;
+    return runXml.replace(/<w:t(\s[^>]*)?>([\s\S]*?)<\/w:t>/g, function(m0, attrs){
+      var at = attrs || '';
+      if (done) return '<w:t' + at + '></w:t>';
+      done = true;
+      if ((/^\s/.test(newText) || /\s$/.test(newText)) && at.indexOf('xml:space') === -1) at += ' xml:space="preserve"';
+      return '<w:t' + at + '>' + encodeXml(newText) + '</w:t>';
+    });
+  }
+  function stripUnderlineRunB(runXml){
+    return runXml.replace(/<w:rPr>[\s\S]*?<\/w:rPr>/, function(rpr){ return rpr.replace(/<w:u(\s[^>]*)?\/?>/g, ''); });
+  }
+  /* Lắp lại 1 segment với nhãn MỚI theo vị trí: run nhãn đầu nhận "X.", phần nhãn thừa ở run sau bị rỗng hoá
+     (chỉ giữ khoảng trắng); gạch chân bị gỡ khỏi run nhãn và các run trắng ngay sau nhãn (dấu vết đánh dấu đáp án). */
+  function rebuildSegmentB(line, seg, newLetter){
+    var out = '';
+    seg.labelIdx.forEach(function(ai, n){
+      var ax = stripUnderlineRunB(line.atoms[ai].s);
+      ax = n === 0 ? setRunTextB(ax, newLetter + '.') : setRunTextB(ax, line.atoms[ai].text.replace(/[^\s]/g, ''));
+      out += ax;
+    });
+    var stripU = true;
+    seg.content.forEach(function(a){
+      var ax = a.s;
+      if (stripU && a.kind === 'r' && !a.text.trim() && !a.ids.length) ax = stripUnderlineRunB(ax);
+      else stripU = false;
+      out += ax;
+    });
+    return out;
+  }
+  function renderOptLineB(part, order){
+    var line = part.line, letters = ['A', 'B', 'C', 'D'];
+    var pieces = order.map(function(oi, pos){ return rebuildSegmentB(line, line.segs[oi], letters[pos]); });
+    return line.head + line.prefix.join('') + pieces.join(line.sep) + '</w:p>';
+  }
+  function renderSubParaB(sub){
+    var pa = sub.pa, mark = {};
+    sub.labelIdx.forEach(function(ai){ mark[ai] = true; });
+    var out = pa.head;
+    pa.atoms.forEach(function(a, i){ out += mark[i] ? stripUnderlineRunB(a.s) : a.s; });
+    return out + '</w:p>';
+  }
+  function stemTextB(b){
+    var t = '';
+    b.parts.forEach(function(p){ if (p.role === 'stem' || p.role === 'extra') t += (t ? ' ' : '') + paraText(p.s); });
+    return t.replace(/\s+/g, ' ').trim();
+  }
+  function segTextB(seg){ var t = ''; seg.content.forEach(function(a){ t += a.text; }); return t.replace(/\s+/g, ' ').trim(); }
+  function segIdsB(seg){ var ids = []; seg.content.forEach(function(a){ ids = ids.concat(a.ids); }); return ids; }
+
+  function classifyB(b){
+    if (b.optLine){
+      b.kind = 'mc';
+      if (b.ansIdx >= 0){ b.shuffleable = true; b.note = 'Đáp án nhận qua nhãn phương án được gạch chân (định dạng đánh dấu đã gỡ khỏi đề học sinh).'; }
+      else { b.shuffleable = false; b.reason = 'Không xác định được đáp án (nhãn gạch chân không duy nhất)'; }
+      return;
+    }
+    if (b.subs.length){
+      if (b.subs.length === 4){ b.kind = 'tf'; b.shuffleable = true; }
+      else { b.kind = 'fixed'; b.shuffleable = false; b.reason = 'Có ' + b.subs.length + ' ý a–d (cần đúng 4 ý) nên giữ nguyên.'; }
+      return;
+    }
+    if (b.sawSolution){
+      if (b.ansText !== null && b.ansText !== ''){ b.kind = 'sa'; b.shuffleable = true; }
+      else { b.kind = 'fixed'; b.shuffleable = false; b.reason = 'Có phần "Lời giải" nhưng không tìm thấy dòng "Đáp số:" — giữ nguyên để thầy bổ sung đáp số.'; }
+      return;
+    }
+    b.kind = 'fixed'; b.shuffleable = false;
+    b.reason = 'Không nhận diện được dạng câu (không có dòng phương án chung, ý a–d hay lời giải) — giữ nguyên.';
+  }
+
+  function parseDocumentB(body, segs){
+    var units = [], cur = null, curSection = 0;
+    function closeBlock(){ if (cur){ units.push({ type: 'block', block: cur }); cur = null; } }
+    segs.forEach(function(seg){
+      if (seg.t !== 'p'){ if (cur) cur.parts.push({ role: 'raw', s: seg.s }); else units.push({ type: 'fixed', s: seg.s }); return; }
+      var txt = paraText(seg.s);
+      if (RE_SECTION.test(txt)){ closeBlock(); units.push({ type: 'section', s: seg.s }); curSection++; return; }
+      if (hasNumPrB(seg.s)){
+        closeBlock();
+        cur = { format: 'B', origNo: 0, section: curSection, parts: [{ role: 'stem', s: seg.s }], subs: [], optLine: null, ansIdx: -1, ansText: null, sawSolution: false, inSolution: false, kind: null, shuffleable: false, reason: '' };
+        return;
+      }
+      if (!cur){ units.push({ type: 'fixed', s: seg.s }); return; }
+      if (cur.inSolution){
+        var nv0 = matchNumAnswer(txt); if (nv0 !== null && cur.ansText === null) cur.ansText = nv0;
+        cur.parts.push({ role: 'answer', s: seg.s }); return;
+      }
+      if (/^\s*Lời\s*giải\b/i.test(txt)){ cur.inSolution = true; cur.sawSolution = true; cur.parts.push({ role: 'answer', s: seg.s }); return; }
+      var nv = matchNumAnswer(txt);
+      if (nv !== null){ if (cur.ansText === null) cur.ansText = nv; cur.sawSolution = true; cur.parts.push({ role: 'answer', s: seg.s }); return; }
+      var av = matchAnswer(txt);
+      if (av >= 0){ if (cur.ansIdx < 0) cur.ansIdx = av; cur.parts.push({ role: 'answer', s: seg.s }); return; }
+      if (!cur.optLine && !cur.subs.length){
+        var line = splitOptionLineB(seg.s);
+        if (line){
+          cur.optLine = line;
+          var markedIdxs = [];
+          line.segs.forEach(function(sg, i2){ if (sg.marked) markedIdxs.push(i2); });
+          if (markedIdxs.length === 1) cur.ansIdx = markedIdxs[0];
+          cur.parts.push({ role: 'optline', s: seg.s, line: line });
+          return;
+        }
+      }
+      if (!cur.optLine && /^\s*[a-d]\)/.test(txt)){
+        var subLab = splitSubLabelB(seg.s);
+        if (subLab){
+          var sub = { s: seg.s, letter: subLab.letter, tf: subLab.marked ? 'Đ' : 'S', pa: subLab.pa, labelIdx: subLab.labelIdx };
+          cur.subs.push(sub);
+          cur.parts.push({ role: 'sub', ref: sub, s: seg.s });
+          return;
+        }
+      }
+      cur.parts.push({ role: 'extra', s: seg.s });
+    });
+    closeBlock();
+    var blocks = [], secCount = {};
+    units.forEach(function(u){ if (u.type === 'block') blocks.push(u.block); });
+    blocks.forEach(function(b){
+      var sk = 's' + (b.section || 0);
+      secCount[sk] = (secCount[sk] || 0) + 1;
+      b.origNo = secCount[sk]; /* số câu gốc = thứ tự trong phần (Word hiển thị đúng số này nhờ numPr) */
+      classifyB(b);
+    });
+    return { ok: true, format: 'B', body: body, units: units, blocks: blocks, totalBlocks: blocks.length };
+  }
+
+  /* Cổng nhận diện Format B: có ít nhất 1 đoạn numPr VÀ (ít nhất 1 tiêu đề PHẦN hoặc 1 dòng phương án chung) */
+  function detectFormatB(segs){
+    var nNum = 0, hasSec = false, hasOpt = false;
+    for (var i = 0; i < segs.length; i++){
+      if (segs[i].t !== 'p') continue;
+      if (hasNumPrB(segs[i].s)) nNum++;
+      if (!hasSec && RE_SECTION.test(paraText(segs[i].s))) hasSec = true;
+      if (!hasOpt && splitOptionLineB(segs[i].s)) hasOpt = true;
+      if (nNum >= 1 && (hasSec || hasOpt)) return true;
+    }
+    return false;
+  }
+
+  function renderBlockB(b, optOrder){
+    var out = [];
+    b.parts.forEach(function(part){
+      if (part.role === 'answer') return; /* gỡ "Lời giải"/"Đáp số:"/dòng đáp án khỏi đề ở mọi câu */
+      if (part.role === 'optline'){ out.push(renderOptLineB(part, optOrder || [0, 1, 2, 3])); return; }
+      if (part.role === 'sub'){ out.push(renderSubParaB(part.ref)); return; }
+      out.push(part.s);
+    });
+    return out.join('');
+  }
+
+  function shuffleDocumentXmlB(parsed, seed){
+    var rnd = mulberry32((seed >>> 0) || 1), units = parsed.units, placed = units.slice();
+    /* Khung V13/tronde: chỉ hoán vị các block trộn được TRONG CÙNG section; neo PHẦN và block cố định giữ chỗ */
+    var slotsBySec = {};
+    units.forEach(function(u, idx){ if (u.type === 'block' && u.block.shuffleable){ var sk = 's' + (u.block.section || 0); (slotsBySec[sk] = slotsBySec[sk] || []).push(idx); } });
+    Object.keys(slotsBySec).forEach(function(sk){
+      var slots = slotsBySec[sk], order = shuffledIdx(slots.length, rnd);
+      slots.forEach(function(slotPos, kk){ placed[slotPos] = units[slots[order[kk]]]; });
+    });
+    var keyRows = [], fixedList = [], outSegs = [], noBySec = {}, mcCount = 0, tfCount = 0, saCount = 0, letters = ['A', 'B', 'C', 'D'];
+    parsed.blocks.forEach(function(b){ if (!b.shuffleable) fixedList.push({ origNo: b.origNo, reason: b.reason }); });
+    placed.forEach(function(u){
+      if (u.type !== 'block'){ outSegs.push(u.s); return; }
+      var b = u.block, sk = 's' + (b.section || 0);
+      noBySec[sk] = (noBySec[sk] || 0) + 1;
+      var newNo = noBySec[sk]; /* vị trí mới trong phần — Word tự hiển thị số này nhờ numPr */
+      if (!b.shuffleable){
+        outSegs.push(renderBlockB(b, null));
+        keyRows.push({ newNo: newNo, origNo: b.origNo, kind: 'fixed', section: b.section || 0, letter: b.ansText || '—', correctText: excerpt(stemTextB(b)) });
+        return;
+      }
+      if (b.kind === 'mc'){
+        mcCount++;
+        var order = shuffledIdx(4, rnd);
+        outSegs.push(renderBlockB(b, order));
+        var newAnsPos = order.indexOf(b.ansIdx);
+        var correctSeg = b.optLine.segs[b.ansIdx];
+        var cIds = segIdsB(correctSeg), cTxt = segTextB(correctSeg);
+        var correctText = (cIds.length && (!cTxt || /^[\s.·…]*$/.test(cTxt))) ? '⟨công thức/hình⟩' : excerpt(cTxt);
+        keyRows.push({ newNo: newNo, origNo: b.origNo, kind: 'mc', section: b.section || 0, letter: letters[newAnsPos], correctText: correctText, ids: cIds, note: b.note || '' });
+      } else if (b.kind === 'sa'){
+        saCount++;
+        outSegs.push(renderBlockB(b, null));
+        keyRows.push({ newNo: newNo, origNo: b.origNo, kind: 'sa', section: b.section || 0, letter: b.ansText, correctText: excerpt(stemTextB(b)) });
+      } else {
+        tfCount++;
+        outSegs.push(renderBlockB(b, null));
+        keyRows.push({ newNo: newNo, origNo: b.origNo, kind: 'tf', section: b.section || 0, letter: b.subs.map(function(s){ return s.tf; }).join('–'), correctText: excerpt(stemTextB(b)) });
+      }
+    });
+    return { ok: true, format: 'B', xml: parsed.body.head + outSegs.join('') + parsed.body.tail, keyRows: keyRows, fixed: fixedList, total: parsed.totalBlocks, mcCount: mcCount, tfCount: tfCount, saCount: saCount };
   }
 
   /* --- Dựng gói .docx tối thiểu hợp lệ từ văn bản thuần (cho chế độ dán văn bản) --- */
@@ -3315,7 +3662,194 @@ var EduDocx = (function(){
     return pptx;
   }
 
-  return { shuffleDocumentXml: shuffleDocumentXml, parseDocument: parseDocument, buildMinimalDocxFiles: buildMinimalDocxFiles, buildDeck: buildDeck, buildLessonDeck: buildLessonDeck, fitFontSize: fitFontSize, buildKhbdDocxFiles: buildKhbdDocxFiles, _paraText: paraText };
+  /* ================= QR ĐÁP ÁN + PHIẾU LÀM BÀI (V14b) — ported from tronde =================
+     - buildQrPayload: port nguyên văn 4 bộ dựng payload của shuffleEngine.ts (tronde):
+       buildQm2025OfficialQrPayload / buildTnMaker2025OfficialQrPayload / buildAzota2025OfficialQrPayload /
+       buildUntOfficialQrPayload + bộ chọn buildQrPayloadString. Nguồn đáp án: keyRows của từng mã đề.
+       STANDARD_2025: tronde chỉ khai báo kiểu, buildQrPayloadString rơi về QM2025 — port giữ đúng như vậy.
+     - phieuGroupForSubject: port getPhieuQMBySubject (docxExporter.ts của tronde) — chế độ AUTO theo môn.
+     - Công thức/hình vẫn đi đường ảnh; QR và phiếu cũng là ẢNH (PNG/JPEG) nhúng nguyên khối vào gói .docx. */
+
+  /* keyRows (EduMaster) → answerKey {part1, part2, part3} đúng hình dạng tronde dùng */
+  function keyRowsToAnswerKey(keyRows){
+    var ak = { part1: [], part2: [], part3: [] };
+    (keyRows || []).forEach(function(r){
+      if (r.kind === 'mc') ak.part1.push({ questionNumber: r.newNo, answer: r.letter });
+      else if (r.kind === 'tf') ak.part2.push({ questionNumber: r.newNo, answers: String(r.letter || '').split(/[–—-]/).map(function(x){ return x.trim() === 'Đ' ? 'Đ' : 'S'; }) });
+      else if (r.kind === 'sa') ak.part3.push({ questionNumber: r.newNo, answer: r.letter == null ? '' : String(r.letter) });
+    });
+    var byNo = function(a, b){ return a.questionNumber - b.questionNumber; };
+    ak.part1.sort(byNo); ak.part2.sort(byNo); ak.part3.sort(byNo);
+    return ak;
+  }
+  /* 1. QM 2025 (qrcode2025.youngmix.vn): [[MaDe, ...Phần I (A/B/C/D), ...Phần II (D/S từng ý), ...Phần III (số, dấu chấm thập phân)], ...] */
+  function buildQm2025OfficialQrPayload(variants){
+    var rows = variants.map(function(v){
+      var rawCode = String(v.examCode).trim();
+      var codeCell = (/^\d+$/.test(rawCode) && !/^0\d+$/.test(rawCode)) ? Number(rawCode) : rawCode;
+      var p1Cells = v.answerKey.part1.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answer; });
+      var p2Cells = [];
+      v.answerKey.part2.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).forEach(function(item){
+        item.answers.forEach(function(ans){ p2Cells.push(ans === 'Đ' ? 'D' : 'S'); });
+      });
+      var p3Cells = v.answerKey.part3.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){
+        var cleaned = String(item.answer).trim().replace(',', '.');
+        var num = Number(cleaned);
+        return (!isNaN(num) && cleaned !== '') ? num : cleaned;
+      });
+      return [codeCell].concat(p1Cells, p2Cells, p3Cells);
+    });
+    return JSON.stringify(rows);
+  }
+  /* 2. TNMAKER 2025 (TLTN-BGD-2025): {"<MaDe>":"<Phần I>#<P2_Câu1>_<P2_Câu2>#<P3_1>_<P3_2>", "success":true, "type":5} */
+  function buildTnMaker2025OfficialQrPayload(variants){
+    var resultObj = { success: true, type: 5 };
+    variants.forEach(function(v){
+      var codeKey = String(v.examCode).trim().replace(/['" ]/g, '');
+      var p1Seq = v.answerKey.part1.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answer; }).join('');
+      var p2Groups = v.answerKey.part2.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answers.map(function(a){ return a === 'Đ' ? 'Đ' : 'S'; }).join(''); });
+      var p3Groups = v.answerKey.part3.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return String(item.answer).trim().replace(/['" ]/g, '').replace(',', '.'); });
+      var encodedStr = p1Seq;
+      if (p2Groups.length) encodedStr += '#' + p2Groups.join('_');
+      if (p3Groups.length) encodedStr += '#' + p3Groups.join('_');
+      resultObj[codeKey] = encodedStr;
+    });
+    return JSON.stringify(resultObj);
+  }
+  /* 3. AZOTA 2025: [["<MaDe>", ...Phần I, ...Phần II ("Đ"/"S" có dấu), ...Phần III (dấu phẩy thập phân)], ...] */
+  function buildAzota2025OfficialQrPayload(variants){
+    var rows = variants.map(function(v){
+      var codeStr = String(v.examCode).trim();
+      var p1Cells = v.answerKey.part1.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answer; });
+      var p2Cells = [];
+      v.answerKey.part2.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).forEach(function(item){
+        item.answers.forEach(function(ans){ p2Cells.push(ans === 'Đ' ? 'Đ' : 'S'); });
+      });
+      var p3Cells = v.answerKey.part3.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return String(item.answer).trim().replace('.', ','); });
+      return [codeStr].concat(p1Cells, p2Cells, p3Cells);
+    });
+    return JSON.stringify(rows);
+  }
+  /* 4. UNT 2025: text nhiều dòng — Mã đề / chuỗi Phần I / chuỗi Phần II / Phần III ngăn bằng "|" (dấu chấm thập phân) */
+  function buildUntOfficialQrPayload(variants){
+    var parts = [];
+    variants.forEach(function(v){
+      parts.push(String(v.examCode).trim());
+      var p1Seq = v.answerKey.part1.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answer; }).join('');
+      if (p1Seq) parts.push(p1Seq);
+      var p2Seq = v.answerKey.part2.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return item.answers.map(function(a){ return a === 'Đ' ? 'Đ' : 'S'; }).join(''); }).join('');
+      if (p2Seq) parts.push(p2Seq);
+      var p3Seq = v.answerKey.part3.slice().sort(function(a, b){ return a.questionNumber - b.questionNumber; }).map(function(item){ return String(item.answer).trim().replace(/['" ]/g, '').replace(',', '.'); }).join('|');
+      if (p3Seq) parts.push(p3Seq);
+    });
+    return parts.join('\n');
+  }
+  /* Bộ chọn payload theo định dạng — port buildQrPayloadString của tronde (STANDARD_2025 rơi về QM2025 như gốc) */
+  function buildQrPayload(examCode, keyRows, format){
+    var variants = [{ examCode: String(examCode), answerKey: keyRowsToAnswerKey(keyRows) }];
+    if (format === 'TNMAKER') return buildTnMaker2025OfficialQrPayload(variants);
+    if (format === 'AZOTA') return buildAzota2025OfficialQrPayload(variants);
+    if (format === 'UNT') return buildUntOfficialQrPayload(variants);
+    return buildQm2025OfficialQrPayload(variants);
+  }
+
+  /* Ánh xạ MÔN → NHÓM PHIẾU (chế độ AUTO) — port getPhieuQMBySubject của tronde (docxExporter.ts) */
+  function phieuGroupForSubject(subjectName){
+    var sub = String(subjectName || '').toLowerCase();
+    if (sub.indexOf('toán') !== -1 || sub.indexOf('toan') !== -1) return 'TOAN';
+    if (sub.indexOf('sinh') !== -1 || sub.indexOf('lí') !== -1 || sub.indexOf('lý') !== -1 || sub.indexOf('ly') !== -1 ||
+        sub.indexOf('hóa') !== -1 || sub.indexOf('hoa') !== -1 || sub.indexOf('địa') !== -1 || sub.indexOf('dia') !== -1) return 'KHTN_DIA';
+    if (sub.indexOf('anh') !== -1 || sub.indexOf('ngoại ngữ') !== -1 || sub.indexOf('ngoai ngu') !== -1) return 'NGOAINGU';
+    return 'KHXH_CN_TIN'; /* các môn còn lại: Sử, Tin, Công nghệ, GDCD/GDKT&PL... */
+  }
+  var PHIEU_ASSETS = { TOAN: 'assets/phieu_toan.jpg', KHTN_DIA: 'assets/phieu_khtn.jpg', NGOAI_NGU: 'assets/phieu_ngoaingu.jpg', KHXH_CN_TIN: 'assets/phieu_khxh.jpg' };
+  var PHIEU_NAMES = { TOAN: 'Phiếu Toán', KHTN_DIA: 'Phiếu KHTN & Địa', NGOAI_NGU: 'Phiếu Ngoại ngữ', KHXH_CN_TIN: 'Phiếu KHXH, CN & Tin' };
+  function stripDiacriticsVN(s){
+    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
+  /* Đoán môn từ tên file (bỏ dấu, gộp chữ) để đặt sẵn ô Môn thi — đoán được mới đặt, giáo viên sửa lại được */
+  function guessSubjectFromFilename(name){
+    var c = stripDiacriticsVN(name).toLowerCase().replace(/[^a-z]/g, '');
+    if (c.indexOf('toan') !== -1) return 'Toán';
+    if (c.indexOf('sinh') !== -1) return 'Sinh học';
+    if (c.indexOf('tienganh') !== -1) return 'Tiếng Anh';
+    if (c.indexOf('vatly') !== -1) return 'Vật lí';
+    if (c.indexOf('hoa') !== -1) return 'Hoá học';
+    if (c.indexOf('dia') !== -1) return 'Địa lí';
+    if (c.indexOf('anh') !== -1) return 'Tiếng Anh';
+    if (c.indexOf('ly') !== -1) return 'Vật lí';
+    if (c.indexOf('lichsu') !== -1 || c.indexOf('su') !== -1) return 'Lịch sử';
+    if (c.indexOf('gdcd') !== -1) return 'GDCD';
+    if (c.indexOf('congnghe') !== -1) return 'Công nghệ';
+    if (c.indexOf('tin') !== -1) return 'Tin học';
+    return '';
+  }
+  /* Đọc kích thước thật của ảnh JPEG từ marker SOF (để tính chiều cao EMU giữ đúng tỉ lệ khi nhúng vào Word) */
+  function jpegSizeFromBytes(b){
+    if (!b || b.length < 10 || b[0] !== 0xFF || b[1] !== 0xD8) return null;
+    var i = 2;
+    while (i + 9 < b.length){
+      if (b[i] !== 0xFF){ i++; continue; }
+      var mk = b[i + 1];
+      if (mk === 0xC0 || mk === 0xC1 || mk === 0xC2) return { w: (b[i + 7] << 8) + b[i + 8], h: (b[i + 5] << 8) + b[i + 6] };
+      if (mk === 0x01 || (mk >= 0xD0 && mk <= 0xD9)){ i += 2; continue; }
+      var len = (b[i + 2] << 8) + b[i + 3];
+      if (len < 2) break;
+      i += 2 + len;
+    }
+    return null;
+  }
+  function drawingParaXml(rid, cx, cy, picName){
+    return '<w:p><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><wp:extent cx="' + cx + '" cy="' + cy + '"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="9871" name="' + encodeXml(picName) + '"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="9871" name="' + encodeXml(picName) + '"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="' + rid + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + cx + '" cy="' + cy + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
+  }
+  /* Chèn phiếu vào ĐẦU gói đề (trang 1 = ảnh phiếu, ngắt trang, rồi mới tới nội dung đề):
+     sửa document.xml + document.xml.rels + [Content_Types].xml ở mức chuỗi — phần còn lại giữ nguyên byte. */
+  function insertPhieuIntoPackage(docXml, relsXml, ctXml, rid, cx, cy){
+    if (!docXml || !relsXml || !ctXml) return null;
+    var phieuParas = drawingParaXml(rid, cx, cy, 'Phieu lam bai') + '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+    var nd = docXml.replace(/(<w:body[^>]*>)/, '$1' + phieuParas);
+    if (nd === docXml) return null;
+    var nrels = relsXml.replace(/<\/Relationships>/, '<Relationship Id="' + rid + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/edumaster_phieu.jpg"/></Relationships>');
+    if (nrels === relsXml) return null;
+    var nct = ctXml;
+    if (!/Extension="jpg"/.test(nct)) nct = nct.replace(/(<Types[^>]*>)/, '$1<Default Extension="jpg" ContentType="image/jpeg"/>');
+    return { docXml: nd, relsXml: nrels, ctXml: nct };
+  }
+  /* Dựng file ĐÁP ÁN + QR (.docx tối thiểu mở rộng: có word/media/*.png + rels + drawing, mỗi mã một mục) */
+  function buildAnswerDocxFiles(entries){
+    function para(text, bold, size){
+      return '<w:p><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>' + (bold ? '<w:b/>' : '') + '<w:sz w:val="' + (size || 26) + '"/></w:rPr><w:t xml:space="preserve">' + encodeXml(text) + '</w:t></w:r></w:p>';
+    }
+    var media = [], docRels = [], body = '', ridN = 0;
+    (entries || []).forEach(function(en, idx){
+      var rows = en.keyRows || [];
+      var p1 = rows.filter(function(r){ return r.kind === 'mc'; });
+      var p2 = rows.filter(function(r){ return r.kind === 'tf'; });
+      var p3 = rows.filter(function(r){ return r.kind === 'sa'; });
+      var fx = rows.filter(function(r){ return r.kind === 'fixed'; });
+      body += para('ĐÁP ÁN — MÃ ĐỀ ' + en.code, true, 32);
+      body += para('Phần I — Trắc nghiệm: ' + (p1.length ? p1.map(function(r){ return r.newNo + '.' + r.letter; }).join('    ') : '(không có)'), false, 26);
+      if (p2.length) body += para('Phần II — Đúng/Sai: ' + p2.map(function(r){ return 'Câu ' + r.newNo + ': ' + r.letter; }).join('   •   '), false, 26);
+      if (p3.length) body += para('Phần III — Trả lời ngắn: ' + p3.map(function(r){ return 'Câu ' + r.newNo + ': ' + r.letter; }).join('   •   '), false, 26);
+      if (fx.length) body += para('(' + fx.length + ' câu giữ nguyên vị trí — đáp án của các câu này xem ở bảng đối chiếu trên web.)', false, 24);
+      if (en.qrDataUrl){
+        ridN++;
+        var rid = 'rIdQr' + ridN, mediaName = 'qr_ma' + en.code + '.png';
+        media.push({ path: 'word/media/' + mediaName, dataUrl: en.qrDataUrl });
+        docRels.push('<Relationship Id="' + rid + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/' + mediaName + '"/>');
+        body += drawingParaXml(rid, 1143000, 1143000, 'QR ma de ' + en.code);
+        body += para('Mã QR đáp án của mã đề ' + en.code + ' — quét bằng phần mềm ' + (en.formatName || 'chấm thi') + ' để chấm tự động.', false, 24);
+      }
+      if (idx < entries.length - 1) body += '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+    });
+    var doc = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + body + '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1417" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>';
+    var ct = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>';
+    var rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+    var docRelsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + docRels.join('') + '</Relationships>';
+    return { '[Content_Types].xml': ct, '_rels/.rels': rels, 'word/document.xml': doc, 'word/_rels/document.xml.rels': docRelsXml, '__media': media };
+  }
+
+  return { shuffleDocumentXml: shuffleDocumentXml, parseDocument: parseDocument, buildMinimalDocxFiles: buildMinimalDocxFiles, buildDeck: buildDeck, buildLessonDeck: buildLessonDeck, fitFontSize: fitFontSize, buildKhbdDocxFiles: buildKhbdDocxFiles, _paraText: paraText, buildQrPayload: buildQrPayload, phieuGroupForSubject: phieuGroupForSubject, phieuAsset: function(g){ return PHIEU_ASSETS[g] || ''; }, phieuName: function(g){ return PHIEU_NAMES[g] || ''; }, guessSubjectFromFilename: guessSubjectFromFilename, jpegSizeFromBytes: jpegSizeFromBytes, insertPhieuIntoPackage: insertPhieuIntoPackage, buildAnswerDocxFiles: buildAnswerDocxFiles };
 })();
 /* == EDU_DOCX_PURE_END == */
 
@@ -3410,6 +3944,9 @@ function mixDocxStart(){
   mixWarnShow('docxWarn', '');
   if (!f){ mixWarnShow('docxWarn', '⚠️ Thầy chưa chọn file .docx.'); return; }
   if (!/\.docx$/i.test(f.name)){ mixWarnShow('docxWarn', '⚠️ File đã chọn không phải định dạng .docx.'); return; }
+  var subjEl = document.getElementById('docxSubject');
+  if (subjEl){ var guessed = EduDocx.guessSubjectFromFilename(f.name); if (guessed) subjEl.value = guessed; }
+  docxPhieuUpdateHint();
   var nCodes = parseInt(document.getElementById('docxCodes').value, 10) || 1;
   var rep = document.getElementById('docxReport');
   rep.innerHTML = '<p class="note">⏳ Đang đọc file và tạo ' + nCodes + ' mã đề...</p>';
@@ -3422,7 +3959,7 @@ function mixDocxStart(){
       return docFile.async('string').then(function(xml){
         var probe = EduDocx.parseDocument(xml);
         if (!probe.ok) throw new Error(probe.error);
-        if (!probe.totalBlocks) throw new Error('Không tìm thấy câu hỏi nào bắt đầu bằng "Câu n." trong file.');
+        if (!probe.totalBlocks) throw new Error('Không tìm thấy câu hỏi nào trong file (web nhận đề dạng "Câu n." hoặc đề Toán không số câu — số tự động của Word, phương án chung một dòng, đáp án qua nhãn gạch chân).');
         var codes = [];
         for (var i = 0; i < nCodes; i++){
           var seed = Math.floor(Math.random() * 2000000000) + 1;
@@ -3446,6 +3983,9 @@ function renderDocxReport(){
   var mk = p.blocks.filter(function(b){ return b.ansByMark; }).length;
   var fx = p.blocks.filter(function(b){ return !b.shuffleable; });
   var html = '<div class="okbox" style="display:block;margin-top:0">📄 Đã đọc file <b>' + esc(st.name) + '</b>: nhận diện <b>' + p.totalBlocks + '</b> câu hỏi — trộn được <b>' + mc + '</b> câu trắc nghiệm, <b>' + tf + '</b> câu Đúng/Sai và <b>' + sa + '</b> câu trả lời ngắn; <b>' + fx.length + '</b> câu giữ nguyên vị trí. Đề có nhiều PHẦN thì chỉ trộn câu trong từng phần, tiêu đề phần giữ nguyên và số câu đánh lại từ 1 trong mỗi phần. Đã tạo <b>' + st.codes.length + '</b> mã đề độc lập. Mọi dòng "Đáp án:" (kể cả đáp án số của Phần trả lời ngắn) đều được gỡ khỏi đề tải về và tổng hợp vào bảng đối chiếu dưới đây.' + (mk ? ' Có <b>' + mk + '</b> câu nhận đáp án qua dấu <b>gạch chân + tô đỏ</b> trên phương án đúng — định dạng đánh dấu này đã được gỡ khỏi đề học sinh.' : '') + '</div>';
+  if (p.format === 'B'){
+    html += '<div class="okbox" style="display:block;margin-top:8px">🅱 Đây là <b>đề Toán dạng MathType / không số câu</b> (số câu do Word tự đánh, phương án 4 khúc chung một dòng): đáp án nhận qua <b>nhãn phương án / ý được gạch chân</b> — mọi dấu gạch chân ở nhãn, phần "Lời giải" và dòng "Đáp số:" đã được gỡ khỏi đề tải về; công thức MathType và hình ảnh giữ nguyên khối đi theo câu.</div>';
+  }
   if (fx.length){
     html += '<div class="warnbox" style="display:block">⚠️ <b>' + fx.length + ' câu KHÔNG trộn</b> (giữ nguyên vị trí trong đề; số câu được đánh lại theo từng phần):<ul class="warnlist">' + fx.map(function(b){ return '<li>Câu ' + b.origNo + ' (theo đề gốc): ' + esc(b.reason) + '</li>'; }).join('') + '</ul></div>';
   }
@@ -3466,20 +4006,120 @@ function renderDocxCmp(){
   document.getElementById('docxDlWrap').innerHTML = '<p class="note">Nút tải từng mã đề sẽ hiện sau khi thầy bấm xác nhận ở trên.</p>';
 }
 function docxConfirm(){ if (!_docxState) return; _docxState.confirmed = true; renderDocxDl(); }
+/* --- V14b: phiếu làm bài theo môn (mặc định AUTO như tronde) + mã QR đáp án --- */
+function docxPhieuResolveGroup(){
+  var sel = document.getElementById('docxPhieu');
+  var v = sel ? sel.value : 'AUTO';
+  if (v === 'NONE') return null;
+  if (v !== 'AUTO') return v;
+  var subj = (document.getElementById('docxSubject') || {}).value || '';
+  return EduDocx.phieuGroupForSubject(subj);
+}
+function docxPhieuUpdateHint(){
+  var el = document.getElementById('docxPhieuHint'); if (!el) return;
+  var sel = document.getElementById('docxPhieu');
+  var v = sel ? sel.value : 'AUTO';
+  if (v === 'NONE'){ el.textContent = 'Không chèn phiếu vào file mã đề.'; return; }
+  var g = docxPhieuResolveGroup();
+  el.textContent = (v === 'AUTO' ? 'Tự động theo môn — đang dùng: ' : 'Đang dùng: ') + EduDocx.phieuName(g) + ' (' + EduDocx.phieuAsset(g) + '). Thầy đổi môn hoặc chọn mẫu phiếu khác khi cần.';
+}
+function docxQrFormatName(fmt){
+  return { QM2025: 'Chấm thi QM 2025', STANDARD_2025: 'Chuẩn 2025 (STANDARD_2025)', TNMAKER: 'TNMaker', AZOTA: 'Azota', UNT: 'UNT Chấm bài' }[fmt] || fmt;
+}
+function docxQrRefresh(){ if (_docxState && _docxState.confirmed) renderDocxQr(); }
+function docxMakeQrDataUrl(text){
+  var holder = document.createElement('div');
+  new QRCode(holder, { text: text, width: 240, height: 240, correctLevel: QRCode.CorrectLevel.M });
+  var cv = holder.querySelector('canvas');
+  return cv ? cv.toDataURL('image/png') : null;
+}
+function renderDocxQr(){
+  var st = _docxState; if (!st || !st.confirmed) return;
+  var wrap = document.getElementById('docxQrWrap'); if (!wrap) return;
+  var fmt = (document.getElementById('docxQrFormat') || {}).value || 'QM2025';
+  st.qrFormat = fmt; st.qrData = {};
+  wrap.innerHTML = '<h3 style="margin:4px 0 8px">🔳 Mã QR đáp án — quét bằng ' + esc(docxQrFormatName(fmt)) + '</h3><p class="note">Đang sinh mã QR...</p>';
+  loadQRCodeLib().then(function(has){
+    if (!has){ wrap.innerHTML = '<h3 style="margin:4px 0 8px">🔳 Mã QR đáp án</h3><p class="note">⚠️ Chưa nạp được thư viện QR (cần mạng ở lần đầu) — thầy kiểm tra mạng rồi bấm lại nút xác nhận để sinh QR.</p>'; return; }
+    var html = '<h3 style="margin:4px 0 8px">🔳 Mã QR đáp án — quét bằng ' + esc(docxQrFormatName(fmt)) + '</h3>';
+    st.codes.forEach(function(c){
+      var url = null;
+      try { url = docxMakeQrDataUrl(EduDocx.buildQrPayload(c.code, c.res.keyRows, fmt)); } catch (e) { url = null; }
+      st.qrData[c.code] = url;
+      html += '<div style="display:inline-block;text-align:center;margin:0 16px 12px 0;vertical-align:top">' + (url ? '<img src="' + url + '" alt="QR mã đề ' + c.code + '" style="width:170px;height:170px;border:1px solid #ddd;border-radius:8px">' : '<div class="note">Không sinh được QR</div>') + '<div class="note" style="margin-top:4px">Mã đề ' + c.code + ' — quét bằng ' + esc(docxQrFormatName(fmt)) + '</div></div>';
+    });
+    wrap.innerHTML = html;
+  });
+}
 function renderDocxDl(){
   var st = _docxState; if (!st || !st.confirmed) return;
-  document.getElementById('docxDlWrap').innerHTML = '<div class="btnrow">' + st.codes.map(function(c){ return '<button class="btn alt" onclick="docxDownload(' + c.code + ')">📥 Tải mã đề ' + c.code + ' (.docx)</button>'; }).join('') + '</div><p class="note">File tải về được đóng gói từ chính file gốc nên giữ nguyên định dạng, hình ảnh và công thức — chỉ đổi thứ tự câu/phương án, đánh số lại và bỏ dòng đáp án.</p>';
+  document.getElementById('docxDlWrap').innerHTML = '<div class="btnrow">' + st.codes.map(function(c){ return '<button class="btn alt" onclick="docxDownload(' + c.code + ')">📥 Tải mã đề ' + c.code + ' (.docx)</button>'; }).join('') + '<button class="btn" onclick="docxDownloadAnswers()">📥 Tải đáp án + QR (.docx)</button></div><p class="note">File mã đề được đóng gói từ chính file gốc nên giữ nguyên định dạng, hình ảnh và công thức — chỉ đổi thứ tự câu/phương án, đánh số lại và bỏ dòng đáp án; phiếu làm bài đã chọn (nếu có) được chèn vào trang 1 của mỗi mã đề. File đáp án gồm đủ các mã: mỗi mã một mục có bảng đáp án 3 phần và ảnh QR để GV quét chấm.</p><div id="docxQrWrap" style="margin-top:10px"></div>';
+  renderDocxQr();
 }
 function docxDownload(code){
   var st = _docxState; if (!st || !st.confirmed) return;
   var c = null;
   st.codes.forEach(function(x){ if (x.code === code) c = x; });
   if (!c) return;
+  var group = docxPhieuResolveGroup();
   JSZip.loadAsync(st.buf.slice(0)).then(function(zip){
     zip.file('word/document.xml', c.res.xml);
+    if (!group) return zip;
+    /* Nạp ảnh phiếu từ thư mục assets/ cùng origin (GitHub Pages); lỗi nạp → vẫn tải mã đề không phiếu + cảnh báo rõ */
+    return fetch(EduDocx.phieuAsset(group)).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.arrayBuffer();
+    }).then(function(ab){
+      var relsFile = zip.file('word/_rels/document.xml.rels');
+      var ctFile = zip.file('[Content_Types].xml');
+      if (!relsFile || !ctFile) throw new Error('gói đề thiếu rels/content-types');
+      return Promise.all([relsFile.async('string'), ctFile.async('string')]).then(function(pair){
+        var bytes = new Uint8Array(ab);
+        var sz = EduDocx.jpegSizeFromBytes(bytes);
+        var cx = 5943600, cy = sz ? Math.round(cx * sz.h / sz.w) : 2952750; /* bề rộng 16,5 cm như mẫu phiếu QM của tronde */
+        var maxId = 0;
+        pair[0].replace(/Id="rId(\d+)"/g, function(m0, n){ maxId = Math.max(maxId, parseInt(n, 10)); return m0; });
+        var out = EduDocx.insertPhieuIntoPackage(c.res.xml, pair[0], pair[1], 'rId' + (maxId + 1), cx, cy);
+        if (!out) throw new Error('không chèn được phiếu vào gói đề');
+        zip.file('word/document.xml', out.docXml);
+        zip.file('word/_rels/document.xml.rels', out.relsXml);
+        zip.file('[Content_Types].xml', out.ctXml);
+        zip.file('word/media/edumaster_phieu.jpg', bytes);
+        return zip;
+      });
+    }).catch(function(e){
+      mixWarnShow('docxWarn', '⚠️ Không nạp/chèn được ảnh phiếu làm bài (' + esc(EduDocx.phieuAsset(group)) + ') — có thể do web chưa có thư mục assets/ trên máy chủ hoặc đang offline. Vẫn tải mã đề ' + code + ' KHÔNG có phiếu.');
+      return zip;
+    });
+  }).then(function(zip){
     return zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
   }).then(function(blob){ saveBlobFile(blob, 'De_da_tron_Ma' + code + '.docx'); })
     .catch(function(err){ mixWarnShow('docxWarn', '⚠️ Không xuất được file: ' + esc(err && err.message ? err.message : String(err))); });
+}
+function docxDownloadAnswers(){
+  var st = _docxState; if (!st || !st.confirmed) return;
+  var fmt = st.qrFormat || (document.getElementById('docxQrFormat') || {}).value || 'QM2025';
+  mixWarnShow('docxWarn', '');
+  loadJSZip().then(function(){
+    return loadQRCodeLib().then(function(has){
+      var qrData = {};
+      if (has){
+        st.codes.forEach(function(c){
+          try { qrData[c.code] = (st.qrData && st.qrFormat === fmt && st.qrData[c.code]) || docxMakeQrDataUrl(EduDocx.buildQrPayload(c.code, c.res.keyRows, fmt)); }
+          catch (e) { qrData[c.code] = null; }
+        });
+      }
+      var entries = st.codes.map(function(c){ return { code: c.code, keyRows: c.res.keyRows, formatName: docxQrFormatName(fmt), qrDataUrl: qrData[c.code] || null }; });
+      var files = EduDocx.buildAnswerDocxFiles(entries);
+      var zip = new JSZip();
+      Object.keys(files).forEach(function(k){
+        if (k === '__media') files[k].forEach(function(mn){ zip.file(mn.path, mn.dataUrl.split(',')[1], { base64: true }); });
+        else zip.file(k, files[k]);
+      });
+      return zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    });
+  }).then(function(blob){ saveBlobFile(blob, 'Dap_an_va_QR.docx'); })
+    .catch(function(err){ mixWarnShow('docxWarn', '⚠️ Không xuất được file đáp án: ' + esc(err && err.message ? err.message : String(err))); });
 }
 
 /* --- Trộn đề: chế độ VĂN BẢN — xuất thêm .docx tối thiểu --- */
@@ -4508,6 +5148,7 @@ function saveKeyModal(){
 fillTopicSelect(document.getElementById('quizTopic'), 'Tất cả các bài');
 refreshSettings();
 qcAnalyze('mix'); /* phân tích sẵn đề mẫu trong module Trộn đề để hiện bảng kiểm tra trực quan */
+docxPhieuUpdateHint(); /* hiện sẵn dòng "đang dùng phiếu nào" ở khu vực trộn .docx */
 </script>
 
 <script>
