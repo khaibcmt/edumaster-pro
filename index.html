@@ -372,6 +372,122 @@ section.page h2{font-weight:800}
 .guide-step p,.guide-step li{line-height:1.55;margin:2px 0}
 .guide-step ul{margin:4px 0 4px 18px;padding:0}
 </style>
+<style>
+/* ================================================================
+   V4 — CHUẨN HOÁ HỆ MÀU THEO MODULE + NÚT NHẬP KEY NHANH
+   Nguyên tắc: MỖI CHỨC NĂNG MỘT MÀU RIÊNG ĐẶC TRƯNG, áp xuyên suốt
+   từ đầu đến cuối section của nó (nút điều hướng, thẻ trang chủ,
+   tiêu đề, nút chính, đầu bảng, thẻ con, badge, viền focus, điểm
+   nhấn) — không lẫn màu giữa các module. Các tông màu cùng một
+   "gia đình" (chính ≈ tông 600, nhạt ≈ tông 400, đậm ≈ tông 800)
+   để đứng cạnh nhau vẫn hài hoà.
+
+   BẢNG MÀU CHUẨN (--mc = chính / --mc2 = nhạt-sáng / --mcd = đậm):
+   - Trang chủ   sec-home    : Tím thương hiệu  #6a11cb / #2575fc / #3a1c96
+   - 1. KHBD     sec-khbd    : Violet           #7c3aed / #a855f7 / #5b21b6
+   - 2. Ma trận  sec-matrix  : Xanh dương       #1d4ed8 / #0ea5e9 / #1e3a8a
+   - 3. Ngân hàng sec-bank   : Xanh lá          #15803d / #22c55e / #14532d
+   - 4. Trộn đề  sec-mix     : Cam              #ea580c / #f59e0b / #9a3412
+   - 5. Ôn tập   sec-quiz    : Hồng             #db2777 / #f472b6 / #9d174d
+   - 6. Game     sec-game    : Đỏ               #dc2626 / #f59e0b* / #b91c1c
+        (*riêng Game: --mc2 là vàng hổ phách — điểm nhấn "game show";
+         4 nút đáp án giữ 4 màu theo VỊ TRÍ kiểu Kahoot, không phải màu module)
+   - 7. Phiếu    sec-phieu   : Ngọc teal        #0e7490 / #14b8a6 / #155e75
+   - 8. Slide    sec-slide   : Vàng amber       #d97706 / #fbbf24 / #92400e
+        (chữ trắng trên nền vàng chỉ đặt trên tông đậm #b45309 trở xuống)
+   - 9. Sổ điểm  sec-grade   : Xanh mint        #047857 / #10b981 / #064e3b
+   - 10. Thư viện sec-library: Nâu vàng         #92400e / #ca8a04 / #78350f
+   - 11. Kho lưu trữ sec-storage : Chàm indigo  #4f46e5 / #818cf8 / #312e81
+   - 12. Cài đặt sec-settings: Xám slate        #475569 / #94a3b8 / #1e293b
+   - 13. Hướng dẫn sec-guide : Xanh sky         #0284c7 / #38bdf8 / #075985
+   NGOẠI LỆ CÓ CHỦ ĐÍCH (giữ nguyên, không chuẩn hoá về màu module):
+   - Màu ngữ nghĩa toàn trang: đúng = xanh lá, sai = đỏ, cảnh báo = vàng.
+   - Logo, khung thông tin giáo viên, thanh topbar: nhận diện thương hiệu tím.
+   ================================================================ */
+
+/* ---------- 1. Gán lại biến màu cho 3 module từng "lạc tông" ---------- */
+section#sec-storage{--mc:#4f46e5;--mc2:#818cf8;--mcd:#312e81}
+section#sec-settings{--mc:#475569;--mc2:#94a3b8;--mcd:#1e293b}
+section#sec-guide{--mc:#0284c7;--mc2:#38bdf8;--mcd:#075985}
+
+/* ---------- 2. Nút điều hướng đang chọn: đồng bộ màu module ---------- */
+.nav-btn.active[data-sec="sec-storage"]{background:linear-gradient(90deg,#4f46e5,#818cf8);border-left-color:#c7d2fe}
+.nav-btn.active[data-sec="sec-settings"]{background:linear-gradient(90deg,#475569,#94a3b8);border-left-color:#e2e8f0}
+.nav-btn.active[data-sec="sec-guide"]{background:linear-gradient(90deg,#0284c7,#38bdf8);border-left-color:#bae6fd}
+.nav-btn.active[data-sec="sec-slide"]{background:linear-gradient(90deg,#d97706,#b45309);border-left-color:#fde68a}
+
+/* ---------- 3. Thẻ trang chủ: đồng bộ màu module ---------- */
+#homeGrid .mod-card:nth-child(8){background:linear-gradient(135deg,#b45309,#d97706)}
+#homeGrid .mod-card:nth-child(8):hover{box-shadow:0 18px 34px rgba(217,119,6,.50)}
+#homeGrid .mod-card:nth-child(11){background:linear-gradient(135deg,#4f46e5,#818cf8)}
+#homeGrid .mod-card:nth-child(11):hover{box-shadow:0 18px 34px rgba(79,70,229,.50)}
+#homeGrid .mod-card:nth-child(12){background:linear-gradient(135deg,#475569,#94a3b8)}
+#homeGrid .mod-card:nth-child(12):hover{box-shadow:0 18px 34px rgba(71,85,105,.50)}
+#homeGrid .mod-card:nth-child(13){background:linear-gradient(135deg,#0284c7,#38bdf8)}
+#homeGrid .mod-card:nth-child(13):hover{box-shadow:0 18px 34px rgba(2,132,199,.50)}
+
+/* ---------- 4. Nhận diện thương hiệu: topbar + nền về gia đình tím ---------- */
+.topbar{background:linear-gradient(90deg,#6a11cb,#2575fc);animation:none}
+body{background:linear-gradient(125deg,#e0e7ff,#f3e8ff,#e0f2fe,#ede9fe,#e0e7ff);background-size:280% 280%;animation:bgShift 45s ease infinite}
+::selection{background:#6a11cb;color:#fff}
+
+/* ---------- 5. Mở rộng độ phủ màu module trong từng section ---------- */
+/* Tiêu đề section (mọi h2 trực tiếp, gồm cả Hướng dẫn) */
+section.page>h2{font-size:23px;font-weight:800;color:var(--mcd);padding-bottom:9px;border-bottom:3px solid;border-image:linear-gradient(90deg,var(--mc),var(--mc2),transparent) 1}
+/* Tiêu đề con trong thẻ: đậm theo màu module; cỡ chữ thống nhất */
+section.page .card h3{font-size:17px;color:var(--mcd)}
+section.page .card h4{font-size:15.5px;color:var(--mcd)}
+#homeGrid .mod-card h3{color:#fff}
+/* Khối xuất kết quả: viền trái màu module */
+section.page pre.out{border-left:5px solid var(--mc)}
+/* Badge/chip trung tính: nhuộm nhẹ màu module */
+section.page .badge{background:color-mix(in srgb,var(--mc) 10%,#fff);border-color:var(--mc2);color:var(--mcd);font-weight:600}
+/* Ô nhập trong bảng: focus theo màu module */
+section.page td input:focus{outline:2px solid var(--mc2)}
+/* Bảng kiểm tra trực quan (Ngân hàng + Trộn đề): đầu bảng theo màu module */
+section.page table.qc th{background:color-mix(in srgb,var(--mc) 13%,#fff);color:var(--mcd)}
+section.page .qc-opt:hover{border-color:var(--mc)}
+/* Slide: đồng hồ thảo luận + quay số theo màu module */
+section.page .dtimer{border-color:var(--mc2);color:var(--mcd)}
+section.page .spin-num{color:var(--mcd)}
+/* Thanh tiến trình theo màu module — RIÊNG Game giữ cầu vồng game show */
+section.page .progress>div{background:linear-gradient(90deg,var(--mc),var(--mc2));animation:none;box-shadow:none}
+#sec-game .progress>div{background:linear-gradient(90deg,#22c55e,#a3e635,#facc15,#fb923c,#ef4444,#22c55e);background-size:250% 100%;animation:barFlow 5s linear infinite;box-shadow:0 0 10px rgba(249,115,22,.55)}
+/* Slide: nút chính + đầu bảng dùng tông amber đậm để chữ trắng dễ đọc */
+section#sec-slide .btn:not(.alt){background:linear-gradient(135deg,#d97706,#b45309)}
+section#sec-slide th{background:linear-gradient(135deg,#d97706,#b45309)}
+/* Cài đặt: nhãn "Khung chuẩn bị" (trước lạc màu violet) về slate của module */
+section#sec-settings .qc-ok{background:var(--mc)!important}
+/* Kho lưu trữ: khung placeholder Drive nhuộm viền chàm */
+section#sec-storage div[style*="dashed"]{border-color:var(--mc2)!important}
+/* Hướng dẫn: các bước dùng viền sky của module thay cho indigo cũ */
+#sec-guide .guide-step{border-left-color:var(--mc)}
+#sec-guide .guide-step h3{color:var(--mcd)}
+
+/* ---------- 6. Trình bày khoa học: nhịp khoảng cách + nút đồng nhất ---------- */
+section.page>.card{margin-bottom:16px}
+.btn{min-height:40px}
+.btn.sm{min-height:32px}
+section.page th{font-size:14px;letter-spacing:.2px}
+
+/* ================================================================
+   NÚT NHẬP KEY NHANH + HỘP THOẠI KEY (màu thương hiệu tím)
+   Dùng CHUNG kho key với mục Cài đặt: localStorage
+   'edumaster_gemini_keys' — không tạo kho key thứ hai.
+   ================================================================ */
+.key-quick-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0 0 14px;padding:12px 14px;border:0;border-radius:12px;background:linear-gradient(90deg,#6a11cb,#2575fc);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(90,40,200,.35);transition:transform .15s ease,filter .15s ease}
+.key-quick-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.key-quick-btn.no-key{border:2px solid #ffd76e;animation:keyGlow 1.6s ease-in-out infinite}
+@keyframes keyGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,215,110,0),0 6px 16px rgba(90,40,200,.35)}50%{box-shadow:0 0 0 6px rgba(255,215,110,.45),0 6px 16px rgba(90,40,200,.35)}}
+.key-home-row{margin:0 0 16px}
+.key-home-row .key-quick-btn{width:auto;margin:0;padding:13px 24px;font-size:16px}
+.key-modal{position:fixed;inset:0;background:rgba(16,12,40,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:2500;display:none;align-items:center;justify-content:center;padding:16px}
+.key-modal.open{display:flex}
+.key-modal-box{background:#fff;border-radius:18px;max-width:520px;width:100%;padding:22px;box-shadow:0 24px 60px rgba(10,5,40,.45);border-top:6px solid #6a11cb;animation:fade .2s ease}
+.key-modal-box h3{margin:0 0 6px;font-size:19px;color:#3a1c96}
+#keyModalStatus{font-weight:700;margin-top:9px;font-size:14px;color:#3a1c96}
+@media (prefers-reduced-motion:reduce){.key-quick-btn.no-key{animation:none}}
+</style>
 </head>
 <body>
 
@@ -381,6 +497,7 @@ section.page h2{font-weight:800}
     👨‍🏫 <b>Giáo viên Hồ Tấn Khải</b><br>
     Trường THPT Mang Thít
   </div>
+  <button type="button" id="keyQuickBtn" class="key-quick-btn" onclick="openKeyModal()">🔑 Nhập key Gemini</button>
   <nav class="navwrap" id="navWrap">
     <button class="nav-btn active" data-sec="sec-home"><span class="ic">🏠</span>Trang chủ / Tổng quan</button>
     <button class="nav-btn" data-sec="sec-khbd"><span class="ic">📝</span>1. Tạo KHBD 5512</button>
@@ -409,6 +526,7 @@ section.page h2{font-weight:800}
   <section class="page show" id="sec-home">
     <h2 class="ptitle">🏠 Trang chủ / Tổng quan</h2>
     <p class="pdesc">Chào thầy Khải! Chọn một module bên dưới (hoặc ở thanh điều hướng) để bắt đầu làm việc. Mọi công cụ đều chạy ngay trên trình duyệt, không cần mạng.</p>
+    <div class="key-home-row"><button type="button" id="keyQuickBtnHome" class="key-quick-btn" onclick="openKeyModal()">🔑 Nhập key Gemini</button></div>
     <div class="grid" id="homeGrid"></div>
   </section>
 
@@ -987,6 +1105,20 @@ IV. Axit nucleic</textarea>
 
   <footer>EduMaster Pro — 10 trong 1 • Phiên bản v3 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng + Firebase config của người dùng (mục Cài đặt).</footer>
 </main>
+
+<!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
+<div id="keyModal" class="key-modal" role="dialog" aria-modal="true" aria-labelledby="keyModalTitle">
+  <div class="key-modal-box">
+    <h3 id="keyModalTitle">🔑 Nhập key Gemini</h3>
+    <p class="note" style="margin:0 0 8px">Dán <b>mỗi key một dòng</b>. Key chỉ lưu trong trình duyệt của thầy, dùng <b>chung kho key với mục Cài đặt</b> (tự khử trùng lặp, dùng xoay vòng round-robin khi gọi AI).</p>
+    <textarea id="keyModalInput" rows="5" placeholder="Dán Gemini API key vào đây, mỗi dòng 1 key..."></textarea>
+    <div id="keyModalStatus">Chưa có key</div>
+    <div class="btnrow">
+      <button type="button" class="btn" onclick="saveKeyModal()">💾 Lưu key</button>
+      <button type="button" class="btn alt" onclick="closeKeyModal()">Đóng</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ================= TIỆN ÍCH & API KEY ================= */
@@ -2190,6 +2322,7 @@ function refreshSettings(){
   if (g && !gi.value) gi.value = g;
   refreshAiNotes();
   if (window.refreshFbSettings) refreshFbSettings();
+  if (typeof refreshKeyQuickUI === 'function') refreshKeyQuickUI();
 }
 function saveApiKeys(){
   var ta = document.getElementById('setKeys');
@@ -2231,6 +2364,62 @@ function deleteGClient(){
   refreshSettings();
   alert('🗑️ Đã xoá Google OAuth Client ID khỏi trình duyệt.');
 }
+
+/* ================= NHẬP KEY NHANH: nút nổi + hộp thoại =================
+   Dùng ĐÚNG cơ chế của mục Cài đặt: cùng localStorage LS_KEYS
+   ('edumaster_gemini_keys'), cùng khử trùng lặp, cùng reset xoay vòng
+   LS_RR và gỡ key đơn LS_KEY — tuyệt đối không tạo kho key thứ hai. */
+function refreshKeyQuickUI(){
+  var n = 0;
+  try { n = getApiKeys().length; } catch(e){}
+  ['keyQuickBtn', 'keyQuickBtnHome'].forEach(function(id){
+    var b = document.getElementById(id);
+    if (!b) return;
+    if (n > 0){
+      b.textContent = '🔑 Key Gemini (' + n + ')';
+      b.classList.remove('no-key');
+    } else {
+      b.textContent = '🔑 Nhập key Gemini — Chưa có key';
+      b.classList.add('no-key');
+    }
+  });
+  var st = document.getElementById('keyModalStatus');
+  if (st) st.textContent = n ? ('✅ Đang có ' + n + ' key sẵn sàng') : 'Chưa có key';
+}
+function openKeyModal(){
+  var m = document.getElementById('keyModal');
+  var ta = document.getElementById('keyModalInput');
+  if (ta) ta.value = getApiKeys().join('\n'); /* nạp sẵn các key đã lưu */
+  refreshKeyQuickUI();
+  if (m) m.classList.add('open');
+  if (ta) ta.focus();
+}
+function closeKeyModal(){
+  var m = document.getElementById('keyModal');
+  if (m) m.classList.remove('open');
+}
+function saveKeyModal(){
+  var ta = document.getElementById('keyModalInput');
+  var lines = (ta && ta.value ? ta.value : '').split(/\r?\n/).map(function(s){ return s.trim(); }).filter(function(s){ return s; });
+  var uniq = [];
+  lines.forEach(function(k){ if (uniq.indexOf(k) < 0) uniq.push(k); });
+  if (!uniq.length){ alert('Thầy chưa nhập Gemini API key nào (mỗi dòng 1 key). Nếu muốn xoá hết key, thầy dùng nút Xoá key trong mục Cài đặt nhé.'); return; }
+  try {
+    localStorage.setItem(LS_KEYS, JSON.stringify(uniq));
+    localStorage.removeItem(LS_KEY);
+    localStorage.setItem(LS_RR, '0');
+  } catch(e){ alert('Trình duyệt không cho lưu — thầy kiểm tra lại cài đặt trình duyệt nhé.'); return; }
+  var st = document.getElementById('setKeys');
+  if (st) st.value = uniq.join('\n'); /* đồng bộ ô nhập trong mục Cài đặt */
+  refreshSettings(); /* đồng bộ trạng thái Cài đặt + aiNote các module + nhãn nút nổi */
+  closeKeyModal();
+  alert('✅ Đã lưu ' + uniq.length + ' Gemini API key vào trình duyệt của thầy (hệ thống sẽ dùng xoay vòng round-robin).');
+}
+(function(){
+  var m = document.getElementById('keyModal');
+  if (m) m.addEventListener('click', function(e){ if (e.target === m) closeKeyModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeKeyModal(); });
+})();
 
 /* ================= KHỞI TẠO ================= */
 fillTopicSelect(document.getElementById('quizTopic'), 'Tất cả các bài');
