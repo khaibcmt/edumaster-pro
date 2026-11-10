@@ -312,6 +312,12 @@ table.cmp td.c,table.cmp th.c{text-align:center}
 table.cmp td.c{font-weight:800;color:var(--mcd);white-space:nowrap}
 .docx-drop{border:2px dashed var(--mc2);border-radius:14px;padding:16px 14px;text-align:center;background:rgba(255,255,255,.65)}
 .docx-drop input[type=file]{max-width:100%}
+.mix-upload{border:3px dashed #ea580c;border-radius:16px;background:#fff7ed;padding:24px 18px;text-align:center;margin-bottom:14px;transition:background .15s ease,border-color .15s ease}
+.mix-upload.drag{background:#ffedd5;border-color:#c2410c}
+.mix-upload-title{font-size:27px;font-weight:800;color:#ea580c;letter-spacing:.4px}
+.mix-upload-sub{font-size:15px;line-height:1.5;margin:8px auto 14px;max-width:660px}
+.mix-upload-btn{font-size:17px;padding:13px 28px;background:#ea580c;box-shadow:0 4px 14px rgba(234,88,12,.35)}
+a.btn.lib-open{background:#92400e;box-shadow:0 4px 12px rgba(146,64,14,.30);text-decoration:none;display:inline-block}
 .mode-tag{display:inline-block;background:linear-gradient(90deg,var(--mc),var(--mc2));color:#fff;font-size:12px;font-weight:800;border-radius:20px;padding:3px 12px;margin-bottom:8px}
 ul.warnlist{margin:6px 0 0;padding-left:20px;line-height:1.55;font-weight:600}
 
@@ -632,6 +638,13 @@ section.page th{font-size:14px;letter-spacing:.2px}
   <section class="page" id="sec-mix">
     <h2 class="ptitle">🔀 Module 4 — Trộn đề (tronde mini)</h2>
     <p class="pdesc">Hai chế độ: <b>(1) Dán văn bản</b> — mỗi câu bắt đầu bằng dòng "Câu n. ...", tiếp theo 4 dòng phương án "A. ...", "B. ...", "C. ...", "D. ...". Đáp án đúng được nhận theo <b>nhiều kiểu ghi</b>: dòng "Đáp án: X" • dấu *** trước phương án đúng • phương án bọc trong [ ] • bảng đáp án ở cuối văn bản (dãy \"1B 2A 3C...\" đứng riêng ở cuối cũng được nhận, không cần dòng \"Đáp án:\" đứng trước). Sau khi phân tích, thầy xem <b>bảng kiểm tra trực quan</b> (bấm vào phương án để đặt lại đáp án) rồi mới trộn. <b>(2) File Word (.docx)</b> — nạp thẳng file đề Word: hệ thống trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>, câu nào không đọc được đáp án sẽ báo rõ và giữ nguyên (không đoán đáp án). Cả hai chế độ đều xáo trộn thứ tự câu và phương án (Fisher–Yates), tự cập nhật đáp án. Riêng chế độ Word: thầy xem <b>bảng đối chiếu đáp án</b> và bấm xác nhận trước khi tải file.</p>
+    <div class="mix-upload" id="mixDropZone" ondragover="mixDragOver(event)" ondragleave="mixDragLeave(event)" ondrop="mixDrop(event)">
+      <div class="mix-upload-title">📤 TẢI FILE ĐỀ LÊN</div>
+      <p class="mix-upload-sub">Bấm để chọn file — hoặc kéo thả file vào đây. Nhận file Word (<b>.docx</b>): giữ nguyên hình ảnh &amp; công thức; nhận file văn bản (<b>.txt</b>): tự đổ nội dung vào ô dán văn bản bên dưới.</p>
+      <input type="file" id="mixUpload" accept=".docx,.txt" style="display:none" onchange="mixUploadHandle(this)">
+      <button class="btn mix-upload-btn" onclick="document.getElementById('mixUpload').click()">📤 Chọn file đề (.docx / .txt)</button>
+      <p class="note" id="mixUploadName" style="margin:10px 0 0"></p>
+    </div>
     <div class="card">
       <label class="fl" style="margin-top:0">Đề gốc</label>
       <textarea id="mixIn" rows="13">Câu 1. Bào quan nào là nơi sản xuất ATP chủ yếu trong tế bào nhân thực?
@@ -939,23 +952,27 @@ IV. Axit nucleic</textarea>
   <!-- ============ 10. THƯ VIỆN TÀI LIỆU ============ -->
   <section class="page" id="sec-library">
     <h2 class="ptitle">📚 Module 10 — Thư viện tài liệu</h2>
-    <p class="pdesc">Kho tài liệu giảng dạy đã biên soạn sẵn của thầy — sẵn sàng mở ra dùng cho từng tiết học.</p>
+    <p class="pdesc">Bấm "Mở tài liệu" để mở thư mục EduMaster Pro trên Google Drive của thầy — nơi lưu các gói KHBD, phiếu học tập và tài liệu tham chiếu (thầy tải các gói .zip lên thư mục này một lần là xem/tải được ở mọi thiết bị).</p>
     <div class="grid">
       <div class="card mod-card" onclick="showSec('sec-khbd')">
         <div class="ic">📚</div><h3>Kho KHBD — 227 file</h3>
         <p>Toàn bộ Kế hoạch bài dạy 6 bộ sách (Sinh học 10/11/12, Công nghệ nông nghiệp 10, Công nghệ 11, Công nghệ nông nghiệp 12) kèm các tiết ôn tập và hồ sơ kiểm tra định kỳ, đã chèn hình SGK và chuẩn hoá theo Công văn 5512.</p>
+        <div class="btnrow"><a class="btn lib-open" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener" onclick="event.stopPropagation()">📂 Mở tài liệu</a></div>
       </div>
       <div class="card mod-card" onclick="showSec('sec-phieu')">
         <div class="ic">🧾</div><h3>Phiếu học tập — 465 file</h3>
         <p>155 bài × 3 bản (Học sinh / Học sinh có đáp án / Giáo viên), làm từ toàn bộ hình, sơ đồ, bảng biểu SGK. Xem chi tiết tại Module Phiếu học tập.</p>
+        <div class="btnrow"><a class="btn lib-open" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener" onclick="event.stopPropagation()">📂 Mở tài liệu</a></div>
       </div>
       <div class="card">
         <div class="ic" style="font-size:32px">🧮</div><h3>Ma trận &amp; Rubric</h3>
         <p class="note">Mỗi KHBD đi kèm ma trận đề kiểm tra thang 10 điểm, Rubric đánh giá năng lực số (Phụ lục 2) và Rubric năng lực AI (Phụ lục 3) — mỗi tiêu chí tối đa 2,5 điểm, tổng 10 điểm.</p>
+        <div class="btnrow"><a class="btn lib-open" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener">📂 Mở tài liệu</a></div>
       </div>
       <div class="card">
         <div class="ic" style="font-size:32px">🗂️</div><h3>Tài liệu tham chiếu</h3>
         <p class="note">PPCT năm học 2026–2027 của 6 bộ môn, SGK Kết nối tri thức (bản quét PDF), file quy chuẩn soạn KHBD bản mới nhất và quy chuẩn ôn tập/kiểm tra — nền tảng để mọi sản phẩm bám đúng yêu cầu cần đạt và mạch kiến thức SGK.</p>
+        <div class="btnrow"><a class="btn lib-open" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener">📂 Mở tài liệu</a></div>
       </div>
     </div>
   </section>
@@ -1172,13 +1189,13 @@ function shuffle(arr){ // Fisher–Yates
   return a;
 }
 var _toastTimer = null;
-function showToast(msg){
+function showToast(msg, ms){
   var t = document.getElementById('eduToast');
   if (!t){ t = document.createElement('div'); t.id = 'eduToast'; document.body.appendChild(t); }
   t.textContent = msg;
   t.classList.add('show');
   if (_toastTimer) clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1500);
+  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, ms || 1500);
 }
 function copyText(id){
   var el = document.getElementById(id);
@@ -1892,9 +1909,59 @@ function docxStateReset(){
   ['docxReport', 'docxCmpWrap', 'docxDlWrap'].forEach(function(id){ var e = document.getElementById(id); if (e) e.innerHTML = ''; });
   mixWarnShow('docxWarn', '');
 }
+
+/* --- Trộn đề: vùng TẢI FILE ĐỀ LÊN ở đầu module (nút nổi bật + kéo–thả) --- */
+var _mixUploadedDocx = null;
+function mixUploadHandle(input){
+  var f = input && input.files ? input.files[0] : null;
+  if (input) input.value = '';
+  if (f) mixUploadProcess(f);
+}
+function mixDragOver(ev){ ev.preventDefault(); var z = document.getElementById('mixDropZone'); if (z) z.classList.add('drag'); }
+function mixDragLeave(ev){ var z = document.getElementById('mixDropZone'); if (z) z.classList.remove('drag'); }
+function mixDrop(ev){
+  ev.preventDefault();
+  var z = document.getElementById('mixDropZone'); if (z) z.classList.remove('drag');
+  var f = ev.dataTransfer && ev.dataTransfer.files ? ev.dataTransfer.files[0] : null;
+  if (f) mixUploadProcess(f);
+}
+function mixUploadProcess(f){
+  var nameEl = document.getElementById('mixUploadName');
+  function showName(prefix){ if (nameEl) nameEl.innerHTML = prefix + ' <b>' + String(f.name).replace(/</g, '&lt;') + '</b>'; }
+  if (/\.docx$/i.test(f.name)){
+    _mixUploadedDocx = f;
+    try {
+      var dt = new DataTransfer();
+      dt.items.add(f);
+      var df = document.getElementById('docxFile');
+      df.files = dt.files;
+      if (df.files && df.files.length) _mixUploadedDocx = null;
+    } catch(e){ /* trình duyệt không cho gán files — mixDocxStart() sẽ dùng _mixUploadedDocx */ }
+    docxStateReset();
+    showName('📄 Đã nhận file Word:');
+    var dfEl = document.getElementById('docxFile');
+    if (dfEl) dfEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showToast('📥 Đã nhận file .docx — bấm "Đọc file & tạo các mã đề" để trộn', 3500);
+  } else if (/\.txt$/i.test(f.name)){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var ta = document.getElementById('mixIn');
+      ta.value = String(reader.result || '');
+      showName('📄 Đã nạp file văn bản:');
+      ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      qcAnalyze('mix');
+      showToast('📥 Đã nạp file .txt và phân tích xong — thầy kiểm tra bảng đáp án rồi bấm Trộn đề', 3500);
+    };
+    reader.onerror = function(){ showToast('⚠️ Không đọc được file .txt này — thầy thử lại hoặc dán nội dung vào ô văn bản.', 3000); };
+    reader.readAsText(f);
+  } else {
+    showToast('⚠️ File "' + f.name + '" không đúng định dạng — vùng này chỉ nhận file .docx hoặc .txt.', 3000);
+  }
+}
 function mixDocxStart(){
   var fEl = document.getElementById('docxFile');
   var f = fEl && fEl.files ? fEl.files[0] : null;
+  if (!f && _mixUploadedDocx) f = _mixUploadedDocx;
   mixWarnShow('docxWarn', '');
   if (!f){ mixWarnShow('docxWarn', '⚠️ Thầy chưa chọn file .docx.'); return; }
   if (!/\.docx$/i.test(f.name)){ mixWarnShow('docxWarn', '⚠️ File đã chọn không phải định dạng .docx.'); return; }
