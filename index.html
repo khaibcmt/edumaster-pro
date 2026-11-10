@@ -892,7 +892,7 @@ D. Nhân tế bào
   <section class="page" id="sec-game">
     <h2 class="ptitle">🔔 Module 6 — Game Rung chuông vàng</h2>
     <p class="pdesc">Game thi đấu kiểu game show: trộn đáp án, cược điểm, trợ giúp 50:50 / Đổi câu / Hỏi khán giả, chuỗi đúng liên tiếp, Gương thần kỳ, hạ gục &amp; hồi sinh... Chơi 1 người ngay trên máy này, hoặc mở <b>Phòng thi trực tuyến</b> cho cả lớp cùng thi qua Firebase (thời gian thực).</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Chơi 1 người ngay trên máy này, hoặc mở <b>Phòng thi trực tuyến</b>: thầy tạo phòng (cần dán cấu hình Firebase ở mục Cài đặt), học sinh quét mã QR / nhập mã phòng để vào thi — kết quả hiện trực tiếp trên màn hình của thầy.</p></div>
+    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Chơi 1 người ngay trên máy này, hoặc mở <b>Phòng thi trực tuyến</b>: thầy nhập bài thi, tạo phòng, học sinh quét mã QR / nhập mã phòng để vào thi — kết quả hiện trực tiếp trên màn hình của thầy. (Cấu hình Firebase: xem ô chỉ dẫn ngay trong tab Phòng thi.)</p></div>
 
     <div class="gtabs">
       <button class="gtab active" id="gtabSolo" onclick="gameTab('solo')">🎮 Chơi 1 người</button>
@@ -920,9 +920,10 @@ D. Nhân tế bào
 
     <!-- ===== PHÒNG THI TRỰC TUYẾN ===== -->
     <div id="gRoomPane" style="display:none">
+      <div class="guidebox" id="roomGuide" style="margin-bottom:14px"><p>📌 <b>Chỉ dẫn phòng thi:</b> ① Nhập <b>bài thi</b> ở ô ngay bên dưới (hoặc bỏ qua — phòng sẽ dùng Ngân hàng câu hỏi) → ② Chỉnh luật chơi rồi bấm <b>Tạo phòng thi</b> → ③ Học sinh quét mã QR / nhập mã phòng để vào → ④ Thầy bấm <b>Bắt đầu thi</b> → ⑤ Xem kết quả trực tiếp ở <b>Bảng kết quả chi tiết</b> phía dưới; khi kết thúc phòng có nút tải kết quả (.csv). <span id="roomGuideFb">Phòng thi chạy qua Firebase — nếu chưa có cấu hình, thầy xem hướng dẫn 5 bước ngay bên dưới.</span></p></div>
       <div id="roomNoFb" class="card" style="margin-bottom:14px;display:none">
         <h3 style="margin:0 0 6px">🔥 Phòng thi trực tuyến cần Firebase (miễn phí)</h3>
-        <p class="note" style="margin:0">Tính năng online đồng bộ qua <b>Firebase Realtime Database</b> bằng project của chính thầy — web không nhúng sẵn bất kỳ thông tin kết nối nào. Cách làm (khoảng 3 phút):</p>
+        <p class="note" style="margin:0">Tính năng online đồng bộ qua <b>Firebase Realtime Database</b> bằng project Firebase của chính thầy. Cách làm (khoảng 3 phút):</p>
         <ol class="note" style="margin:8px 0 8px 18px;padding:0">
           <li>Mở <b>console.firebase.google.com</b>, đăng nhập Google và bấm <b>Add project</b> → đặt tên (ví dụ: edumaster) → Create project.</li>
           <li>Trong project: vào <b>Build → Realtime Database → Create Database</b> → chọn <b>Start in test mode</b>.</li>
@@ -934,6 +935,22 @@ D. Nhân tế bào
       </div>
 
       <div id="roomEntry">
+        <div class="card" style="margin-bottom:14px" id="rtExamCard">
+          <h3 style="margin:0 0 4px">📝 Ô NHẬP BÀI THI — bộ đề cho phòng thi này</h3>
+          <p class="note" style="margin:0 0 10px">Thầy dán nội dung đề (hoặc tải file .txt/.docx) rồi bấm <b>Đọc bài thi</b> — phòng thi sẽ dùng đúng bộ đề này. Nếu bỏ trống, phòng dùng <b>Ngân hàng câu hỏi</b> như hiện nay.</p>
+          <label class="fl">Tên bài thi</label>
+          <input type="text" id="rtExamName" placeholder="Ví dụ: Kiểm tra 15 phút — Bài 5: Các phân tử sinh học">
+          <label class="fl">Nội dung đề (mỗi câu bắt đầu "Câu n.", tiếp theo 4 phương án "A. ...", "B. ...", "C. ...", "D. ..."; đáp án ghi "Đáp án: X", hoặc đánh dấu *** trước phương án đúng, hoặc để bảng đáp án ở cuối)</label>
+          <textarea id="rtExamText" rows="8" placeholder="Câu 1. ..."></textarea>
+          <div class="btnrow">
+            <button class="btn" onclick="rtExamParse()">🔍 Đọc bài thi</button>
+            <label class="btn alt" style="cursor:pointer;margin:0">📂 Tải file (.txt / .docx)<input type="file" id="rtExamFile" accept=".txt,.docx" style="display:none" onchange="rtExamFileLoad(this)"></label>
+            <button class="btn alt" onclick="rtExamClear()">🧹 Xoá bài thi</button>
+          </div>
+          <div class="warnbox" id="rtExamMsg"></div>
+          <div id="rtExamCheck" style="margin-top:10px"></div>
+          <p class="note" id="rtExamStatus" style="margin:10px 0 0">📌 Chưa nhập bài thi — phòng sẽ dùng Ngân hàng câu hỏi như hiện nay.</p>
+        </div>
         <div class="row2">
           <div class="card">
             <h3 style="margin:0 0 4px">👨‍🏫 Dành cho GIÁO VIÊN — Tạo phòng thi</h3>
@@ -957,6 +974,7 @@ D. Nhân tế bào
             <input type="text" id="rsName" placeholder="Ví dụ: Nguyễn Văn An">
             <div class="btnrow"><button class="btn" onclick="rsJoin()">🎯 Vào phòng thi</button></div>
             <div id="rsJoinMsg"></div>
+            <div class="guidebox" style="margin-top:10px"><p>📌 <b>Chỉ dẫn cho học sinh:</b> Nhập mã phòng → nhập tên của em → bấm <b>Vào phòng thi</b> → chờ thầy bấm "Bắt đầu thi" → đọc câu hỏi và bấm vào đáp án để trả lời.</p></div>
           </div>
         </div>
       </div>
@@ -968,6 +986,7 @@ D. Nhân tế bào
           <div class="big-code" id="rtCodeBig">------</div>
           <div class="qrbox" id="rtQR"><span class="note">Đang tạo mã QR...</span></div>
           <p class="note" style="text-align:center;margin:10px 0 0">Link tham gia: <b id="rtLink"></b></p>
+          <p class="note" style="text-align:center;margin:4px 0 0" id="rtExamInfo"></p>
           <div class="btnrow" style="justify-content:center">
             <button class="btn alt" onclick="rtCopyLink()">📋 Sao chép link</button>
             <button class="btn" onclick="rtStart()">▶️ Bắt đầu thi</button>
@@ -1007,6 +1026,10 @@ D. Nhân tế bào
             <h3 style="margin:0 0 10px">📜 Nhật ký ván đấu</h3>
             <div class="logbox" id="rtLog"><div>— Nhật ký sẽ ghi lại cược điểm, dùng kỹ năng, trộm điểm, hạ gục, hồi sinh, cứu trợ... —</div></div>
           </div>
+        </div>
+        <div class="card" id="rtDetailCard" style="display:none;margin-top:14px">
+          <h3 style="margin:0 0 10px">📊 Bảng kết quả chi tiết — cập nhật trực tiếp</h3>
+          <div id="rtDetail"><p class="note">Chưa có dữ liệu.</p></div>
         </div>
         <div id="rtFinal" style="margin-top:14px"></div>
       </div>
@@ -1232,7 +1255,7 @@ IV. Axit nucleic</textarea>
       <p>Học sinh chọn bài (hoặc Tất cả) → làm từng câu, đúng/sai tô màu và giải thích ngay → cuối bài có tổng kết điểm /10. Dữ liệu lấy từ Ngân hàng câu hỏi.</p></div>
     <div class="guide-step"><h3>🔔 6. Game Rung chuông vàng</h3>
       <ul><li><b>Chơi 1 người:</b> chỉnh luật ở Panel Luật chơi rồi bấm Bắt đầu. Luật chính: đáp án được trộn mỗi câu; có <b>cược điểm</b>, sai bị <b>trừ điểm</b>; trợ giúp 50:50 / Đổi câu / Hỏi khán giả — <b>mỗi loại chỉ dùng 1 lần/ván</b>; đúng <b>5 câu liên tiếp</b> mở <b>Gương thần kỳ</b> ăn trộm điểm của Top 1 (kèm thưởng kill); điểm về 0 là bị hạ gục — có câu hỏi <b>Hồi sinh</b> tự cứu; sai liên tiếp 3 câu là bị loại; vòng Tăng tốc nhân đôi điểm và câu Thách đố điểm cao cuối ván.</li>
-      <li><b>Phòng thi trực tuyến:</b> cần dán Firebase config trong Cài đặt trước. Thầy tạo phòng → màn hình hiện <b>mã QR + mã phòng</b>, học sinh quét QR vào phòng; câu hỏi hiện đồng loạt, bảng xếp hạng cập nhật thời gian thực; thầy có nút <b>Cứu trợ</b> đưa học sinh bị loại trở lại ván và xem Nhật ký ván đấu. Có thêm chế độ <b>Kéo Co</b> 2 đội và <b>Diệt Boss</b> cả lớp; đặt <b>mã phòng cố định</b> thì các buổi sau khỏi quét lại QR.</li></ul></div>
+      <li><b>Phòng thi trực tuyến:</b> theo trình tự — thầy <b>nhập bài thi</b> ở ô đầu tab Phòng thi (dán đề hoặc tải file .txt/.docx → bấm <b>Đọc bài thi</b> → kiểm tra, sửa đáp án trong bảng kiểm tra; bỏ trống thì phòng dùng Ngân hàng câu hỏi) → chỉnh luật chơi → <b>Tạo phòng</b> → học sinh quét <b>mã QR</b> / nhập mã phòng + tên để vào → thầy bấm <b>Bắt đầu thi</b> → kết quả của từng em (đã trả lời / đúng / điểm / trạng thái) hiện trực tiếp ở <b>Bảng kết quả chi tiết</b> và Bảng xếp hạng; khi kết thúc phòng có khung tổng kết để <b>tải kết quả (.csv)</b> hoặc sao chép kết quả. Web đã tích hợp sẵn Firebase thì thầy và học sinh không cần dán cấu hình; nếu chưa có, thầy dán firebaseConfig trong mục Cài đặt. Có thêm chế độ <b>Kéo Co</b> 2 đội, <b>Diệt Boss</b> cả lớp, nút <b>Cứu trợ</b> đưa học sinh bị loại trở lại ván, Nhật ký ván đấu và <b>mã phòng cố định</b> dùng cho mọi buổi.</li></ul></div>
     <div class="guide-step"><h3>🧾 7. Phiếu học tập</h3>
       <p>Trang giới thiệu kho 465 file phiếu (155 bài × 3 bản: Học sinh / Học sinh có đáp án / Giáo viên) làm từ hình SGK — file Word lấy từ gói phiếu học tập kèm theo của thầy.</p></div>
     <div class="guide-step"><h3>🎞️ 8. Tạo slide</h3>
@@ -1282,7 +1305,7 @@ IV. Axit nucleic</textarea>
 
     <div class="card" style="margin-bottom:14px">
       <h3 style="margin:0 0 4px">🔥 Firebase config (phòng thi trực tuyến)</h3>
-      <p class="note">Dùng cho Module Game — Phòng thi trực tuyến (đồng bộ thời gian thực qua Firebase Realtime Database). Thầy tạo project Firebase miễn phí của mình, sao chép đoạn <b>firebaseConfig</b> rồi dán vào đây. Hướng dẫn từng bước có ngay trong Module Game khi chưa có config.</p>
+      <p class="note">Dùng cho Module Game — Phòng thi trực tuyến (đồng bộ thời gian thực qua Firebase Realtime Database). <b>Nếu web đã được tích hợp sẵn Firebase thì thầy không cần dán gì thêm.</b> Config thầy dán ở đây (nếu có) được <b>ưu tiên dùng trước</b> cấu hình tích hợp sẵn. Hướng dẫn tạo project Firebase có ngay trong Module Game khi chưa có cấu hình nào.</p>
       <label class="fl">Firebase config (JSON) của thầy</label>
       <textarea id="setFbConfig" rows="5" placeholder='Dán firebaseConfig dạng JSON vào đây, ví dụ: {"apiKey":"...","authDomain":"...","databaseURL":"https://...","projectId":"..."}' autocomplete="off" spellcheck="false"></textarea>
       <div class="btnrow">
@@ -1290,7 +1313,7 @@ IV. Axit nucleic</textarea>
         <button class="btn alt" onclick="deleteFbConfig()">🗑️ Xoá config</button>
       </div>
       <p style="margin:12px 0 0;font-weight:700" id="setFbStatus">Chưa có Firebase config</p>
-      <p class="note" style="margin-top:8px">🔒 Giống API key: config chỉ lưu trong <b>trình duyệt của thầy</b> (localStorage), <b>không nhúng sẵn trong mã nguồn web</b>. Ai dùng tính năng online sẽ tự dán config của mình.</p>
+      <p class="note" style="margin-top:8px">🔒 Config dán ở đây chỉ lưu trong <b>trình duyệt của thầy</b> (localStorage). Cấu hình Firebase tích hợp sẵn trong web (nếu có) là thông tin kết nối công khai phía máy khách của project Firebase — không phải mật khẩu, cũng không phải key Gemini.</p>
     </div>
 
     <div class="card">
@@ -1967,9 +1990,15 @@ function qcValid(kind){
   st.qs.forEach(function(q, i){ if (st.used[i]){ used++; if (q.ans < 0 || qcOptCount(q) < 4) bad++; } });
   return { ok: used > 0 && bad === 0, used: used, bad: bad, total: st.qs.length };
 }
+function qcEls(kind){
+  if (kind === 'mix') return { ta: 'mixIn', warn: 'mixWarn', box: 'mixCheck', btn: 'mixGoBtn' };
+  if (kind === 'room') return { ta: 'rtExamText', warn: 'rtExamMsg', box: 'rtExamCheck', btn: '' };
+  return { ta: 'bankImport', warn: 'bankQcWarn', box: 'bankCheck', btn: 'bankAddBtn' };
+}
 function qcAnalyze(kind){
-  var ta = document.getElementById(kind === 'mix' ? 'mixIn' : 'bankImport');
-  var warnId = kind === 'mix' ? 'mixWarn' : 'bankQcWarn';
+  var els = qcEls(kind);
+  var ta = document.getElementById(els.ta);
+  var warnId = els.warn;
   var parsed = EduParse.parseQuestionsMulti(ta.value);
   if (!parsed.questions.length){
     _qcStates[kind] = null;
@@ -1981,15 +2010,16 @@ function qcAnalyze(kind){
   st.qs.forEach(function(q, i){ st.used[i] = (q.ans >= 0 && qcOptCount(q) === 4); });
   _qcStates[kind] = st;
   var v = qcValid(kind);
-  mixWarnShow(warnId, '🔍 Đã phân tích ' + st.qs.length + ' câu' + (parsed.usedKeyTable ? ' (có dùng bảng đáp án ở cuối)' : '') + ': ' + v.used + ' câu sẵn sàng' + (v.bad ? ', ' + v.bad + ' câu đã chọn nhưng CHƯA có đáp án — thầy bấm vào phương án đúng trong bảng kiểm tra để đặt lại, hoặc bỏ chọn câu đó.' : '. Thầy kiểm tra bảng bên dưới rồi bấm nút dùng.'));
+  mixWarnShow(warnId, '🔍 Đã phân tích ' + st.qs.length + ' câu' + (parsed.usedKeyTable ? ' (có dùng bảng đáp án ở cuối)' : '') + ': ' + v.used + ' câu sẵn sàng' + (v.bad ? ', ' + v.bad + ' câu đã chọn nhưng CHƯA có đáp án — thầy bấm vào phương án đúng trong bảng kiểm tra để đặt lại, hoặc bỏ chọn câu đó.' : (kind === 'room' ? '. Thầy kiểm tra bảng bên dưới, sửa đáp án nếu cần — bộ đề này sẽ được dùng khi thầy bấm Tạo phòng thi.' : '. Thầy kiểm tra bảng bên dưới rồi bấm nút dùng.')));
   qcRender(kind);
 }
 function qcRender(kind){
   var st = _qcStates[kind];
-  var box = document.getElementById(kind === 'mix' ? 'mixCheck' : 'bankCheck');
-  var btn = document.getElementById(kind === 'mix' ? 'mixGoBtn' : 'bankAddBtn');
+  var els = qcEls(kind);
+  var box = document.getElementById(els.box);
+  var btn = els.btn ? document.getElementById(els.btn) : null;
   if (!box) return;
-  if (!st){ box.innerHTML = ''; if (btn) btn.disabled = true; return; }
+  if (!st){ box.innerHTML = ''; if (btn) btn.disabled = true; if (kind === 'room' && typeof rtExamSyncStatus === 'function') rtExamSyncStatus(); return; }
   var letters = ['A', 'B', 'C', 'D'];
   var rows = st.qs.map(function(q, i){
     var missing = q.ans < 0, short = qcOptCount(q) < 4;
@@ -2003,8 +2033,9 @@ function qcRender(kind){
       }).join('') + '</td></tr>';
   }).join('');
   box.innerHTML = '<div class="qc-wrap"><table class="qc"><tr><th style="width:44px">Dùng</th><th>Câu hỏi</th><th>Phương án — bấm để đặt đáp án đúng</th></tr>' + rows + '</table></div>' +
-    '<p class="note" style="margin-top:6px">Phương án đúng được tô xanh. Câu viền đỏ là câu đã chọn dùng nhưng chưa có đáp án — cần đặt đáp án mới trộn/dùng được.</p>';
+    '<p class="note" style="margin-top:6px">Phương án đúng được tô xanh. Câu viền đỏ là câu đã chọn dùng nhưng chưa có đáp án — cần đặt đáp án mới dùng được.</p>';
   if (btn) btn.disabled = !qcValid(kind).ok;
+  if (kind === 'room' && typeof rtExamSyncStatus === 'function') rtExamSyncStatus();
 }
 function qcSetAns(kind, qi, j){
   var st = _qcStates[kind]; if (!st || !st.qs[qi]) return;
@@ -3172,13 +3203,60 @@ function bossBarHTML(hp, max, dmg){
 }
 
 function getFbConfigRaw(){ try { return localStorage.getItem(LS_FB) || ''; } catch(e){ return ''; } }
-function badgeOf(score){
+/* == EDU_ROOM_PURE_BEGIN == */
+/* --- Lõi thuần của Phòng thi (không DOM/Firebase): huy hiệu, thứ hạng, đếm kết quả, trạng thái, CSV --- */
+function _eduBadge(score){
   if (score >= 2000) return '💎 Kim cương';
   if (score >= 1000) return '🥇 Vàng';
   if (score >= 500)  return '🥈 Bạc';
   if (score >= 300)  return '🥉 Đồng';
   return '';
 }
+function _eduSorted(players){
+  return Object.keys(players || {}).map(function(id){
+    var p = players[id]; p._id = id; return p;
+  }).sort(function(a, b){ return (b.score || 0) - (a.score || 0); });
+}
+/* Số câu đã trả lời / số câu đúng của 1 người chơi: ưu tiên trường answered/correct ghi sẵn
+   trong node người chơi; nếu thiếu thì đếm bù từ bản đồ answers của phòng (theo từng câu). */
+function playerCounts(p, answersMap){
+  var a = (typeof p.answered === 'number') ? p.answered : null;
+  var c = (typeof p.correct === 'number') ? p.correct : null;
+  if ((a === null || c === null) && answersMap && p._id){
+    var aa = 0, cc = 0;
+    Object.keys(answersMap).forEach(function(idx){
+      var row = answersMap[idx] || {}, r = row[p._id];
+      if (r){ aa++; if (r.correct) cc++; }
+    });
+    if (a === null) a = aa;
+    if (c === null) c = cc;
+  }
+  return { answered: a || 0, correct: c || 0 };
+}
+function rtStatusText(p){
+  if (p.out === 'zero') return '💀 Bị hạ gục';
+  if (p.out === 'wrong') return '☠️ Bị loại (sai liên tiếp)';
+  if (p.out === 'boss') return '💔 Hết tim — khán giả cổ vũ';
+  var s = '🟢 Đang thi';
+  if ((p.rescues || 0) > 0) s += ' • 🆘 đã cứu trợ ×' + p.rescues;
+  if ((p.revives || 0) > 0) s += ' • 🌟 đã hồi sinh ×' + p.revives;
+  return s;
+}
+function csvCell(v){
+  v = String(v === null || v === undefined ? '' : v);
+  return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+}
+function buildResultsCSV(players, answersMap){
+  var arr = _eduSorted(players || {});
+  var lines = ['Họ tên,Số câu đã trả lời,Số câu đúng,Điểm,Huy hiệu'];
+  arr.forEach(function(p){
+    var c = playerCounts(p, answersMap);
+    lines.push([csvCell(p.name || ''), c.answered, c.correct, (p.score || 0), csvCell(_eduBadge(p.score || 0))].join(','));
+  });
+  return lines.join('\n');
+}
+/* == EDU_ROOM_PURE_END == */
+function badgeOf(score){ return _eduBadge(score); }
 function showAnnounce(txt, ms){
   var a = document.getElementById('gAnnounce');
   if (!a){ a = document.createElement('div'); a.id = 'gAnnounce'; document.body.appendChild(a); }
@@ -3201,11 +3279,7 @@ function confettiBurst(){
     (function(el){ setTimeout(function(){ el.remove(); }, 5600); })(d);
   }
 }
-function sortedPlayers(players){
-  return Object.keys(players || {}).map(function(id){
-    var p = players[id]; p._id = id; return p;
-  }).sort(function(a, b){ return (b.score || 0) - (a.score || 0); });
-}
+function sortedPlayers(players){ return _eduSorted(players); }
 function lbHTML(players, myId){
   var arr = sortedPlayers(players);
   if (!arr.length) return '<p class="note">Chưa có người chơi.</p>';
@@ -3575,7 +3649,9 @@ function soloEnd(skipMsg){
 function refreshFbSettings(){
   var el = document.getElementById('setFbStatus'); if (!el) return;
   var raw = getFbConfigRaw();
-  el.textContent = raw ? '✅ Đã lưu Firebase config (đang nằm trong trình duyệt này)' : 'Chưa có Firebase config';
+  var embedded = (typeof FIREBASE_EMBEDDED_CONFIG !== 'undefined') && !!FIREBASE_EMBEDDED_CONFIG;
+  el.textContent = raw ? '✅ Đã lưu Firebase config trong trình duyệt này (được ưu tiên dùng khi kết nối phòng thi)'
+    : (embedded ? '✅ Web đã tích hợp sẵn Firebase — thầy không cần dán cấu hình nữa' : 'Chưa có Firebase config');
   var ta = document.getElementById('setFbConfig');
   if (raw && ta && !ta.value) ta.value = raw;
 }
@@ -3608,6 +3684,24 @@ function fbParseConfig(txt){
   return cfg;
 }
 
+/* ===== CẤU HÌNH FIREBASE NHÚNG SẴN — CHỖ CẮM DUY NHẤT =====
+   Thầy Khải đã chốt (10/11/2026): NHÚNG SẴN cấu hình Firebase vào web để học sinh quét QR là thi ngay.
+   👉 Cắm firebaseConfig của thầy vào đây (dạng object hoặc chuỗi JSON đều đọc được), ví dụ:
+      var FIREBASE_EMBEDDED_CONFIG = { apiKey: '...', authDomain: '...', databaseURL: 'https://...', projectId: '...' };
+   Thứ tự ưu tiên khi kết nối: (1) config thầy dán trong mục Cài đặt (localStorage edumaster_firebase_config);
+   (2) cấu hình nhúng sẵn ở dòng dưới đây. Cả hai đều trống thì phòng thi hiện hướng dẫn 5 bước như trước. */
+var FIREBASE_EMBEDDED_CONFIG = null;
+function fbNormalizeEmbedded(){
+  if (!FIREBASE_EMBEDDED_CONFIG) return null;
+  try { return fbParseConfig(typeof FIREBASE_EMBEDDED_CONFIG === 'string' ? FIREBASE_EMBEDDED_CONFIG : JSON.stringify(FIREBASE_EMBEDDED_CONFIG)); } catch(e){ return null; }
+}
+function fbActiveConfig(){
+  var raw = getFbConfigRaw();
+  if (raw){ var c = fbParseConfig(raw); if (c) return c; }
+  return fbNormalizeEmbedded();
+}
+function fbHasConfig(){ return !!fbActiveConfig(); }
+
 /* ================= FIREBASE: NẠP SDK KHI CẦN ================= */
 var FB = { ready: false, db: null, loading: null, offset: 0 };
 function fbLoadScript(src){
@@ -3619,9 +3713,7 @@ function fbLoadScript(src){
 }
 function fbEnsure(){
   if (FB.ready && FB.db) return Promise.resolve(true);
-  var raw = getFbConfigRaw();
-  if (!raw) return Promise.resolve(false);
-  var cfg = fbParseConfig(raw);
+  var cfg = fbActiveConfig();
   if (!cfg) return Promise.resolve(false);
   if (FB.loading) return FB.loading;
   FB.loading = fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js')
@@ -3658,9 +3750,15 @@ function loadQRCodeLib(){
     });
 }
 function roomPaneInit(){
-  var has = !!getFbConfigRaw();
+  var has = fbHasConfig();
   document.getElementById('roomNoFb').style.display = has ? 'none' : 'block';
   document.getElementById('roomEntry').style.display = has ? 'block' : 'none';
+  var g = document.getElementById('roomGuideFb');
+  if (g){
+    var embedded = (typeof FIREBASE_EMBEDDED_CONFIG !== 'undefined') && !!FIREBASE_EMBEDDED_CONFIG;
+    g.textContent = embedded ? 'Web đã tích hợp sẵn Firebase — thầy và học sinh không cần dán cấu hình nữa, cứ tạo phòng và quét QR là thi.'
+      : (getFbConfigRaw() ? 'Đang dùng cấu hình Firebase thầy đã dán trong mục Cài đặt.' : 'Phòng thi chạy qua Firebase — nếu chưa có cấu hình, thầy xem hướng dẫn 5 bước ngay bên dưới.');
+  }
 }
 
 /* ================= PHÒNG THI: GIÁO VIÊN ================= */
@@ -3672,6 +3770,77 @@ function rtLogLine(text){
   d.textContent = '• ' + text;
   log.insertBefore(d, log.firstChild);
   while (log.children.length > 60) log.removeChild(log.lastChild);
+}
+/* ================= Ô NHẬP BÀI THI CHO PHÒNG THI =================
+   Thầy dán đề / tải file → EduParse phân tích (qua qcAnalyze('room')) → bảng kiểm tra đáp án bấm-sửa được.
+   Khi Tạo phòng: nếu bộ đề hợp lệ thì phòng dùng ĐÚNG bộ đề này; không có thì dùng Ngân hàng câu hỏi như cũ. */
+function rtExamSyncStatus(){
+  var el = document.getElementById('rtExamStatus'); if (!el) return;
+  var st = _qcStates.room;
+  if (!st){ el.innerHTML = '📌 Chưa nhập bài thi — phòng sẽ dùng <b>Ngân hàng câu hỏi</b> như hiện nay.'; return; }
+  var v = qcValid('room');
+  var name = (document.getElementById('rtExamName').value || '').trim();
+  if (v.ok) el.innerHTML = '✅ Phòng sẽ dùng bài thi này (<b>' + v.used + ' câu</b>)' + (name ? ' — <b>' + esc(name) + '</b>' : '') + '. Thầy cứ bấm Tạo phòng thi như bình thường.';
+  else if (v.used > 0 && v.bad > 0) el.innerHTML = '⚠️ Còn ' + v.bad + ' câu đã chọn nhưng chưa có đáp án — thầy bấm vào phương án đúng trong bảng kiểm tra để đặt lại, hoặc bỏ chọn câu đó.';
+  else el.innerHTML = '📌 Đã đọc ' + v.total + ' câu nhưng chưa câu nào sẵn sàng (thiếu đáp án hoặc thiếu phương án) — phòng tạm dùng Ngân hàng câu hỏi.';
+}
+function rtExamParse(){
+  qcAnalyze('room');
+  rtExamSyncStatus();
+}
+function rtExamClear(){
+  var ta = document.getElementById('rtExamText'); if (ta) ta.value = '';
+  var nm = document.getElementById('rtExamName'); if (nm) nm.value = '';
+  _qcStates.room = null;
+  var box = document.getElementById('rtExamCheck'); if (box) box.innerHTML = '';
+  mixWarnShow('rtExamMsg', '');
+  rtExamSyncStatus();
+}
+/* Trích văn bản thuần từ XML của file .docx: mỗi đoạn <w:p> thành 1 dòng (dùng lại bộ đọc run của EduDocx) */
+function rtDocxToText(xml){
+  var parts = String(xml || '').split(/<w:p[\s>]/), out = [];
+  for (var i = 1; i < parts.length; i++){
+    var seg = parts[i], end = seg.indexOf('</w:p>');
+    if (end >= 0) seg = seg.slice(0, end);
+    var line = EduDocx._paraText(seg).replace(/\s+/g, ' ').trim();
+    if (line) out.push(line);
+  }
+  return out.join('\n');
+}
+function rtExamFileLoad(input){
+  var f = input && input.files ? input.files[0] : null;
+  try { input.value = ''; } catch(e){}
+  if (!f) return;
+  var ta = document.getElementById('rtExamText');
+  if (/\.txt$/i.test(f.name)){
+    var rd = new FileReader();
+    rd.onload = function(){ ta.value = String(rd.result || ''); rtExamParse(); showToast('📥 Đã nạp file .txt — thầy kiểm tra bảng đáp án bên dưới'); };
+    rd.onerror = function(){ showToast('⚠️ Không đọc được file .txt này'); };
+    rd.readAsText(f);
+  } else if (/\.docx$/i.test(f.name)){
+    showToast('⏳ Đang đọc file Word...');
+    loadJSZip().then(function(){ return f.arrayBuffer(); }).then(function(buf){ return JSZip.loadAsync(buf); }).then(function(zip){
+      var docFile = zip.file('word/document.xml');
+      if (!docFile) throw new Error('no-doc');
+      return docFile.async('string');
+    }).then(function(xml){
+      ta.value = rtDocxToText(xml);
+      rtExamParse();
+      showToast('📥 Đã trích nội dung từ file Word — thầy kiểm tra bảng đáp án bên dưới');
+    }).catch(function(){ showToast('⚠️ Không đọc được file .docx này (file hỏng hoặc không đúng định dạng Word)'); });
+  } else {
+    showToast('⚠️ Chỉ nhận file .txt hoặc .docx');
+  }
+}
+/* Bộ câu hỏi dùng cho phòng: lấy từ ô nhập bài thi nếu đã phân tích hợp lệ, ngược lại trả null (dùng Ngân hàng) */
+function rtExamQuestions(){
+  var ta = document.getElementById('rtExamText');
+  var st = _qcStates.room;
+  if (st && ta && st.srcText !== ta.value){ qcAnalyze('room'); st = _qcStates.room; }
+  if (!st || !qcValid('room').ok) return null;
+  var out = [];
+  st.qs.forEach(function(q, i){ if (st.used[i]) out.push({ q: q.q, opts: q.opts.slice(0, 4).map(function(o){ return String(o); }), ans: q.ans }); });
+  return out.length ? out : null;
 }
 function rtCreateRoom(){
   var msg = document.getElementById('rtCreateMsg');
@@ -3688,13 +3857,24 @@ function rtCreateRoom(){
       var chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; code = '';
       for (var i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
     }
-    var picked = shuffle(QUESTIONS);
-    var qs = picked.slice(0, 10).map(function(q){ return { q: q.q, bai: q.bai, opts: q.opts, ans: q.ans }; });
-    if (picked[10]) qs.push({ q: picked[10].q, bai: picked[10].bai, opts: picked[10].opts, ans: picked[10].ans, bonus: true });
-    var revivePool = picked.slice(11, 14).map(function(q){ return { q: q.q, bai: q.bai, opts: q.opts, ans: q.ans }; });
-    T = { code: code, R: R, questions: qs, players: {}, meta: {}, current: null, answers: {}, reviveAns: {}, revive: null, bonusPlayed: false, ended: false, sessionStart: Date.now(), tug: 0, boss: null };
+    var examQs = rtExamQuestions();
+    var examName = examQs ? (document.getElementById('rtExamName').value || '').trim() : '';
+    var qs, revivePool, mainCount;
+    if (examQs){
+      var baiTag = examName || 'Bài thi trực tuyến';
+      qs = examQs.map(function(q){ return { q: q.q, bai: baiTag, opts: q.opts, ans: q.ans }; });
+      mainCount = qs.length;
+      revivePool = shuffle(qs.slice()).slice(0, 3).map(function(q){ return { q: q.q, bai: q.bai, opts: q.opts, ans: q.ans }; });
+    } else {
+      var picked = shuffle(QUESTIONS);
+      qs = picked.slice(0, 10).map(function(q){ return { q: q.q, bai: q.bai, opts: q.opts, ans: q.ans }; });
+      if (picked[10]) qs.push({ q: picked[10].q, bai: picked[10].bai, opts: picked[10].opts, ans: picked[10].ans, bonus: true });
+      revivePool = picked.slice(11, 14).map(function(q){ return { q: q.q, bai: q.bai, opts: q.opts, ans: q.ans }; });
+      mainCount = 10;
+    }
+    T = { code: code, R: R, questions: qs, mainCount: mainCount, examName: examName, players: {}, meta: {}, current: null, answers: {}, reviveAns: {}, revive: null, bonusPlayed: false, ended: false, sessionStart: Date.now(), tug: 0, boss: null };
     roomRef(code).set({
-      meta: { status: 'lobby', qIndex: -1, rules: R, mode: R.mode, winner: '', createdAt: firebase.database.ServerValue.TIMESTAMP },
+      meta: { status: 'lobby', qIndex: -1, rules: R, mode: R.mode, winner: '', examName: examName, qCount: mainCount, createdAt: firebase.database.ServerValue.TIMESTAMP },
       questions: qs, revivePool: revivePool,
       tug: 0,
       boss: (R.mode === 'boss' ? { hp: R.bossHp, max: R.bossHp } : null)
@@ -3704,6 +3884,7 @@ function rtCreateRoom(){
       document.getElementById('rtLobby').style.display = 'block';
       document.getElementById('rtLive').style.display = 'none';
       document.getElementById('rtBoards').style.display = 'none';
+      document.getElementById('rtDetailCard').style.display = 'none';
       document.getElementById('rtFinal').innerHTML = '';
       document.getElementById('rtCodeBig').textContent = code;
       var link = location.href.split('?')[0].split('#')[0] + '?room=' + code;
@@ -3717,6 +3898,7 @@ function rtCreateRoom(){
       });
       rtAttach();
       rtLogLine('🚪 Đã tạo phòng ' + code + ' — chờ học sinh quét mã QR vào phòng.');
+      rtLogLine(examQs ? ('📝 Phòng dùng BÀI THI' + (examName ? ' "' + examName + '"' : '') + ' — ' + mainCount + ' câu.') : ('📚 Phòng dùng bộ câu hỏi từ Ngân hàng — ' + mainCount + ' câu.'));
       msg.innerHTML = '';
     }).catch(function(e){ msg.innerHTML = '<p class="warnbox" style="display:block">⚠️ Tạo phòng thất bại: ' + esc(e.message || e) + '</p>'; });
   });
@@ -3767,7 +3949,7 @@ function rtAttach(){
     rtLogLine(ev.text);
     showAnnounce(ev.text, 4200);
   });
-  ref.child('answers').on('value', function(s){ T.answers = s.val() || {}; rtRenderAnsCount(); });
+  ref.child('answers').on('value', function(s){ T.answers = s.val() || {}; rtRenderAnsCount(); rtRenderDetail(); });
   ref.child('reviveAns').on('value', function(s){ T.reviveAns = s.val() || {}; rtRenderAnsCount(); });
 }
 function rtRenderPlayers(){
@@ -3782,22 +3964,58 @@ function rtRenderPlayers(){
       '<button class="btn sm" onclick="rtRescue(\'' + id + '\')">🆘 Cứu trợ</button></div>';
   }).join('') : '<p class="note">Chưa có em nào bị loại.</p>';
   rtRenderAnsCount();
+  rtRenderDetail();
+}
+/* Bảng kết quả chi tiết của giáo viên: Tên | Đã trả lời | Đúng | Điểm | Trạng thái — vẽ lại mỗi khi
+   dữ liệu người chơi hoặc answers thay đổi (thời gian thực qua 2 listener ở rtAttach). */
+function rtDetailTableHTML(){
+  if (!T) return '';
+  var arr = sortedPlayers(T.players);
+  if (!arr.length) return '<p class="note">Chưa có học sinh nào trong phòng.</p>';
+  var rows = arr.map(function(p, i){
+    var c = playerCounts(p, T.answers);
+    return '<tr><td style="text-align:center">' + (i + 1) + '</td><td><b>' + esc(p.name || '...') + '</b></td>' +
+      '<td style="text-align:center">' + c.answered + '</td><td style="text-align:center">' + c.correct + '</td>' +
+      '<td style="text-align:center"><b>' + (p.score || 0) + '</b></td><td>' + rtStatusText(p) + '</td></tr>';
+  }).join('');
+  return '<div style="overflow-x:auto"><table><tr><th style="width:40px">#</th><th>Họ tên</th><th>Đã trả lời</th><th>Đúng</th><th>Điểm</th><th>Trạng thái</th></tr>' + rows + '</table></div>';
+}
+function rtRenderDetail(){
+  var box = document.getElementById('rtDetail');
+  if (!box || !T) return;
+  box.innerHTML = rtDetailTableHTML();
+}
+function rtDownloadCSV(){
+  if (!T) return;
+  var csv = buildResultsCSV(T.players, T.answers);
+  var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  saveBlobFile(blob, 'Ket_qua_phong_' + T.code + '.csv');
+  showToast('📥 Đã tải file kết quả (.csv)');
+}
+function rtCopyResults(){
+  if (!T) return;
+  var txt = buildResultsCSV(T.players, T.answers);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ showToast('✅ Đã sao chép kết quả'); }, function(){ showToast('⚠️ Không sao chép được — hãy tải file .csv thay thế'); });
+  else showToast('⚠️ Trình duyệt không hỗ trợ sao chép — hãy tải file .csv thay thế');
 }
 function rtRenderMeta(){
   if (!T || !T.meta) return;
+  var info = document.getElementById('rtExamInfo');
+  if (info) info.textContent = T.meta.examName ? ('📝 Bài thi: ' + T.meta.examName + ' — ' + (T.meta.qCount || T.mainCount || 10) + ' câu') : ('📚 Bộ câu hỏi từ Ngân hàng — ' + (T.meta.qCount || T.mainCount || 10) + ' câu');
   if (T.meta.status === 'ended' && !T.ended){ T.ended = true; rtShowFinal(); }
 }
 function rtPhaseOf(cur){
   if (!cur) return '';
   if (cur.bonus) return '🌟 CÂU THÁCH ĐỐ — ' + BONUS_VALUE + ' điểm';
   if (cur.accel) return '⚡ VÒNG TĂNG TỐC x2';
-  return 'Câu ' + (cur.idx + 1) + ' / 10 — Vòng thường';
+  return 'Câu ' + (cur.idx + 1) + ' / ' + (T.mainCount || 10) + ' — Vòng thường';
 }
 function rtRenderCurrent(){
   if (!T) return;
   var live = document.getElementById('rtLive'), lobby = document.getElementById('rtLobby'), boards = document.getElementById('rtBoards');
   if (T.meta.status === 'playing' || T.meta.status === 'reviving'){
     lobby.style.display = 'none'; live.style.display = 'block'; boards.style.display = 'grid';
+    var dc = document.getElementById('rtDetailCard'); if (dc) dc.style.display = 'block';
   } else return;
   var qText = '...', optsHTML = '', phase = '';
   if (T.meta.status === 'reviving' && T.revive){
@@ -3812,7 +4030,7 @@ function rtRenderCurrent(){
       qText = q.q;
       optsHTML = q.opts.map(function(op, j){ return '<div class="opt-big" data-tpos="' + j + '" style="cursor:default">' + LETTERS[j] + '. ' + esc(op) + '</div>'; }).join('');
     }
-    document.getElementById('rtNextBtn').textContent = (T.current.idx >= 9) ? (T.R.bonus && !T.bonusPlayed ? '🌟 Tới câu Thách đố' : '🏁 Kết thúc & vinh danh') : '⏭️ Câu tiếp theo';
+    document.getElementById('rtNextBtn').textContent = (T.current.idx >= (T.mainCount || 10) - 1) ? (T.R.bonus && !T.bonusPlayed && T.questions[T.mainCount || 10] ? '🌟 Tới câu Thách đố' : '🏁 Kết thúc & vinh danh') : '⏭️ Câu tiếp theo';
   }
   document.getElementById('rtPhase').textContent = phase;
   document.getElementById('rtPhase').className = 'phase-tag' + (T.current && T.current.bonus ? '' : ' blue');
@@ -3865,12 +4083,12 @@ function rtNext(){
   if (!T) return;
   if (T.meta.status === 'reviving'){ rtCloseRevive(); return; }
   var next = (T.current ? T.current.idx : -1) + 1;
-  if (T.R.kill && T.R.reviveMax > 0 && next > 0 && next % 5 === 0 && next < 10){
+  if (T.R.kill && T.R.reviveMax > 0 && next > 0 && next % 5 === 0 && next < (T.mainCount || 10)){
     var hasOut = Object.keys(T.players).some(function(id){ var p = T.players[id]; return (p.out === 'zero' || p.out === 'wrong') && (p.revives || 0) < T.R.reviveMax; });
     if (hasOut){ rtOpenRevive(next); return; }
   }
-  if (next <= 9) rtGotoQuestion(next);
-  else if (T.R.bonus && !T.bonusPlayed && T.questions[10]) rtGotoQuestion(10);
+  if (next < (T.mainCount || 10)) rtGotoQuestion(next);
+  else if (T.R.bonus && !T.bonusPlayed && T.questions[T.mainCount || 10]) rtGotoQuestion(T.mainCount || 10);
   else rtFinish();
 }
 function rtOpenRevive(nextIdx){
@@ -3902,12 +4120,12 @@ function rtCloseRevive(){
     roomRef(code).child('revive').remove();
     roomRef(code).child('meta').update({ status: 'playing' });
     var next = T.pendingNext; T.pendingNext = null;
-    if (typeof next === 'number' && next <= 9) rtGotoQuestion(next);
+    if (typeof next === 'number' && next < (T.mainCount || 10)) rtGotoQuestion(next);
   });
 }
 function rtRescue(pid){
   var p = T.players[pid]; if (!p) return;
-  roomRef(T.code).child('players/' + pid).update({ score: T.R.rescueScore, out: '', wrongStreak: 0, hearts: 3 }).then(function(){
+  roomRef(T.code).child('players/' + pid).update({ score: T.R.rescueScore, out: '', wrongStreak: 0, hearts: 3, rescues: (p.rescues || 0) + 1 }).then(function(){
     pushEvent(T.code, '🆘 Thầy/cô đã cứu trợ ' + p.name + ' quay lại ván đấu!', 'rescue');
   });
 }
@@ -3940,6 +4158,10 @@ function rtShowFinal(){
       return '<div class="pod" style="background:linear-gradient(180deg,' + heights[k] + ',#8e6cc8)">' + medals[k] + '<br>' + esc(p.name) + '<br>' + p.score + ' điểm</div>';
     }).join('') + '</div>' +
     '<div class="btnrow" style="justify-content:center"><button class="btn" onclick="rtLeave()">🚪 Đóng phòng & tạo phòng mới</button></div></div>';
+  document.getElementById('rtFinal').innerHTML += '<div class="card" style="margin-top:14px"><h3 style="margin:0 0 10px">📊 Bảng kết quả cuối cùng — Phòng ' + T.code + (T.examName ? ' • ' + esc(T.examName) : '') + '</h3>' + rtDetailTableHTML() +
+    '<div class="btnrow" style="justify-content:center;margin-top:12px"><button class="btn" onclick="rtDownloadCSV()">📥 Tải kết quả (.csv)</button><button class="btn alt" onclick="rtCopyResults()">📋 Sao chép kết quả</button></div></div>';
+  var dc2 = document.getElementById('rtDetailCard'); if (dc2) dc2.style.display = 'block';
+  rtRenderDetail();
   confettiBurst();
 }
 function rtEndRoom(){
@@ -3964,7 +4186,7 @@ function rsJoin(){
   if (!name){ msg.innerHTML = '<p class="warnbox" style="display:block">⚠️ Em chưa nhập tên của mình.</p>'; return; }
   msg.innerHTML = '<p class="note">⏳ Đang kết nối phòng...</p>';
   fbEnsure().then(function(ok){
-    if (!ok){ msg.innerHTML = '<p class="warnbox" style="display:block">⚠️ Thiết bị này chưa có Firebase config — em vào mục Cài đặt dán config (theo hướng dẫn của thầy) rồi quay lại nhé.</p>'; return; }
+    if (!ok){ msg.innerHTML = '<p class="warnbox" style="display:block">⚠️ Chưa kết nối được tới phòng thi — em kiểm tra mạng rồi thử lại, hoặc báo thầy kiểm tra cấu hình Firebase nhé.</p>'; return; }
     roomRef(code).once('value').then(function(snap){
       if (!snap.exists()){ msg.innerHTML = '<p class="warnbox" style="display:block">⚠️ Không tìm thấy phòng ' + esc(code) + ' — em kiểm tra lại mã phòng.</p>'; return; }
       var room = snap.val();
@@ -4036,7 +4258,8 @@ function rsRender(){
   var area = document.getElementById('rsArea'), st = U.meta.status;
   if (st === 'ended'){ if (!U.ended){ U.ended = true; rsShowFinal(); } return; }
   if (st === 'lobby' || !st){
-    area.innerHTML = '<p class="wait-big">✅ Đã vào phòng ' + U.code + '!<br><span class="note">Chờ giáo viên bấm "Bắt đầu thi"... Hiện có ' + Object.keys(U.players).length + ' bạn trong phòng.</span></p>' + rsSkillBarHTML() +
+    var examLine = (U.meta && (U.meta.examName || U.meta.qCount)) ? '<br><span class="note">' + (U.meta.examName ? '📝 Bài thi: <b>' + esc(U.meta.examName) + '</b>' : '📚 Bộ câu hỏi từ Ngân hàng') + ' — ' + (U.meta.qCount || (U.questions || []).length) + ' câu</span>' : '';
+    area.innerHTML = '<p class="wait-big">✅ Đã vào phòng ' + U.code + '!<br><span class="note">Chờ giáo viên bấm "Bắt đầu thi"... Hiện có ' + Object.keys(U.players).length + ' bạn trong phòng.</span>' + examLine + '</p>' + rsSkillBarHTML() +
       '<div style="max-width:520px;margin:0 auto">' + lbHTML(U.players, U.pid) + '</div>' +
       '<div class="btnrow" style="justify-content:center"><button class="btn alt" onclick="rsLeave()">🚪 Rời phòng</button></div>';
     return;
@@ -4072,7 +4295,7 @@ function rsRenderQuestion(){
   U.answered = false;
   U.bet = (U.R.betMode === 'round') ? U.roundBet : 0;
   var needRoundBet = U.R.bet && U.R.betMode === 'round' && cur.idx % 5 === 0 && !cur.bonus;
-  var tag = cur.bonus ? '<span class="phase-tag">🌟 CÂU THÁCH ĐỐ — ' + BONUS_VALUE + ' điểm</span>' : (cur.accel ? '<span class="phase-tag">⚡ VÒNG TĂNG TỐC x2</span>' : '<span class="phase-tag blue">Câu ' + (cur.idx + 1) + ' / 10</span>');
+  var tag = cur.bonus ? '<span class="phase-tag">🌟 CÂU THÁCH ĐỐ — ' + BONUS_VALUE + ' điểm</span>' : (cur.accel ? '<span class="phase-tag">⚡ VÒNG TĂNG TỐC x2</span>' : '<span class="phase-tag blue">Câu ' + (cur.idx + 1) + ' / ' + ((U.meta && U.meta.qCount) || 10) + '</span>');
   if (cur.bonus && (U.me.score || 0) < U.R.bonusMin){
     area.innerHTML = tag + '<p class="wait-big">🌟 Câu Thách đố cần tối thiểu ' + U.R.bonusMin + ' điểm — em chưa đủ điểm nên ngồi ngoài câu này nhé.</p>' + rsSkillBarHTML();
     U.answered = true; return;
@@ -4151,6 +4374,9 @@ function rsSubmit(correct, pos, isTimeout){
   var delta = correct ? (sc.gain + streakBonus) : -sc.loss;
   var wrongAfter = correct ? 0 : (me.wrongStreak || 0) + 1;
   roomRef(U.code).child('answers/' + U.cur.idx + '/' + U.pid).set({ correct: correct, pts: delta, bet: U.bet || 0, timeout: !!isTimeout, t: firebase.database.ServerValue.TIMESTAMP });
+  /* Tổng kết vào node người chơi để màn hình giáo viên hiện "Đã trả lời / Đúng" theo thời gian thực */
+  pref.child('answered').transaction(function(cur){ return (cur || 0) + 1; });
+  if (correct) pref.child('correct').transaction(function(cur){ return (cur || 0) + 1; });
   if ((U.bet || 0) >= 50) pushEvent(U.code, '🎲 ' + U.name + ' đã cược ' + U.bet + ' điểm ở câu ' + (U.cur.idx + 1) + '!', 'bet');
   /* --- V3: hiệu ứng chế độ Kéo co / Diệt Boss (điểm cá nhân vẫn tính song song như trên) --- */
   if (U.R.mode === 'tug' && correct){
