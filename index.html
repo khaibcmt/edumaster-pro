@@ -1492,7 +1492,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v16 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v17 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
@@ -5776,7 +5776,8 @@ function authFriendlyErr(err){
     'auth/unauthorized-domain': 'Tên miền web chưa nằm trong danh sách Firebase cho phép đăng nhập — thầy báo em kiểm tra lại cấu hình Firebase.',
     'auth/user-disabled': 'Tài khoản này đã bị vô hiệu hoá ở phía Google/Firebase — thầy kiểm tra lại tài khoản Google của mình.',
     'auth/internal-error': 'Google/Firebase báo lỗi nội bộ tạm thời — thầy chờ ít phút rồi thử lại.',
-    'auth/web-storage-unsupported': 'Trình duyệt đang chặn phần lưu đăng nhập (thường do chế độ ẩn danh hoặc chặn cookie) — thầy tắt ẩn danh, cho phép cookie rồi thử lại.'
+    'auth/web-storage-unsupported': 'Trình duyệt đang chặn phần lưu đăng nhập (thường do chế độ ẩn danh hoặc chặn cookie) — thầy tắt ẩn danh, cho phép cookie rồi thử lại.',
+    'auth/operation-not-supported-in-this-environment': 'Trình duyệt thầy đang mở (có thể là trình duyệt trong Zalo/Facebook) không hỗ trợ đăng nhập Google — thầy bấm nút chia sẻ/mở bằng Safari hoặc Chrome rồi đăng nhập ở đó nhé.'
   };
   return map[code] || ('Đăng nhập chưa thành công (' + (code || (err && err.message) || 'lỗi không rõ') + ') — thầy chờ ít phút rồi thử lại.');
 }
@@ -5845,11 +5846,23 @@ function authHandleState(user){
   authGateApply();
 }
 
+/* V17: nhận biết điện thoại/máy tính bảng — Safari trên iPhone làm hỏng luồng popup
+   (kẹt ở trang ...firebaseapp.com với dòng "The requested action is invalid."),
+   nên trên di động phải đi luồng đăng nhập TOÀN TRANG (redirect) ngay từ đầu. */
+function authIsMobile(){
+  try { return /Android|webOS|iPhone|iPad|iPod|Mobile|Tablet/i.test((typeof navigator !== 'undefined' && navigator.userAgent) || ''); }
+  catch(e){ return false; }
+}
 function ownerSignIn(){
   fbEnsure().then(function(ok){
     if (!ok || !FB.auth){ showToast('⚠️ Chưa kết nối được Firebase — thầy kiểm tra mạng rồi thử lại nhé'); return; }
     var gm = document.getElementById('authGateMsg'); if (gm) gm.textContent = '';
     var provider = new firebase.auth.GoogleAuthProvider();
+    if (authIsMobile()){
+      showToast('📱 Đang chuyển thầy sang trang đăng nhập Google — xong sẽ tự quay lại web…');
+      FB.auth.signInWithRedirect(provider).catch(function(e){ authShowErr(e); });
+      return;
+    }
     FB.auth.signInWithPopup(provider).catch(function(err){
       if (err && err.code === 'auth/popup-blocked'){
         authShowErr(err);
