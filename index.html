@@ -673,6 +673,24 @@ body.hs-mode #gRoomPane{display:block!important}
 body.hs-mode #roomGuide,body.hs-mode #roomNoFb,body.hs-mode #rtExamCard,body.hs-mode #rtScreen{display:none!important}
 body.hs-mode #roomEntry{display:block!important}
 body.hs-mode #roomEntry .row2>.card:first-child{display:none!important}
+/* ---------- V15: thẻ trang chủ GỌN vừa 2 hàng + sidebar TO rõ (theo ý thầy Khải) ---------- */
+@media (min-width:881px){ .sidebar{width:308px;flex:0 0 308px;padding:20px 16px} }
+.logo{font-size:27px}
+.logo-sub{font-size:14px;margin-bottom:16px}
+.teacher-box{font-size:14.5px;padding:12px 14px;line-height:1.55}
+.nav-btn{font-size:16.5px;padding:13px 14px;gap:12px;margin-bottom:4px}
+.nav-btn .ic{font-size:20px;width:27px}
+.main{padding:16px 20px 30px}
+.topbar{padding:13px 20px;margin-bottom:14px}
+.topbar h1{font-size:22px}
+.topbar p{font-size:13.5px}
+#homeGrid{gap:10px}
+#homeGrid .mod-card{padding:12px 13px}
+#homeGrid .mod-card .ic{font-size:27px;padding:5px 9px;border-radius:12px}
+#homeGrid .mod-card h3{font-size:15px;margin:7px 0 3px}
+#homeGrid .mod-card p{font-size:12.5px;line-height:1.35}
+@media (min-width:1150px){ #homeGrid{grid-template-columns:repeat(7,1fr)} }
+@media (min-width:760px) and (max-width:1149px){ #homeGrid{grid-template-columns:repeat(4,1fr)} }
 </style>
 </head>
 <body>
@@ -1474,7 +1492,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v14 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v15 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
