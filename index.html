@@ -1492,7 +1492,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v15 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v16 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
@@ -5762,6 +5762,31 @@ var AUTH = { user: null, resolved: false, hsMode: false, welcomed: false };
 
 function authIsOwner(u){ return !!u && String(u.email || '').toLowerCase() === OWNER_EMAIL; }
 
+/* V16: dịch mã lỗi đăng nhập sang tiếng Việt dễ hiểu + hiện rõ trên màn hình khoá.
+   Trước đây lỗi bị nuốt gần hết (chỉ toast thoáng qua, lỗi sau chuyển trang thì mất hẳn)
+   nên thầy không biết vì sao đăng nhập không được. */
+function authFriendlyErr(err){
+  var code = (err && err.code) || '';
+  var map = {
+    'auth/too-many-requests': 'Google đang TẠM CHẶN đăng nhập vì có quá nhiều lần thử trong thời gian ngắn. Đây là khoá phía Google, không phải web hỏng: thầy chờ ít phút, nếu Google yêu cầu xác minh trên điện thoại thì thầy xác minh giúp, rồi bấm đăng nhập lại là được.',
+    'auth/popup-blocked': 'Trình duyệt đang chặn cửa sổ đăng nhập — web đang tự chuyển sang cách đăng nhập toàn trang, thầy chờ một chút…',
+    'auth/popup-closed-by-user': 'Cửa sổ đăng nhập bị đóng trước khi hoàn tất. Nếu thầy không tự đóng thì rất có thể Google đang yêu cầu xác minh tài khoản: thầy thử vào Gmail trên điện thoại trước cho Google yên tâm, rồi quay lại đây bấm đăng nhập.',
+    'auth/cancelled-popup-request': 'Đang có một cửa sổ đăng nhập khác còn mở — thầy hoàn tất ở cửa sổ đó nhé.',
+    'auth/network-request-failed': 'Mạng bị đứt giữa chừng khi đăng nhập — thầy kiểm tra wifi/4G rồi bấm đăng nhập lại.',
+    'auth/unauthorized-domain': 'Tên miền web chưa nằm trong danh sách Firebase cho phép đăng nhập — thầy báo em kiểm tra lại cấu hình Firebase.',
+    'auth/user-disabled': 'Tài khoản này đã bị vô hiệu hoá ở phía Google/Firebase — thầy kiểm tra lại tài khoản Google của mình.',
+    'auth/internal-error': 'Google/Firebase báo lỗi nội bộ tạm thời — thầy chờ ít phút rồi thử lại.',
+    'auth/web-storage-unsupported': 'Trình duyệt đang chặn phần lưu đăng nhập (thường do chế độ ẩn danh hoặc chặn cookie) — thầy tắt ẩn danh, cho phép cookie rồi thử lại.'
+  };
+  return map[code] || ('Đăng nhập chưa thành công (' + (code || (err && err.message) || 'lỗi không rõ') + ') — thầy chờ ít phút rồi thử lại.');
+}
+function authShowErr(err){
+  var msg = authFriendlyErr(err);
+  var gm = document.getElementById('authGateMsg');
+  if (gm) gm.innerHTML = '⚠️ ' + msg;
+  showToast('⚠️ Đăng nhập chưa thành công — thầy xem dòng thông báo ở màn hình khoá nhé');
+}
+
 /* Link dành cho học sinh: quét QR là vào thẳng ô nhập tên, mã phòng điền sẵn */
 function studentLink(code){
   var base = location.href.split('?')[0].split('#')[0];
@@ -5823,12 +5848,14 @@ function authHandleState(user){
 function ownerSignIn(){
   fbEnsure().then(function(ok){
     if (!ok || !FB.auth){ showToast('⚠️ Chưa kết nối được Firebase — thầy kiểm tra mạng rồi thử lại nhé'); return; }
+    var gm = document.getElementById('authGateMsg'); if (gm) gm.textContent = '';
     var provider = new firebase.auth.GoogleAuthProvider();
     FB.auth.signInWithPopup(provider).catch(function(err){
       if (err && err.code === 'auth/popup-blocked'){
-        FB.auth.signInWithRedirect(provider).catch(function(){ showToast('⚠️ Đăng nhập thất bại — thầy thử lại nhé'); });
-      } else if (err && err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){
-        showToast('⚠️ Đăng nhập thất bại: ' + (err.message || err));
+        authShowErr(err);
+        FB.auth.signInWithRedirect(provider).catch(function(e2){ authShowErr(e2); });
+      } else {
+        authShowErr(err);
       }
     });
   });
@@ -5871,6 +5898,11 @@ function authGateBoot(){
     }
     try { var p = FB.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); if (p && p.catch) p.catch(function(){}); } catch(e){}
     FB.auth.onAuthStateChanged(authHandleState);
+    /* V16: nhận kết quả/lỗi của luồng đăng nhập chuyển trang (dự phòng khi popup bị chặn).
+       Thiếu bước này thì lỗi phía Google sau khi quay lại trang bị mất hẳn, không ai biết vì sao. */
+    if (typeof FB.auth.getRedirectResult === 'function'){
+      try { FB.auth.getRedirectResult().catch(function(err){ if (err) authShowErr(err); }); } catch(e){}
+    }
   });
 }
 function authBoot(){
