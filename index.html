@@ -360,6 +360,17 @@ tr.qc-missing{outline:2px solid #e53935;outline-offset:-2px}
 /* ================= V3: PRESET MA TRẬN & MISC ================= */
 .preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
 textarea.bk{width:100%;font-family:Consolas,monospace;font-size:12px}
+/* ===== V3.1: chữ nổi bật + Hướng dẫn sử dụng ===== */
+#homeGrid .mod-card h3{font-size:19px;font-weight:800;text-shadow:0 2px 6px rgba(0,0,0,.45);letter-spacing:.2px}
+#homeGrid .mod-card p{color:#fff;font-size:14.5px;font-weight:600;line-height:1.5;text-shadow:0 1px 4px rgba(0,0,0,.45)}
+#homeGrid .mod-card:nth-child(13){background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff}
+#homeGrid .mod-card:nth-child(13) h3{color:#fff}
+.nav-btn{font-weight:700}
+section.page h2{font-weight:800}
+.guide-step{background:#fff;border:1px solid #e5e7eb;border-left:6px solid #6366f1;border-radius:12px;padding:12px 16px;margin:0 0 12px}
+.guide-step h3{margin:0 0 6px;font-size:16.5px}
+.guide-step p,.guide-step li{line-height:1.55;margin:2px 0}
+.guide-step ul{margin:4px 0 4px 18px;padding:0}
 </style>
 </head>
 <body>
@@ -384,6 +395,7 @@ textarea.bk{width:100%;font-family:Consolas,monospace;font-size:12px}
     <button class="nav-btn" data-sec="sec-library"><span class="ic">📚</span>10. Thư viện tài liệu</button>
     <button class="nav-btn" data-sec="sec-storage"><span class="ic">💾</span>11. Kho lưu trữ</button>
     <button class="nav-btn" data-sec="sec-settings"><span class="ic">⚙️</span>12. Cài đặt (API key)</button>
+    <button class="nav-btn" data-sec="sec-guide"><span class="ic">📖</span>13. Hướng dẫn sử dụng</button>
   </nav>
 </aside>
 
@@ -879,6 +891,50 @@ IV. Axit nucleic</textarea>
   </section>
 
   <!-- ============ 12. CÀI ĐẶT ============ -->
+  <section class="page" id="sec-guide">
+    <h2>📖 Hướng dẫn sử dụng EduMaster Pro</h2>
+    <p>Chào thầy! Đây là cẩm nang nhanh của nền tảng: mỗi mục là một module, đọc đúng mục mình cần là dùng được ngay. Hầu hết tính năng chạy ngay trên trình duyệt, <b>không cần mạng</b>; riêng xuất file Word/PowerPoint và phòng thi trực tuyến cần mạng ở lần dùng đầu.</p>
+    <div class="guide-step"><h3>🚀 Bắt đầu nhanh</h3>
+      <ul><li>Chọn module ở thanh bên trái hoặc bấm thẻ màu ở Trang chủ.</li>
+      <li>Dữ liệu (ngân hàng câu hỏi, sổ điểm, bản nháp) tự lưu trong trình duyệt của máy đang dùng — muốn mang sang máy khác hãy dùng <b>Key sao lưu đa máy</b> ở mục Kho lưu trữ.</li>
+      <li>Các tính năng AI và phòng thi online cần thông tin kết nối do thầy tự dán trong mục <b>12. Cài đặt</b> — web tuyệt đối không nhúng sẵn key của bất kỳ ai.</li></ul></div>
+    <div class="guide-step"><h3>📝 1. Tạo KHBD 5512</h3>
+      <p>Điền môn, lớp, tên bài, số tiết, mã năng lực số và chủ đề AI → bấm <b>Tạo khung KHBD</b> → khung giáo án chuẩn Công văn 5512 hiện ra để thầy soạn tiếp; có nút sao chép và tải file .txt.</p></div>
+    <div class="guide-step"><h3>🧮 2. Ma trận đề</h3>
+      <p>Nhập số câu theo 3 phần × 3 mức độ, hệ thống tự tính tổng điểm thang 10. Muốn nhanh: bấm preset <b>Chuẩn 7991</b> (12 – 4 – 6 câu) hoặc <b>Gọn 10 câu</b> là ra ngay ma trận đúng 10 điểm; Phần II Đúng/Sai chấm lũy tiến 0,10 – 0,25 – 0,50 – 1,00 theo số ý đúng.</p></div>
+    <div class="guide-step"><h3>🗃️ 3. Ngân hàng câu hỏi</h3>
+      <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..."). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu.</p></div>
+    <div class="guide-step"><h3>🔀 4. Trộn đề</h3>
+      <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → bấm trộn → nhận đề đã xáo trộn kèm bảng đáp án mới, xuất được cả .docx và .txt.</li>
+      <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề.</li></ul></div>
+    <div class="guide-step"><h3>✍️ 5. Ôn tập trắc nghiệm</h3>
+      <p>Học sinh chọn bài (hoặc Tất cả) → làm từng câu, đúng/sai tô màu và giải thích ngay → cuối bài có tổng kết điểm /10. Dữ liệu lấy từ Ngân hàng câu hỏi.</p></div>
+    <div class="guide-step"><h3>🔔 6. Game Rung chuông vàng</h3>
+      <ul><li><b>Chơi 1 người:</b> chỉnh luật ở Panel Luật chơi rồi bấm Bắt đầu. Luật chính: đáp án được trộn mỗi câu; có <b>cược điểm</b>, sai bị <b>trừ điểm</b>; trợ giúp 50:50 / Đổi câu / Hỏi khán giả — <b>mỗi loại chỉ dùng 1 lần/ván</b>; đúng <b>5 câu liên tiếp</b> mở <b>Gương thần kỳ</b> ăn trộm điểm của Top 1 (kèm thưởng kill); điểm về 0 là bị hạ gục — có câu hỏi <b>Hồi sinh</b> tự cứu; sai liên tiếp 3 câu là bị loại; vòng Tăng tốc nhân đôi điểm và câu Thách đố điểm cao cuối ván.</li>
+      <li><b>Phòng thi trực tuyến:</b> cần dán Firebase config trong Cài đặt trước. Thầy tạo phòng → màn hình hiện <b>mã QR + mã phòng</b>, học sinh quét QR vào phòng; câu hỏi hiện đồng loạt, bảng xếp hạng cập nhật thời gian thực; thầy có nút <b>Cứu trợ</b> đưa học sinh bị loại trở lại ván và xem Nhật ký ván đấu. Có thêm chế độ <b>Kéo Co</b> 2 đội và <b>Diệt Boss</b> cả lớp; đặt <b>mã phòng cố định</b> thì các buổi sau khỏi quét lại QR.</li></ul></div>
+    <div class="guide-step"><h3>🧾 7. Phiếu học tập</h3>
+      <p>Trang giới thiệu kho 465 file phiếu (155 bài × 3 bản: Học sinh / Học sinh có đáp án / Giáo viên) làm từ hình SGK — file Word lấy từ gói phiếu học tập kèm theo của thầy.</p></div>
+    <div class="guide-step"><h3>🎞️ 8. Tạo slide</h3>
+      <p>Nhập tên bài + mỗi mục một dòng → sinh dàn ý; thêm dòng con bắt đầu bằng <b>"Đáp án:"</b> để gắn đáp án cho slide của mục đó. Có chỉnh cỡ chữ A−/A+, <b>trình chiếu toàn màn hình</b> (phím mũi tên/Cách để chuyển, nút Hiện/Ẩn đáp án), <b>quay số học sinh 1–50</b>, <b>hẹn giờ thảo luận</b> và nút <b>tải file .pptx</b> mở PowerPoint chỉnh tiếp.</p></div>
+    <div class="guide-step"><h3>📊 9. Sổ điểm</h3>
+      <p>Nhập điểm miệng, 15 phút, 1 tiết — điểm trung bình tự tính theo (Miệng + 15 phút + 1 tiết × 2) / 4 và xếp loại Giỏi/Khá/Trung bình/Yếu, có tổng kết số học sinh theo từng loại.</p></div>
+    <div class="guide-step"><h3>📚 10. Thư viện tài liệu</h3>
+      <p>Tra cứu nhanh các kho tài liệu của thầy: 227 KHBD, 465 phiếu học tập, ma trận & rubric, tài liệu tham chiếu PPCT/SGK.</p></div>
+    <div class="guide-step"><h3>💾 11. Kho lưu trữ</h3>
+      <ul><li><b>Kho cục bộ:</b> lưu bản nháp KHBD và ngân hàng câu hỏi vào trình duyệt, tải lại khi cần.</li>
+      <li><b>Key sao lưu đa máy:</b> bấm Tạo key để đóng gói dữ liệu thành một đoạn mã → sang máy khác dán vào ô Khôi phục là có đủ dữ liệu. Key sao lưu <b>không chứa</b> API key hay thông tin kết nối (an toàn).</li>
+      <li><b>Google Drive:</b> thư mục gốc "EduMaster Pro" trên Drive của thầy đã sẵn sàng; đồng bộ Drive thật sẽ bật ở giai đoạn sau.</li></ul></div>
+    <div class="guide-step"><h3>⚙️ 12. Cài đặt</h3>
+      <ul><li><b>Gemini API key:</b> dán nhiều key (mỗi dòng 1 key), hệ thống tự xoay vòng khi gọi AI; chọn mô hình mặc định: Flash-Lite (nhanh nhất), Flash (cân bằng), Pro (chuyên sâu). Đây là khung chuẩn bị cho đợt nối AI.</li>
+      <li><b>Firebase config:</b> dán đoạn firebaseConfig của project Firebase miễn phí để mở phòng thi trực tuyến.</li>
+      <li><b>Google OAuth Client ID:</b> dùng cho kết nối Drive ở giai đoạn sau.</li>
+      <li>Mọi thông tin chỉ lưu trong trình duyệt của chính thầy — đừng chia sẻ key cho người khác.</li></ul></div>
+    <div class="guide-step"><h3>💡 Mẹo hay</h3>
+      <ul><li>Trước khi trộn đề, luôn liếc qua <b>bảng kiểm tra/đối chiếu đáp án</b> — 10 giây kiểm tra đổi lấy một bảng đáp án chắc chắn đúng.</li>
+      <li>Đặt <b>mã phòng cố định</b> cho lớp mình hay dạy để học sinh vào phòng bằng một mã QR duy nhất cả học kỳ.</li>
+      <li>Sau mỗi đợt nhập liệu lớn (ngân hàng câu hỏi, sổ điểm), tạo một <b>key sao lưu</b> cất vào Drive/Zalo của thầy để phòng khi đổi máy.</li></ul></div>
+  </section>
+
   <section class="page" id="sec-settings">
     <h2 class="ptitle">⚙️ Cài đặt</h2>
     <p class="pdesc">Thông tin kết nối do chính người dùng tự nhập. Nền tảng tuyệt đối không nhúng sẵn bất kỳ API key hay thông tin đăng nhập nào trong mã nguồn.</p>
@@ -1032,7 +1088,8 @@ var MODULES = [
   {sec:'sec-grade',   ic:'📊', t:'9. Sổ điểm',             d:'Nhập điểm, tự tính điểm trung bình và xếp loại học lực.'},
   {sec:'sec-library', ic:'📚', t:'10. Thư viện tài liệu',  d:'Kho 227 KHBD, phiếu học tập, ma trận và rubric đi kèm.'},
   {sec:'sec-storage', ic:'💾', t:'11. Kho lưu trữ',        d:'Lưu bản nháp vào kho cục bộ; sẵn sàng nối Google Drive.'},
-  {sec:'sec-settings',ic:'⚙️', t:'12. Cài đặt',            d:'Tự nhập Gemini API key và Google Client ID của riêng thầy.'}
+  {sec:'sec-settings',ic:'⚙️', t:'12. Cài đặt',            d:'Tự nhập Gemini API key và Google Client ID của riêng thầy.'},
+  {sec:'sec-guide',   ic:'📖', t:'13. Hướng dẫn sử dụng',  d:'Cách dùng từng module, luật chơi game và các mẹo hay.'}
 ];
 function showSec(id){
   var pages = document.querySelectorAll('section.page');
