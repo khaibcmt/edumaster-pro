@@ -121,6 +121,11 @@ Nguyên tắc: **mỗi chức năng một màu riêng đặc trưng, xuyên su�
 - **L6 — Toast khi sao chép:** mọi nút Sao chép (khung KHBD, key sao lưu, link phòng...) nay hiện thông báo nhỏ "✅ Đã sao chép" tự ẩn sau ~1,5 giây; sao chép thất bại sẽ báo để copy thủ công, thay cho hộp thoại alert cũ.
 - **L7 — Ma trận đề thêm Phần IV — Tự luận:** hàng mới đủ 3 cột mức độ + ô điểm mỗi câu riêng (mặc định 1,0đ, 0,25–3đ); tổng câu/tổng điểm và hộp Đạt chuẩn tính cả Phần IV; hai preset giữ nguyên cấu hình 3 phần và đặt Phần IV = 0 câu, kèm ghi chú "chưa gồm Tự luận". Kiểm thử logic bằng harness riêng đạt **15/15** (kịch bản I=8, II=4, III=4, IV=2×1,0đ → tổng đúng 10đ, Đạt chuẩn; IV 1 câu × 2đ cộng đúng 2đ).
 
+## Bổ sung theo yêu cầu trực tiếp của thầy (đợt tải lên & thư viện)
+
+- **Nút TẢI FILE ĐỀ LÊN nổi bật ở đầu Module Trộn đề:** khung viền đứt nét màu cam của module ngay dưới phần mô tả, chữ lớn "📤 TẢI FILE ĐỀ LÊN", nút chọn file to + hỗ trợ **kéo–thả file vào khung** (viền đổi màu khi kéo vào). Nhận **.docx** → file được chuyển thẳng vào ô chọn file của chế độ Word (gán bằng DataTransfer; trình duyệt nào không cho gán thì giữ file ở biến dự phòng để nút "Đọc file & tạo các mã đề" vẫn đọc được), cuộn xuống thẻ Word và báo toast — không tự trộn để thầy chọn số mã đề trước. Nhận **.txt** → nội dung tự đổ vào ô dán văn bản và **tự phân tích đáp án** ngay. File sai đuôi → toast cảnh báo. Ô chọn file cũ trong thẻ Word vẫn dùng bình thường.
+- **Thư viện tài liệu mở được tài liệu thật:** cả 4 thẻ (Kho KHBD 227 file, Phiếu học tập 465 file, Ma trận & Rubric, Tài liệu tham chiếu) đều có nút **"📂 Mở tài liệu"** màu nâu của module, mở thư mục Google Drive **EduMaster Pro** ở tab mới; mô tả đầu mục đã hướng dẫn thầy tải các gói .zip lên thư mục này một lần để xem/tải ở mọi thiết bị. (Hai thẻ đầu vốn bấm cả thẻ để chuyển module nên nút có chặn sự kiện để chỉ mở Drive.)
+
 ## Kỹ thuật
 
 - HTML/CSS/JavaScript thuần (vanilla), 1 file duy nhất, font hệ thống (Segoe UI/Arial), giao diện sidebar + thẻ bo góc, mỗi module một màu gradient riêng (xem mục Giao diện), responsive cơ bản.
