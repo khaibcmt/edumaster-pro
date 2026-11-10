@@ -371,6 +371,9 @@ section.page h2{font-weight:800}
 .guide-step h3{margin:0 0 6px;font-size:16.5px}
 .guide-step p,.guide-step li{line-height:1.55;margin:2px 0}
 .guide-step ul{margin:4px 0 4px 18px;padding:0}
+/* ===== Toast thông báo nhỏ (L6) ===== */
+#eduToast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px);background:#1e293b;color:#fff;font-weight:700;font-size:15px;padding:11px 22px;border-radius:999px;box-shadow:0 10px 30px rgba(15,23,42,.35);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:9999;max-width:92vw;text-align:center}
+#eduToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 <style>
 /* ================================================================
@@ -564,8 +567,8 @@ section.page th{font-size:14px;letter-spacing:.2px}
       <div class="preset-row">
         <b>⚡ Điền nhanh theo chuẩn:</b>
         <button class="btn sm" onclick="mxPreset('chuan7991')">📐 Chuẩn 7991</button>
-        <button class="btn alt sm" onclick="mxPreset('gon10')">🎯 Gọn 10 câu</button>
-        <span class="note">Chuẩn 7991: Phần I = 12 câu × 0,25đ = 3đ • Phần II = 4 câu Đúng/Sai (tối đa 1,0đ/câu, luỹ tiến 0,10/0,25/0,50/1,00 theo số ý đúng) = 4đ • Phần III = 6 câu × 0,5đ = 3đ → tổng 10đ. Gọn 10 câu: I = 16 câu (4đ) • II = 4 câu (4đ) • III = 4 câu (2đ).</span>
+        <button class="btn alt sm" onclick="mxPreset('gon10')">🎯 Mẫu 24 câu (10 điểm)</button>
+        <span class="note">Chuẩn 7991: Phần I = 12 câu × 0,25đ = 3đ • Phần II = 4 câu Đúng/Sai (tối đa 1,0đ/câu, luỹ tiến 0,10/0,25/0,50/1,00 theo số ý đúng) = 4đ • Phần III = 6 câu × 0,5đ = 3đ → tổng 10đ. Mẫu 24 câu (10 điểm): I = 16 câu (4đ) • II = 4 câu (4đ) • III = 4 câu (2đ). Hai preset chưa gồm Tự luận — nếu đề có tự luận, thầy nhập thêm ở Phần IV và giảm bớt các phần khác cho tổng vẫn đủ 10 điểm.</span>
       </div>
       <table id="mxTable">
         <tr><th style="text-align:left">Phần</th><th>Nhận biết</th><th>Thông hiểu</th><th>Vận dụng</th><th>Tổng câu</th><th>Tổng điểm</th></tr>
@@ -584,6 +587,11 @@ section.page th{font-size:14px;letter-spacing:.2px}
           <td><input type="number" min="0" value="2" class="mx" data-part="3"></td>
           <td><input type="number" min="0" value="1" class="mx" data-part="3"></td>
           <td id="mxQ3">4</td><td id="mxP3">2,0</td></tr>
+        <tr><td style="text-align:left"><b>Phần IV</b> — Tự luận (điểm mỗi câu: <input type="number" id="mxRate4" min="0.25" max="3" step="0.25" value="1" style="width:72px"> đ)</td>
+          <td><input type="number" min="0" value="0" class="mx" data-part="4"></td>
+          <td><input type="number" min="0" value="0" class="mx" data-part="4"></td>
+          <td><input type="number" min="0" value="0" class="mx" data-part="4"></td>
+          <td id="mxQ4">0</td><td id="mxP4">0</td></tr>
         <tr><td style="text-align:left"><b>TỔNG CỘNG</b></td><td colspan="3"></td>
           <td id="mxQT" style="font-weight:800">24</td><td id="mxPT" style="font-weight:800">10,0</td></tr>
       </table>
@@ -606,7 +614,7 @@ section.page th{font-size:14px;letter-spacing:.2px}
     <div id="bankList"></div>
     <div class="card" style="margin-top:14px">
       <span class="mode-tag">NHẬP NHIỀU CÂU HỎI (parser đa kiểu đáp án)</span>
-      <p class="note" style="margin:0 0 8px">Dán nhiều câu hỏi cùng lúc. Hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b> • dấu <b>***</b> trước phương án đúng (***B. ... hoặc B. ***...) • phương án đúng bọc trong <b>[ ]</b> ([B]. ...) • <b>bảng đáp án ở cuối</b> (sau dòng "Đáp án:" ghi "1B 2A 3C..." hoặc từng dòng "Câu 1: B"). Sau khi phân tích, thầy kiểm tra ở <b>bảng kiểm tra trực quan</b> bên dưới — bấm vào phương án bất kỳ để đặt lại đáp án đúng.</p>
+      <p class="note" style="margin:0 0 8px">Dán nhiều câu hỏi cùng lúc. Hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b> • dấu <b>***</b> trước phương án đúng (***B. ... hoặc B. ***...) • phương án đúng bọc trong <b>[ ]</b> ([B]. ...) • <b>bảng đáp án ở cuối</b> (ghi "1B 2A 3C..." sau dòng "Đáp án:", hoặc từng dòng "Câu 1: B" — dãy đáp án đứng riêng ở cuối cũng được nhận, không cần dòng "Đáp án:" đứng trước). Sau khi phân tích, thầy kiểm tra ở <b>bảng kiểm tra trực quan</b> bên dưới — bấm vào phương án bất kỳ để đặt lại đáp án đúng.</p>
       <label class="fl" style="margin-top:0">Tên bài (chủ đề) cho các câu sắp nhập</label>
       <input type="text" id="bankImportTopic" placeholder="Ví dụ: Quang hợp ở thực vật">
       <label class="fl">Nội dung câu hỏi (dán vào đây)</label>
@@ -623,7 +631,7 @@ section.page th{font-size:14px;letter-spacing:.2px}
   <!-- ============ 4. TRỘN ĐỀ ============ -->
   <section class="page" id="sec-mix">
     <h2 class="ptitle">🔀 Module 4 — Trộn đề (tronde mini)</h2>
-    <p class="pdesc">Hai chế độ: <b>(1) Dán văn bản</b> — mỗi câu bắt đầu bằng dòng "Câu n. ...", tiếp theo 4 dòng phương án "A. ...", "B. ...", "C. ...", "D. ...". Đáp án đúng được nhận theo <b>nhiều kiểu ghi</b>: dòng "Đáp án: X" • dấu *** trước phương án đúng • phương án bọc trong [ ] • bảng đáp án ở cuối văn bản. Sau khi phân tích, thầy xem <b>bảng kiểm tra trực quan</b> (bấm vào phương án để đặt lại đáp án) rồi mới trộn. <b>(2) File Word (.docx)</b> — nạp thẳng file đề Word: hệ thống trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>, câu nào không đọc được đáp án sẽ báo rõ và giữ nguyên (không đoán đáp án). Cả hai chế độ đều xáo trộn thứ tự câu và phương án (Fisher–Yates), tự cập nhật đáp án. Riêng chế độ Word: thầy xem <b>bảng đối chiếu đáp án</b> và bấm xác nhận trước khi tải file.</p>
+    <p class="pdesc">Hai chế độ: <b>(1) Dán văn bản</b> — mỗi câu bắt đầu bằng dòng "Câu n. ...", tiếp theo 4 dòng phương án "A. ...", "B. ...", "C. ...", "D. ...". Đáp án đúng được nhận theo <b>nhiều kiểu ghi</b>: dòng "Đáp án: X" • dấu *** trước phương án đúng • phương án bọc trong [ ] • bảng đáp án ở cuối văn bản (dãy \"1B 2A 3C...\" đứng riêng ở cuối cũng được nhận, không cần dòng \"Đáp án:\" đứng trước). Sau khi phân tích, thầy xem <b>bảng kiểm tra trực quan</b> (bấm vào phương án để đặt lại đáp án) rồi mới trộn. <b>(2) File Word (.docx)</b> — nạp thẳng file đề Word: hệ thống trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>, câu nào không đọc được đáp án sẽ báo rõ và giữ nguyên (không đoán đáp án). Cả hai chế độ đều xáo trộn thứ tự câu và phương án (Fisher–Yates), tự cập nhật đáp án. Riêng chế độ Word: thầy xem <b>bảng đối chiếu đáp án</b> và bấm xác nhận trước khi tải file.</p>
     <div class="card">
       <label class="fl" style="margin-top:0">Đề gốc</label>
       <textarea id="mixIn" rows="13">Câu 1. Bào quan nào là nơi sản xuất ATP chủ yếu trong tế bào nhân thực?
@@ -1019,9 +1027,9 @@ IV. Axit nucleic</textarea>
     <div class="guide-step"><h3>📝 1. Tạo KHBD 5512</h3>
       <p>Điền môn, lớp, tên bài, số tiết, mã năng lực số và chủ đề AI → bấm <b>Tạo khung KHBD</b> → khung giáo án chuẩn Công văn 5512 hiện ra để thầy soạn tiếp; có nút sao chép và tải file .txt.</p></div>
     <div class="guide-step"><h3>🧮 2. Ma trận đề</h3>
-      <p>Nhập số câu theo 3 phần × 3 mức độ, hệ thống tự tính tổng điểm thang 10. Muốn nhanh: bấm preset <b>Chuẩn 7991</b> (12 – 4 – 6 câu) hoặc <b>Gọn 10 câu</b> là ra ngay ma trận đúng 10 điểm; Phần II Đúng/Sai chấm lũy tiến 0,10 – 0,25 – 0,50 – 1,00 theo số ý đúng.</p></div>
+      <p>Nhập số câu theo 4 phần × 3 mức độ, hệ thống tự tính tổng điểm thang 10. Muốn nhanh: bấm preset <b>Chuẩn 7991</b> (12 – 4 – 6 câu) hoặc <b>Mẫu 24 câu (10 điểm)</b> là ra ngay ma trận đúng 10 điểm; Phần II Đúng/Sai chấm lũy tiến 0,10 – 0,25 – 0,50 – 1,00 theo số ý đúng. Nếu đề có phần tự luận, thầy nhập thêm ở <b>Phần IV — Tự luận</b> và đặt điểm mỗi câu (mặc định 1,0đ/câu, chỉnh được 0,25–3đ) — tổng điểm toàn đề tính cả Phần IV, nên thầy giảm bớt các phần trắc nghiệm cho tổng vẫn đủ 10 điểm (hai preset chưa gồm Tự luận, Phần IV luôn bắt đầu từ 0 câu).</p></div>
     <div class="guide-step"><h3>🗃️ 3. Ngân hàng câu hỏi</h3>
-      <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..."). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu.</p></div>
+      <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..." — nhận cả khi không có dòng "Đáp án:" đứng trước). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu.</p></div>
     <div class="guide-step"><h3>🔀 4. Trộn đề</h3>
       <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → bấm trộn → nhận đề đã xáo trộn kèm bảng đáp án mới, xuất được cả .docx và .txt.</li>
       <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề.</li></ul></div>
@@ -1163,17 +1171,26 @@ function shuffle(arr){ // Fisher–Yates
   }
   return a;
 }
+var _toastTimer = null;
+function showToast(msg){
+  var t = document.getElementById('eduToast');
+  if (!t){ t = document.createElement('div'); t.id = 'eduToast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1500);
+}
 function copyText(id){
   var el = document.getElementById(id);
   var txt = el ? (el.value !== undefined && el.tagName === 'TEXTAREA' ? el.value : el.textContent) : '';
-  function done(){ alert('Đã sao chép vào bộ nhớ tạm!'); }
+  function done(){ showToast('✅ Đã sao chép'); }
   if (navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(txt).then(done, function(){ fallback(); });
   } else fallback();
   function fallback(){
     var ta = document.createElement('textarea');
     ta.value = txt; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch(e){ alert('Không sao chép tự động được — thầy hãy bôi đen và sao chép thủ công.'); }
+    try { document.execCommand('copy'); done(); } catch(e){ showToast('⚠️ Không sao chép được — hãy chọn và copy thủ công'); }
     document.body.removeChild(ta);
   }
 }
@@ -1210,7 +1227,7 @@ function refreshAiNotes(){
 /* ================= ĐIỀU HƯỚNG ================= */
 var MODULES = [
   {sec:'sec-khbd',    ic:'📝', t:'1. Tạo KHBD 5512',       d:'Sinh khung Kế hoạch bài dạy chuẩn Công văn 5512 từ thông tin bài học.'},
-  {sec:'sec-matrix',  ic:'🧮', t:'2. Ma trận đề',          d:'Lập ma trận đề kiểm tra 3 phần, tự tính tổng điểm thang 10.'},
+  {sec:'sec-matrix',  ic:'🧮', t:'2. Ma trận đề',          d:'Lập ma trận đề kiểm tra 4 phần (cả Tự luận), tự tính tổng điểm thang 10.'},
   {sec:'sec-bank',    ic:'🗃️', t:'3. Ngân hàng câu hỏi',   d:'Kho câu hỏi trắc nghiệm Sinh học 10, lọc theo từng bài.'},
   {sec:'sec-mix',     ic:'🔀', t:'4. Trộn đề (tronde)',    d:'Xáo trộn thứ tự câu và phương án, tự cập nhật đáp án.'},
   {sec:'sec-quiz',    ic:'✍️', t:'5. Ôn tập trắc nghiệm',  d:'Học sinh làm bài từng câu, có phản hồi đúng/sai ngay.'},
@@ -1293,13 +1310,19 @@ act('Hoạt động 4: Vận dụng') + '\n' +
 
 /* ================= MODULE 2: MA TRẬN ĐỀ ================= */
 var MX_RATE = {1: 0.25, 2: 1.0, 3: 0.5};
+function mxRate4(){
+  var el = document.getElementById('mxRate4');
+  var v = el ? parseFloat(el.value) : 1;
+  if (isNaN(v)) v = 1;
+  return Math.min(3, Math.max(0.25, v));
+}
 function calcMatrix(){
   var totQ = 0, totP = 0;
-  [1,2,3].forEach(function(p){
+  [1,2,3,4].forEach(function(p){
     var ins = document.querySelectorAll('.mx[data-part="' + p + '"]');
     var q = 0;
     ins.forEach(function(i){ q += Math.max(0, parseInt(i.value, 10) || 0); });
-    var pts = q * MX_RATE[p];
+    var pts = q * (p === 4 ? mxRate4() : MX_RATE[p]);
     totQ += q; totP += pts;
     document.getElementById('mxQ' + p).textContent = q;
     document.getElementById('mxP' + p).textContent = pts.toFixed(2).replace('.', ',').replace(/,?0+$/, '');
@@ -1316,6 +1339,7 @@ function calcMatrix(){
   }
 }
 document.querySelectorAll('.mx').forEach(function(i){ i.addEventListener('input', calcMatrix); });
+var _mxR4 = document.getElementById('mxRate4'); if (_mxR4) _mxR4.addEventListener('input', calcMatrix);
 calcMatrix();
 /* Điền nhanh ma trận theo preset thang điểm chuẩn Bộ (CV 7991) */
 function mxPreset(name){
@@ -1324,9 +1348,10 @@ function mxPreset(name){
     gon10:     { 1: [6, 6, 4], 2: [2, 1, 1], 3: [1, 2, 1] }
   }[name];
   if (!P) return;
-  [1, 2, 3].forEach(function(p){
+  [1, 2, 3, 4].forEach(function(p){
+    var vals = P[p] || [0, 0, 0]; /* preset không gồm Tự luận: Phần IV luôn đặt 0 câu */
     var ins = document.querySelectorAll('.mx[data-part="' + p + '"]');
-    ins.forEach(function(inp, i){ if (P[p][i] !== undefined) inp.value = P[p][i]; });
+    ins.forEach(function(inp, i){ if (vals[i] !== undefined) inp.value = vals[i]; });
   });
   calcMatrix();
 }
@@ -1397,7 +1422,8 @@ var EduParse = (function(){
      (1) dòng "Đáp án: X" / "Đáp án X" / "Đ/A: X" ngay trong câu;
      (2) dấu *** trước chữ cái ("***B. ...") hoặc ngay sau chữ cái ("B. ***...");
      (3) phương án đúng bọc trong [ ] ("[B]. ...");
-     (4) bảng đáp án ở cuối văn bản (sau dòng "Đáp án:"/"Bảng đáp án": "1B 2A 3C 4D" hoặc từng dòng "Câu 1: B").
+     (4) bảng đáp án ở cuối văn bản (sau dòng "Đáp án:"/"Bảng đáp án": "1B 2A 3C 4D" hoặc từng dòng "Câu 1: B");
+     (5) dãy đáp án đứng RIÊNG ở cuối văn bản ("1B 2A 3C", "1.A 2.B", "1-A 2-B") — nhận cả khi KHÔNG có dòng "Đáp án:" đứng trước.
      Trả về { questions: [{no, q, opts:[4], ans(-1 = chưa rõ), src}], usedKeyTable } */
   function parseQuestionsMulti(text){
     var lines = String(text || '').split(/\r?\n/);
@@ -1409,6 +1435,37 @@ var EduParse = (function(){
       while ((m = re.exec(s)) !== null){ keyMap[parseInt(m[1], 10)] = LET.indexOf(m[2].toUpperCase()); found = true; }
       return found;
     }
+    /* Nhận diện một dòng CHỈ gồm các cặp "số + chữ cái đáp án" liên tiếp (bảng đáp án đứng riêng).
+       Trả về mảng [[số câu, chỉ số đáp án], ...], hoặc null nếu dòng còn chứa bất kỳ nội dung nào khác. */
+    function bareKeyPairs(s){
+      var t = String(s || '').trim();
+      if (!/^\d+\s*[.\-]?\s*[A-D]\b/i.test(t)) return null;
+      var re = /(\d+)\s*[.\-]?\s*([A-D])\b/g, m, pairs = [];
+      if (!/^[\s,;.]*$/.test(t.replace(re, ' '))) return null;
+      re.lastIndex = 0;
+      while ((m = re.exec(t)) !== null) pairs.push([parseInt(m[1], 10), LET.indexOf(m[2].toUpperCase())]);
+      return pairs.length ? pairs : null;
+    }
+    /* L1: dãy đáp án đứng RIÊNG ở cuối văn bản (không có dòng "Đáp án:" phía trước) — tách làm bảng đáp án
+       TRƯỚC khi phân tích để không bị dính vào phương án D của câu cuối. Chỉ áp dụng khi khối cuối hoàn toàn
+       khớp mẫu nghiêm ngặt, đứng sau câu hỏi cuối và số cặp không vượt quá số câu đã khai báo phía trên. */
+    (function(){
+      var end = lines.length;
+      while (end > 0 && !String(lines[end - 1]).trim()) end--;
+      var start = end, block = [];
+      while (start > 0){
+        var pr = bareKeyPairs(lines[start - 1]);
+        if (!pr) break;
+        block = pr.concat(block); start--;
+      }
+      if (start === end || !block.length) return;
+      var qCount = 0;
+      for (var i = 0; i < start; i++) if (/^Câu\s*\d+\s*[.:)]/i.test(String(lines[i]).trim())) qCount++;
+      if (qCount < 1 || block.length > qCount) return;
+      block.forEach(function(p){ keyMap[p[0]] = p[1]; });
+      usedKey = true;
+      lines = lines.slice(0, start);
+    })();
     lines.forEach(function(raw){
       var line = String(raw || '').trim();
       if (!line) return;
@@ -1986,7 +2043,7 @@ function showQuizQ(){
   var x = quizList[quizIdx]; quizAnswered = false;
   var letters = ['A','B','C','D'];
   area.innerHTML =
-    '<p class="note" style="margin-top:0">Câu ' + (quizIdx + 1) + ' / ' + quizList.length + ' — Bài: <b>' + esc(x.bai) + '</b> • Điểm đúng hiện tại: ' + quizScore + '</p>' +
+    '<p class="note" style="margin-top:0">Câu ' + (quizIdx + 1) + ' / ' + quizList.length + ' — Bài: <b>' + esc(x.bai) + '</b> • Điểm đúng hiện tại: <span id="quizScoreNow">' + quizScore + '</span></p>' +
     '<p style="font-size:16.5px"><b>' + esc(x.q) + '</b></p>' +
     x.opts.map(function(op, j){ return '<button class="opt-btn" onclick="quizPick(' + j + ')">' + letters[j] + '. ' + esc(op) + '</button>'; }).join('') +
     '<div id="quizFb" style="margin-top:10px;font-weight:700"></div>' +
@@ -2005,6 +2062,7 @@ function quizPick(j){
   var fb = document.getElementById('quizFb');
   if (j === x.ans){ quizScore++; fb.innerHTML = '✅ Chính xác!'; fb.style.color = 'var(--ok)'; }
   else { fb.innerHTML = '❌ Chưa đúng — đáp án đúng là ' + ['A','B','C','D'][x.ans] + '.'; fb.style.color = 'var(--bad)'; }
+  var qsn = document.getElementById('quizScoreNow'); if (qsn) qsn.textContent = quizScore; /* L3: tiêu đề điểm cập nhật ngay, khớp phản hồi */
   document.getElementById('quizNext').style.display = 'inline-block';
 }
 function quizNextQ(){ quizIdx++; showQuizQ(); }
@@ -2023,7 +2081,7 @@ function genSlides(){
   document.getElementById('slideOut').innerHTML = data.preview.map(function(s, i){
     return '<div class="slide-mini"><h4 style="font-size:' + hfs + 'px">🖥️ Slide ' + (i + 1) + ': ' + esc(s.t) + '</h4><ul style="font-size:' + bfs + 'px">' +
       s.b.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') +
-      (s.a ? '<li style="color:#14532d"><b>Đáp án:</b> ' + esc(s.a) + '</li>' : '') +
+      (s.a ? '<li style="color:#14532d"><b>Đáp án: </b>' + esc(s.a) + '</li>' : '') +
       '</ul></div>';
   }).join('');
 }
@@ -2630,6 +2688,15 @@ function soloInfoUpdate(extra){
   document.getElementById('soloInfo').textContent = (extra ? extra + ' • ' : '') +
     '⭐ Điểm: ' + S.score + ' • 🔥 Chuỗi đúng: ' + S.streak + (S.mirrorReady ? ' • 🔮 Gương thần kỳ đã mở!' : '');
 }
+function soloModeBarHTML(){
+  if (!S) return '';
+  var R = S.R;
+  if (R.mode === 'tug') return tugBarHTML(S.tug);
+  if (R.mode === 'boss') return bossBarHTML(S.bossHp, R.bossHp, S.bossDmg) +
+    '<p class="note" style="margin:2px 0 8px">❤️ Tim của em: ' + '❤️'.repeat(Math.max(0, S.hearts)) + '🤍'.repeat(Math.max(0, 3 - S.hearts)) + ' — sai là mất 1 tim, hết tim thành khán giả!</p>';
+  return '';
+}
+function soloModeBarUpdate(){ var el = document.getElementById('soloModeBar'); if (el) el.innerHTML = soloModeBarHTML(); }
 function soloRenderQ(isBonus){
   var area = document.getElementById('soloArea'), R = S.R, cur = S.cur;
   S.answered = false;
@@ -2650,10 +2717,7 @@ function soloRenderQ(isBonus){
       '<button class="ll-btn" id="ll-a" onclick="soloLifeline(\'a\')" ' + (S.ll.a ? 'disabled' : '') + '>👥 Hỏi khán giả' + (S.ll.a ? ' <span class="used">Đã dùng</span>' : '') + '</button></div>' +
       '<div id="audOut" style="margin-top:10px"></div>';
   }
-  var modeBar = '';
-  if (R.mode === 'tug') modeBar = tugBarHTML(S.tug);
-  else if (R.mode === 'boss') modeBar = bossBarHTML(S.bossHp, R.bossHp, S.bossDmg) +
-    '<p class="note" style="margin:2px 0 8px">❤️ Tim của em: ' + '❤️'.repeat(Math.max(0, S.hearts)) + '🤍'.repeat(Math.max(0, 3 - S.hearts)) + ' — sai là mất 1 tim, hết tim thành khán giả!</p>';
+  var modeBar = '<div id="soloModeBar">' + soloModeBarHTML() + '</div>';
   area.innerHTML = modeBar + tag + '<p class="big-q">' + esc(cur.q) + '</p>' + betHTML +
     '<div id="soloOpts">' + cur.disp.map(function(op, j){
       return '<button class="opt-big" data-pos="' + j + '" onclick="soloPick(' + j + ')">' + LETTERS[j] + '. ' + esc(op) + '</button>';
@@ -2732,6 +2796,7 @@ function soloApplyResult(correct, pos){
       msg += '<br>💔 Mất 1 tim — còn ' + Math.max(0, S.hearts) + ' tim.';
     }
   }
+  soloModeBarUpdate(); /* L3: thanh Boss (HP + sát thương) và hàng tim cập nhật ngay, khớp với phản hồi bên dưới */
   var btns = document.getElementById('soloOpts').querySelectorAll('.opt-big');
   btns.forEach(function(b, j){
     b.disabled = true;
@@ -3117,7 +3182,7 @@ function rtStartTick(){
     }
   }, 200);
 }
-function rtCopyLink(){ if (T && T.link){ if (navigator.clipboard) navigator.clipboard.writeText(T.link).then(function(){ alert('Đã sao chép link tham gia phòng!'); }); } }
+function rtCopyLink(){ if (T && T.link){ if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(T.link).then(function(){ showToast('✅ Đã sao chép'); }, function(){ showToast('⚠️ Không sao chép được — hãy chọn và copy thủ công'); }); else showToast('⚠️ Không sao chép được — hãy chọn và copy thủ công'); } }
 function rtStart(){
   if (!Object.keys(T.players).length){ if (!confirm('Chưa có học sinh nào vào phòng. Thầy vẫn muốn bắt đầu?')) return; }
   roomRef(T.code).child('meta').update({ status: 'playing' });
@@ -3433,8 +3498,13 @@ function rsSubmit(correct, pos, isTimeout){
       var dmgNow = sc.gain + streakBonus;
       roomRef(U.code).child('boss/hp').transaction(function(cur){ return Math.max(0, ((cur === null || cur === undefined) ? U.R.bossHp : cur) - dmgNow); });
       pref.child('dmg').transaction(function(cur){ return (cur || 0) + dmgNow; });
+      /* L3: cập nhật cục bộ ngay để thanh Boss (HP + tổng sát thương) khớp phản hồi, không chờ listener Firebase */
+      if (U.boss) U.boss.hp = Math.max(0, (U.boss.hp || 0) - dmgNow);
+      if (U.me) U.me.dmg = (U.me.dmg || 0) + dmgNow;
+      rsRenderModeBar();
     } else {
       var heartsLeft = Math.max(0, ((me.hearts !== undefined && me.hearts !== null) ? me.hearts : 3) - 1);
+      if (U.me) U.me.hearts = heartsLeft; /* L3: tim cục bộ cập nhật ngay */
       pref.update({ hearts: heartsLeft });
       if (heartsLeft <= 0){
         pref.update({ out: 'boss' });
