@@ -646,6 +646,33 @@ section.page .card h4{font-size:17px}
 .kb-label{display:block;font-weight:700;font-size:16px;color:var(--mcd);margin:0 0 6px}
 .kb-ta{width:100%;box-sizing:border-box;font-size:16px;line-height:1.6;padding:11px 13px;border:1px solid #dfe3f2;border-radius:10px;background:#fff;font-family:inherit;resize:vertical}
 .kb-ta:focus{outline:2px solid var(--mc2);border-color:transparent}
+
+/* ============================================================
+   V11 — CỔNG ĐĂNG NHẬP CHỦ SỞ HỮU + CHẾ ĐỘ HỌC SINH
+   ============================================================ */
+.auth-box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.5;margin-bottom:16px;color:#fff}
+.auth-box .abtn{display:block;width:100%;margin-top:8px;padding:9px 10px;border:0;border-radius:9px;background:#ffd76e;color:#4a2c00;font-weight:800;font-size:14px;cursor:pointer}
+.auth-box .abtn:hover{filter:brightness(1.07)}
+#authGate{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#3a1c96,#6a11cb 55%,#2575fc);align-items:center;justify-content:center;padding:18px;overflow:auto}
+#authGate .auth-card{background:#fff;border-radius:20px;max-width:440px;width:100%;padding:32px 26px 26px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.38)}
+#authGate .auth-logo{font-size:31px;font-weight:900;color:#3a1c96}
+#authGate .auth-logo span{color:#db2777}
+#authGate .auth-sub{font-size:18px;font-weight:800;color:#b91c1c;margin:10px 0 4px}
+#authGate .auth-note{font-size:15px;color:#444;line-height:1.55;margin:0 0 16px}
+#authGate .auth-btn{display:block;width:100%;margin:10px 0;padding:14px;font-size:16.5px}
+#authGate .auth-div{color:#999;font-size:13.5px;margin:14px 0 2px}
+#hsBar{display:none}
+body.hs-mode #hsBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(90deg,#6a11cb,#2575fc);color:#fff;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:700}
+body.hs-mode #hsBar button{background:rgba(255,255,255,.92);color:#3a1c96;border:0;border-radius:8px;padding:7px 12px;font-weight:800;cursor:pointer}
+body.hs-mode .sidebar,body.hs-mode .topbar,body.hs-mode footer{display:none!important}
+body.hs-mode .main{margin:0!important}
+body.hs-mode .page{display:none!important}
+body.hs-mode #sec-game{display:block!important}
+body.hs-mode #sec-game .ptitle,body.hs-mode #sec-game .pdesc,body.hs-mode #sec-game>.guidebox,body.hs-mode #sec-game .gtabs,body.hs-mode #gSoloPane{display:none!important}
+body.hs-mode #gRoomPane{display:block!important}
+body.hs-mode #roomGuide,body.hs-mode #roomNoFb,body.hs-mode #rtExamCard,body.hs-mode #rtScreen{display:none!important}
+body.hs-mode #roomEntry{display:block!important}
+body.hs-mode #roomEntry .row2>.card:first-child{display:none!important}
 </style>
 </head>
 <body>
@@ -655,6 +682,9 @@ section.page .card h4{font-size:17px}
   <div class="teacher-box">
     👨‍🏫 <b>Giáo viên Hồ Tấn Khải</b><br>
     Trường THPT Mang Thít
+  </div>
+  <div class="auth-box" id="authBox">
+    <div id="authBoxText">🔐 Tài khoản: <b>đang kiểm tra...</b></div>
   </div>
   <button type="button" id="keyQuickBtn" class="key-quick-btn" onclick="openKeyModal()">🔑 Nhập key Gemini</button>
   <nav class="navwrap" id="navWrap">
@@ -695,7 +725,7 @@ section.page .card h4{font-size:17px}
     <p class="pdesc">Soạn Kế hoạch bài dạy đúng quy chuẩn bản v5: chỉ cần ghi 4 thông tin, hệ thống tự tra kho SGK (số tiết, mạch kiến thức, mã năng lực số / AI) và sinh bản soạn để thầy chỉnh sửa rồi xuất file Word đúng mẫu.</p>
     <div class="guidebox">
       <p>📌 <b>Chỉ dẫn:</b> ① Ghi 4 thông tin: <b>Tên bài – Khối – Lớp – Môn</b> (số tiết, mã năng lực số, chủ đề AI hệ thống tự tra trong kho SGK, thầy không cần nhập).</p>
-      <p>② Bấm <b>✨ Tạo kế hoạch bài dạy</b> → ③ Sửa trực tiếp trong các <b>khung xem trước</b> bên dưới → ④ Bấm <b>📄 Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5.</p>
+      <p>② Bấm <b>✨ Tạo kế hoạch bài dạy</b> → ③ Sửa trực tiếp trong các <b>khung xem trước</b> bên dưới → ④ Bấm <b>📄 Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5. Có key Gemini thì bấm thêm <b>🤖 AI viết nội dung</b> để AI viết nội dung thật theo dàn ý SGK vào các khung — thầy kiểm tra, sửa lại rồi mới xuất file.</p>
     </div>
     <div id="aiNote-khbd"></div>
     <div class="card">
@@ -717,8 +747,10 @@ section.page .card h4{font-size:17px}
       <label class="fl">Tên bài</label>
       <input type="text" id="kBai" list="kBaiList" value="Bài 1: DNA và cơ chế tái bản" placeholder="Gõ tên bài hoặc số bài, ví dụ: Bài 8 — hoặc chọn trong danh sách gợi ý">
       <datalist id="kBaiList"></datalist>
+      <select id="kBaiPick" onchange="pickBaiInto(this, 'kBai')" style="margin-top:8px"><option value="">— hoặc chọn nhanh bài trong kho SGK —</option></select>
       <div class="btnrow">
         <button class="btn" onclick="genKHBD()">✨ Tạo kế hoạch bài dạy</button>
+        <button class="btn alt" onclick="khbdAiWrite(this)">🤖 AI viết nội dung</button>
       </div>
       <div id="khbdNote"></div>
     </div>
@@ -788,7 +820,7 @@ section.page .card h4{font-size:17px}
   <section class="page" id="sec-bank">
     <h2 class="ptitle">🗃️ Module 3 — Ngân hàng câu hỏi</h2>
     <p class="pdesc">Kho câu hỏi trắc nghiệm Sinh học 10 có sẵn. Dùng bộ lọc để xem theo từng bài; ngân hàng này cũng cấp dữ liệu cho Module Ôn tập và Game Rung chuông vàng.</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Dùng bộ lọc để xem câu hỏi theo bài → thêm câu mới ở ô nhập nhiều câu (dán văn bản, hệ thống tự nhận diện đáp án và cho kiểm tra lại) → câu hỏi trong ngân hàng được dùng chung cho module Ôn tập và Game.</p></div>
+    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Dùng bộ lọc để xem câu hỏi theo bài → thêm câu mới ở ô nhập nhiều câu (dán văn bản, hệ thống tự nhận diện đáp án và cho kiểm tra lại) → câu hỏi trong ngân hàng được dùng chung cho module Ôn tập và Game. Có key Gemini thì dùng <b>🤖 AI sinh câu hỏi</b>: ghi chủ đề + số câu, AI sinh câu đưa vào bảng kiểm tra để thầy duyệt, sửa đáp án rồi mới lưu vào ngân hàng.</p></div>
     <div id="aiNote-bank"></div>
     <div class="card" style="margin-bottom:14px">
       <label class="fl" style="margin-top:0">Lọc theo bài</label>
@@ -799,6 +831,17 @@ section.page .card h4{font-size:17px}
     <div class="card" style="margin-top:14px">
       <span class="mode-tag">NHẬP NHIỀU CÂU HỎI (parser đa kiểu đáp án)</span>
       <p class="note" style="margin:0 0 8px">Dán nhiều câu hỏi cùng lúc. Hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b> • dấu <b>***</b> trước phương án đúng (***B. ... hoặc B. ***...) • phương án đúng bọc trong <b>[ ]</b> ([B]. ...) • <b>bảng đáp án ở cuối</b> (ghi "1B 2A 3C..." sau dòng "Đáp án:", hoặc từng dòng "Câu 1: B" — dãy đáp án đứng riêng ở cuối cũng được nhận, không cần dòng "Đáp án:" đứng trước). Sau khi phân tích, thầy kiểm tra ở <b>bảng kiểm tra trực quan</b> bên dưới — bấm vào phương án bất kỳ để đặt lại đáp án đúng.</p>
+      <span class="mode-tag">🤖 AI SINH CÂU HỎI (dùng key Gemini của thầy)</span>
+      <div class="row2">
+        <div><label class="fl" style="margin-top:0">Chủ đề / bài cho câu hỏi AI sinh</label>
+          <input type="text" id="bankAiTopic" placeholder="Ví dụ: Quang hợp ở thực vật (để trống sẽ lấy ô Tên bài bên dưới)"></div>
+        <div><label class="fl" style="margin-top:0">Số câu</label>
+          <input type="number" id="bankAiCount" value="10" min="1" max="30"></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" onclick="bankAiGen(this)">🤖 AI sinh câu hỏi</button>
+      </div>
+      <p class="note" style="margin:0 0 10px">Câu AI sinh sẽ hiện vào ô dán văn bản + bảng kiểm tra đáp án bên dưới để thầy duyệt và sửa đáp án rồi mới thêm vào ngân hàng — AI không tự lưu thẳng.</p>
       <label class="fl" style="margin-top:0">Tên bài (chủ đề) cho các câu sắp nhập</label>
       <input type="text" id="bankImportTopic" placeholder="Ví dụ: Quang hợp ở thực vật">
       <label class="fl">Nội dung câu hỏi (dán vào đây)</label>
@@ -928,7 +971,8 @@ D. Nhân tế bào
 
     <!-- ===== PHÒNG THI TRỰC TUYẾN ===== -->
     <div id="gRoomPane" style="display:none">
-      <div class="guidebox" id="roomGuide" style="margin-bottom:14px"><p>📌 <b>Chỉ dẫn phòng thi:</b> ① Nhập <b>bài thi</b> ở ô ngay bên dưới (hoặc bỏ qua — phòng sẽ dùng Ngân hàng câu hỏi) → ② Chỉnh luật chơi rồi bấm <b>Tạo phòng thi</b> → ③ Học sinh quét mã QR / nhập mã phòng để vào → ④ Thầy bấm <b>Bắt đầu thi</b> → ⑤ Xem kết quả trực tiếp ở <b>Bảng kết quả chi tiết</b> phía dưới; khi kết thúc phòng có nút tải kết quả (.csv). <span id="roomGuideFb">Phòng thi chạy qua Firebase — nếu chưa có cấu hình, thầy xem hướng dẫn 5 bước ngay bên dưới.</span></p></div>
+      <div id="hsBar"><span>🎓 Chế độ học sinh — vào phòng thi</span><button type="button" onclick="exitStudentMode()">Thoát chế độ học sinh</button></div>
+      <div class="guidebox" id="roomGuide" style="margin-bottom:14px"><p>📌 <b>Chỉ dẫn phòng thi:</b> ① Nhập <b>bài thi</b> ở ô ngay bên dưới (hoặc bỏ qua — phòng sẽ dùng Ngân hàng câu hỏi) → ② Chỉnh luật chơi rồi bấm <b>Tạo phòng thi</b> → ③ Học sinh quét mã QR là vào thẳng phòng thi, <b>không cần đăng nhập</b> (hoặc nhập mã phòng) → ④ Thầy bấm <b>Bắt đầu thi</b> → ⑤ Xem kết quả trực tiếp ở <b>Bảng kết quả chi tiết</b> phía dưới; khi kết thúc phòng có nút tải kết quả (.csv). <span id="roomGuideFb">Phòng thi chạy qua Firebase — nếu chưa có cấu hình, thầy xem hướng dẫn 5 bước ngay bên dưới.</span></p></div>
       <div id="roomNoFb" class="card" style="margin-bottom:14px;display:none">
         <h3 style="margin:0 0 6px">🔥 Phòng thi trực tuyến cần Firebase (miễn phí)</h3>
         <p class="note" style="margin:0">Tính năng online đồng bộ qua <b>Firebase Realtime Database</b> bằng project Firebase của chính thầy. Cách làm (khoảng 3 phút):</p>
@@ -1083,7 +1127,7 @@ D. Nhân tế bào
     <p class="pdesc"><b>Cách chính:</b> chọn Môn – Khối – Lớp – Tên bài, hệ thống tự dựng <b>bộ slide bài giảng theo đúng mạch SGK</b> (bìa, mục tiêu, khởi động, nội dung từng mục có khung hình, đồ thị, video, câu hỏi tương tác, luyện tập 3 phần, củng cố, dặn dò) để thầy xem trước, sửa từng slide rồi xuất .pptx. Bên dưới vẫn còn cách tạo dàn ý nhanh từ văn bản và các công cụ lớp học.</p>
     <div class="guidebox">
       <p>📌 <b>Chỉ dẫn:</b> ① Chọn <b>Môn – Khối – Lớp</b> và <b>Tên bài</b> → ② Bấm <b>✨ Dựng bộ slide</b>: bộ slide hiện ra bên dưới theo đúng mạch SGK.</p>
-      <p>③ <b>Sửa từng slide</b> ngay trong khung xem trước: sửa tiêu đề và nội dung, <b>thả ảnh</b> vào khung hình của slide nội dung, <b>dán link YouTube</b> vào slide video, <b>sửa nhãn + số</b> ở slide đồ thị — ④ Bấm <b>▶️ Trình chiếu bộ slide</b> để dạy ngay (slide câu hỏi bấm "Hiện đáp án" mới lộ đáp án) hoặc <b>📥 Xuất PowerPoint (.pptx)</b> để lấy file về máy.</p>
+      <p>③ <b>Sửa từng slide</b> ngay trong khung xem trước: sửa tiêu đề và nội dung, <b>thả ảnh</b> vào khung hình của slide nội dung, <b>dán link YouTube</b> vào slide video, <b>sửa nhãn + số</b> ở slide đồ thị — ④ Bấm <b>▶️ Trình chiếu bộ slide</b> để dạy ngay (slide câu hỏi bấm "Hiện đáp án" mới lộ đáp án) hoặc <b>📥 Xuất PowerPoint (.pptx)</b> để lấy file về máy. Có key Gemini thì bấm <b>🤖 AI điền nội dung</b> để AI viết nội dung thật cho các slide nội dung, câu hỏi tương tác và luyện tập — thầy kiểm tra, sửa lại trong khung xem trước rồi mới trình chiếu / xuất file.</p>
     </div>
     <div id="aiNote-slide"></div>
     <div class="card">
@@ -1106,7 +1150,9 @@ D. Nhân tế bào
       <label class="fl">Tên bài (chọn từ kho SGK hoặc gõ "Bài n")</label>
       <input type="text" id="dkBai" list="dkBaiList" placeholder="Ví dụ: Bài 1: DNA và cơ chế tái bản">
       <datalist id="dkBaiList"></datalist>
-      <div class="btnrow"><button class="btn" onclick="deckBuild()">✨ Dựng bộ slide</button></div>
+      <select id="dkBaiPick" onchange="pickBaiInto(this, 'dkBai')" style="margin-top:8px"><option value="">— hoặc chọn nhanh bài trong kho SGK —</option></select>
+      <div class="btnrow"><button class="btn" onclick="deckBuild()">✨ Dựng bộ slide</button>
+      <button class="btn alt" onclick="deckAiFill(this)">🤖 AI điền nội dung</button></div>
       <p class="note" id="deckNote" style="margin:8px 0 0">Bộ slide gồm đủ: slide bìa → mục tiêu → câu hỏi khởi động → từng mục nội dung (có khung chèn hình/sơ đồ/ảnh thật) → slide đồ thị → slide video (dán link, tự sinh mã QR) → câu hỏi tương tác giữa bài → luyện tập 3 phần → củng cố bằng sơ đồ tóm tắt → dặn dò.</p>
     </div>
     <div id="deckWrap" style="display:none;margin-top:14px">
@@ -1285,13 +1331,17 @@ IV. Axit nucleic</textarea>
     <div class="guide-step"><h3>🚀 Bắt đầu nhanh</h3>
       <ul><li>Chọn module ở thanh bên trái hoặc bấm thẻ màu ở Trang chủ.</li>
       <li>Dữ liệu (ngân hàng câu hỏi, sổ điểm, bản nháp) tự lưu trong trình duyệt của máy đang dùng — muốn mang sang máy khác hãy dùng <b>Key sao lưu đa máy</b> ở mục Kho lưu trữ.</li>
-      <li>Các tính năng AI và phòng thi online cần thông tin kết nối do thầy tự dán trong mục <b>12. Cài đặt</b> — web tuyệt đối không nhúng sẵn key của bất kỳ ai.</li></ul></div>
+      <li>Các tính năng AI cần Gemini key do thầy tự dán trong mục <b>12. Cài đặt</b> (hoặc nút 🔑 ở thanh bên) — web không nhúng sẵn key Gemini của bất kỳ ai. Phòng thi online dùng Firebase đã tích hợp sẵn.</li></ul></div>
+    <div class="guide-step"><h3>🔐 Đăng nhập & quyền sử dụng</h3>
+      <ul><li>Nền tảng <b>chỉ dành cho thầy Hồ Tấn Khải</b>: khi mở web, thầy bấm <b>🔐 Đăng nhập bằng Google</b> và đăng nhập bằng tài khoản Google của thầy (khaibcmtchina@gmail.com) để mở khoá toàn bộ tính năng. Tài khoản Google khác đăng nhập sẽ bị <b>từ chối ngay</b> — không xem, không dùng được phần của giáo viên.</li>
+      <li>Thầy chỉ cần đăng nhập <b>một lần trên mỗi máy</b> — các lần sau web tự nhớ. Muốn khoá lại, bấm <b>Đăng xuất</b> ở hộp tài khoản trên thanh bên.</li>
+      <li><b>Học sinh không cần tài khoản:</b> quét mã QR trên màn hình phòng thi (hoặc mở link phòng — link có dạng <i>?hs=1&room=MÃ-PHÒNG</i>) là vào thẳng ô nhập tên để thi; học sinh không thấy và không dùng được các phần của giáo viên.</li></ul></div>
     <div class="guide-step"><h3>📝 1. Tạo KHBD 5512</h3>
-      <p>Chỉ ghi 4 thông tin: <b>tên bài, khối, lớp, môn</b> → bấm <b>Tạo kế hoạch bài dạy</b> (số tiết, mạch SGK, mã năng lực số/AI hệ thống tự tra kho thẻ bài học SGK) → sửa trực tiếp trong các khung xem trước → bấm <b>Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5 (bảng 2 cột Hoạt động 2, màu NLS/AI, đáp án gạch chân tô đỏ); cũng có nút sao chép toàn văn và tải .txt.</p></div>
+      <p>Chỉ ghi 4 thông tin: <b>tên bài, khối, lớp, môn</b> → bấm <b>Tạo kế hoạch bài dạy</b> (số tiết, mạch SGK, mã năng lực số/AI hệ thống tự tra kho thẻ bài học SGK) → sửa trực tiếp trong các khung xem trước → bấm <b>Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5 (bảng 2 cột Hoạt động 2, màu NLS/AI, đáp án gạch chân tô đỏ); cũng có nút sao chép toàn văn và tải .txt. Bấm <b>🤖 AI viết nội dung</b> (cần key Gemini của thầy, nhập ở mục Cài đặt hoặc nút 🔑 ở thanh bên) để AI viết nội dung thật theo dàn ý SGK vào các khung xem trước.</p></div>
     <div class="guide-step"><h3>🧮 2. Ma trận đề</h3>
       <p>Nhập số câu theo 4 phần × 3 mức độ, hệ thống tự tính tổng điểm thang 10. Muốn nhanh: bấm preset <b>Chuẩn 7991</b> (12 – 4 – 6 câu) hoặc <b>Mẫu 24 câu (10 điểm)</b> là ra ngay ma trận đúng 10 điểm; Phần II Đúng/Sai chấm lũy tiến 0,10 – 0,25 – 0,50 – 1,00 theo số ý đúng. Nếu đề có phần tự luận, thầy nhập thêm ở <b>Phần IV — Tự luận</b> và đặt điểm mỗi câu (mặc định 1,0đ/câu, chỉnh được 0,25–3đ) — tổng điểm toàn đề tính cả Phần IV, nên thầy giảm bớt các phần trắc nghiệm cho tổng vẫn đủ 10 điểm (hai preset chưa gồm Tự luận, Phần IV luôn bắt đầu từ 0 câu).</p></div>
     <div class="guide-step"><h3>🗃️ 3. Ngân hàng câu hỏi</h3>
-      <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..." — nhận cả khi không có dòng "Đáp án:" đứng trước). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu.</p></div>
+      <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..." — nhận cả khi không có dòng "Đáp án:" đứng trước). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu. Hoặc bấm <b>🤖 AI sinh câu hỏi</b>: ghi chủ đề và số câu, AI sinh câu đưa vào đúng bảng kiểm tra trực quan đó để thầy duyệt trước khi lưu.</p></div>
     <div class="guide-step"><h3>🔀 4. Trộn đề</h3>
       <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → bấm trộn → nhận đề đã xáo trộn kèm bảng đáp án mới, xuất được cả .docx và .txt.</li>
       <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề.</li></ul></div>
@@ -1303,7 +1353,7 @@ IV. Axit nucleic</textarea>
     <div class="guide-step"><h3>🧾 7. Phiếu học tập</h3>
       <p>Trang giới thiệu kho 465 file phiếu (155 bài × 3 bản: Học sinh / Học sinh có đáp án / Giáo viên) làm từ hình SGK — file Word lấy từ gói phiếu học tập kèm theo của thầy.</p></div>
     <div class="guide-step"><h3>🎞️ 8. Tạo slide</h3>
-      <p><b>Cách chính — dựng bài giảng theo SGK:</b> chọn Môn – Khối – Lớp – Tên bài → bấm <b>Dựng bộ slide</b>: hệ thống sinh đủ bộ slide theo mạch SGK của bài (bìa, mục tiêu, khởi động, nội dung từng mục có khung chèn hình/sơ đồ/ảnh, đồ thị, video kèm mã QR, câu hỏi tương tác, luyện tập 3 phần, củng cố bằng sơ đồ khối, dặn dò). <b>Sửa từng slide</b> trong khung xem trước (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) → <b>trình chiếu</b> ngay trên web (đáp án chỉ hiện khi bấm nút) hoặc <b>xuất file .pptx</b> đúng mẫu để mở bằng PowerPoint. Cách nhanh cũ (gõ tên bài + các mục, thêm dòng "Đáp án:"), chỉnh cỡ chữ A−/A+, <b>quay số học sinh 1–50</b> và <b>hẹn giờ thảo luận</b> vẫn còn nguyên bên dưới.</p></div>
+      <p><b>Cách chính — dựng bài giảng theo SGK:</b> chọn Môn – Khối – Lớp – Tên bài → bấm <b>Dựng bộ slide</b>: hệ thống sinh đủ bộ slide theo mạch SGK của bài (bìa, mục tiêu, khởi động, nội dung từng mục có khung chèn hình/sơ đồ/ảnh, đồ thị, video kèm mã QR, câu hỏi tương tác, luyện tập 3 phần, củng cố bằng sơ đồ khối, dặn dò). <b>Sửa từng slide</b> trong khung xem trước (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) → <b>trình chiếu</b> ngay trên web (đáp án chỉ hiện khi bấm nút) hoặc <b>xuất file .pptx</b> đúng mẫu để mở bằng PowerPoint. Cách nhanh cũ (gõ tên bài + các mục, thêm dòng "Đáp án:"), chỉnh cỡ chữ A−/A+, <b>quay số học sinh 1–50</b> và <b>hẹn giờ thảo luận</b> vẫn còn nguyên bên dưới. Bấm <b>🤖 AI điền nội dung</b> (cần key Gemini của thầy) để AI viết nội dung thật cho các slide nội dung, câu hỏi tương tác và luyện tập.</p></div>
     <div class="guide-step"><h3>📊 9. Sổ điểm</h3>
       <p>Nhập điểm miệng, 15 phút, 1 tiết — điểm trung bình tự tính theo (Miệng + 15 phút + 1 tiết × 2) / 4 và xếp loại Giỏi/Khá/Trung bình/Yếu, có tổng kết số học sinh theo từng loại.</p></div>
     <div class="guide-step"><h3>📚 10. Thư viện tài liệu</h3>
@@ -1325,12 +1375,12 @@ IV. Axit nucleic</textarea>
 
   <section class="page" id="sec-settings">
     <h2 class="ptitle">⚙️ Cài đặt</h2>
-    <p class="pdesc">Thông tin kết nối do chính người dùng tự nhập. Nền tảng tuyệt đối không nhúng sẵn bất kỳ API key hay thông tin đăng nhập nào trong mã nguồn.</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Tự dán Gemini API key (mỗi dòng 1 key), cấu hình Firebase và Google Client ID của thầy vào các ô dưới đây → bấm lưu; mọi thông tin chỉ nằm trong trình duyệt này, tuyệt đối không nhúng sẵn trong mã nguồn.</p></div>
+    <p class="pdesc">Gemini API key và Google Client ID do chính người dùng tự nhập, không nhúng sẵn trong mã nguồn. Riêng cấu hình Firebase (thông tin kết nối công khai phía máy khách) đã được tích hợp sẵn cho phòng thi trực tuyến và cổng đăng nhập chủ sở hữu.</p>
+    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Tự dán Gemini API key (mỗi dòng 1 key) và Google Client ID của thầy vào các ô dưới đây → bấm lưu; các thông tin này chỉ nằm trong trình duyệt này. Cấu hình Firebase đã tích hợp sẵn — thầy chỉ dán đè khi muốn dùng project Firebase khác.</p></div>
 
     <div class="card" style="margin-bottom:14px">
-      <h3 style="margin:0 0 4px">🤖 Gemini API key — đa key xoay vòng <span class="qc-ok" style="background:#7a5af8">Khung chuẩn bị cho đợt nối AI</span></h3>
-      <p class="note">Dùng cho các tính năng AI (Tạo KHBD, Ngân hàng câu hỏi, Tạo slide, Ôn tập...). Thầy lấy key miễn phí tại Google AI Studio bằng tài khoản Google của mình. Có thể dán <b>nhiều key, mỗi dòng 1 key</b> — hệ thống sẽ <b>tự xoay vòng (round-robin)</b> giữa các key để chia tải, tránh cạn hạn mức của một key. Key đơn đã lưu trước đây được tự động gộp vào danh sách này. <i>Lưu ý trung thực: đây là khung chuẩn bị sẵn sàng (lưu trữ + xoay vòng key + chọn mô hình) — việc gọi AI thật sẽ được bật ở đợt nâng cấp nối AI tiếp theo.</i></p>
+      <h3 style="margin:0 0 4px">🤖 Gemini API key — đa key xoay vòng <span class="qc-ok" style="background:#7a5af8">Đã nối AI thật — dùng được ngay</span></h3>
+      <p class="note">Dùng cho các tính năng AI (Tạo KHBD, Ngân hàng câu hỏi, Tạo slide, Ôn tập...). Thầy lấy key miễn phí tại Google AI Studio bằng tài khoản Google của mình. Có thể dán <b>nhiều key, mỗi dòng 1 key</b> — hệ thống sẽ <b>tự xoay vòng (round-robin)</b> giữa các key để chia tải, tránh cạn hạn mức của một key. Key đơn đã lưu trước đây được tự động gộp vào danh sách này. Các nút <b>🤖 AI</b> trong module Tạo KHBD, Ngân hàng câu hỏi và Tạo slide đã nối AI thật — bấm là AI viết bằng key của thầy.</p>
       <label class="fl">Danh sách Gemini API key (mỗi dòng 1 key)</label>
       <textarea id="setKeys" rows="4" placeholder="Dán mỗi key một dòng vào đây (key bắt đầu bằng AIza...)" autocomplete="off" spellcheck="false"></textarea>
       <div class="btnrow">
@@ -1338,7 +1388,7 @@ IV. Axit nucleic</textarea>
         <button class="btn alt" onclick="deleteApiKey()">🗑️ Xoá mọi key</button>
       </div>
       <p style="margin:12px 0 0;font-weight:700" id="setKeyStatus">Chưa có key</p>
-      <label class="fl">Mô hình AI mặc định (dùng khi nối AI ở đợt sau)</label>
+      <label class="fl">Mô hình AI mặc định</label>
       <select id="setModel" onchange="saveAiModel()">
         <option value="gemini-flash-lite">⚡ Nhanh nhất — Flash-Lite (sinh câu hỏi nhanh, tác vụ nhẹ)</option>
         <option value="gemini-flash">⚖️ Cân bằng — Flash (dùng hằng ngày)</option>
@@ -1357,6 +1407,7 @@ IV. Axit nucleic</textarea>
         <button class="btn alt" onclick="deleteFbConfig()">🗑️ Xoá config</button>
       </div>
       <p style="margin:12px 0 0;font-weight:700" id="setFbStatus">Chưa có Firebase config</p>
+      <p class="note" style="margin-top:8px">🔐 <b>Chủ sở hữu:</b> nền tảng đã khoá bằng đăng nhập Google — chỉ tài khoản của thầy <b>Hồ Tấn Khải</b> (khaibcmtchina@gmail.com) mới mở khoá và dùng được các tính năng giáo viên; tài khoản khác đăng nhập sẽ bị từ chối. Học sinh <b>không cần tài khoản</b> — quét mã QR / mở link phòng thi là vào thẳng ô nhập tên.</p>
       <p class="note" style="margin-top:8px">🔒 Config dán ở đây chỉ lưu trong <b>trình duyệt của thầy</b> (localStorage). Cấu hình Firebase tích hợp sẵn trong web (nếu có) là thông tin kết nối công khai phía máy khách của project Firebase — không phải mật khẩu, cũng không phải key Gemini.</p>
     </div>
 
@@ -1374,7 +1425,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v3 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng + Firebase config của người dùng (mục Cài đặt).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v11 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
@@ -1388,6 +1439,19 @@ IV. Axit nucleic</textarea>
       <button type="button" class="btn" onclick="saveKeyModal()">💾 Lưu key</button>
       <button type="button" class="btn alt" onclick="closeKeyModal()">Đóng</button>
     </div>
+  </div>
+</div>
+
+<!-- ============ CỔNG ĐĂNG NHẬP CHỦ SỞ HỮU (V11) ============ -->
+<div id="authGate" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo">🎓 EduMaster <span>Pro</span></div>
+    <p class="auth-sub">Nền tảng chỉ dành cho thầy Hồ Tấn Khải</p>
+    <p class="auth-note">Thầy đăng nhập bằng tài khoản Google của thầy để mở khoá toàn bộ nền tảng. Tài khoản Google khác sẽ <b>không được cấp quyền</b>.</p>
+    <button type="button" class="btn auth-btn" onclick="ownerSignIn()">🔐 Đăng nhập bằng Google (chỉ dành cho thầy)</button>
+    <div class="auth-div">— hoặc —</div>
+    <button type="button" class="btn alt auth-btn" onclick="enterStudentMode('')">🎓 Em là học sinh — vào phòng thi</button>
+    <p class="note" id="authGateMsg" style="margin:12px 0 0"></p>
   </div>
 </div>
 
@@ -1477,16 +1541,135 @@ function refreshAiNotes(){
     if (has){
       el.className = 'okbox';
       el.style.marginBottom = '14px';
-      el.innerHTML = '✅ Đã có Gemini API key (lưu trong trình duyệt) — các tính năng AI của module này sẽ dùng key của thầy. <i>(Bản v1: khung kiểm tra key đã sẵn sàng, chức năng gọi AI thật sẽ bật ở giai đoạn sau.)</i>';
+      el.innerHTML = '✅ Đã có key Gemini (lưu trong trình duyệt) — các nút 🤖 AI của module này dùng key của thầy để viết nội dung thật.';
     } else {
       el.className = 'warnbox';
       el.style.display = 'block';
       el.style.marginBottom = '14px';
-      el.innerHTML = '⚠️ Chưa có Gemini API key — tính năng AI của module này cần key. Thầy vào mục <b>Cài đặt</b> ở thanh bên để nhập Gemini API key của mình (key chỉ lưu trên trình duyệt của thầy). Các chức năng không cần AI vẫn dùng bình thường.';
+      el.innerHTML = '⚠️ Chưa có key Gemini — tính năng AI chờ thầy nhập key (nút 🔑 ở thanh bên). Các chức năng không cần AI vẫn dùng bình thường.';
     }
   });
 }
 
+
+/* == EDU_AI_BEGIN == */
+/* ================= LÕI AI THẬT (V10) =================
+   Gọi Gemini bằng key DO NGƯỜI DÙNG tự nhập trong Cài đặt / nút 🔑
+   (localStorage 'edumaster_gemini_keys', model 'edumaster_model').
+   Mã nguồn tuyệt đối KHÔNG chứa key nào. */
+function eduAiLs(key){ try { return localStorage.getItem(key); } catch (e) { return null; } }
+function eduAiKeys(){
+  if (typeof getApiKeys === 'function'){ try { return getApiKeys(); } catch (e) {} }
+  var arr = [];
+  try { arr = JSON.parse(eduAiLs('edumaster_gemini_keys') || '[]'); } catch (e) { arr = []; }
+  if (!Array.isArray(arr)) arr = [];
+  return arr.map(function(k){ return String(k || '').trim(); }).filter(function(k){ return k; });
+}
+/* Ánh xạ tên model trong Cài đặt -> mã model thật của Gemini API */
+function eduAiModelId(){
+  var m = '';
+  try { m = (typeof getAiModel === 'function') ? getAiModel() : (eduAiLs('edumaster_model') || ''); } catch (e) {}
+  m = String(m || 'gemini-flash');
+  if (m === 'gemini-flash-lite') return 'gemini-2.5-flash-lite';
+  if (m === 'gemini-flash') return 'gemini-2.5-flash';
+  if (m === 'gemini-pro') return 'gemini-2.5-pro';
+  return m;
+}
+function eduAiToast(msg, ms){ if (typeof showToast === 'function') showToast(msg, ms); }
+/* Hàng chờ đơn giản: nút hiện "⏳ AI đang viết..." và bị khoá trong lúc gọi AI */
+function eduAiSetBusy(btn, busy){
+  if (!btn) return;
+  if (busy){
+    if (btn._aiOldHtml === undefined) btn._aiOldHtml = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = '⏳ AI đang viết...';
+  } else {
+    btn.disabled = false;
+    if (btn._aiOldHtml !== undefined) btn.innerHTML = btn._aiOldHtml;
+  }
+}
+/* eduAI(promptText) -> Promise<string>: thử lần lượt các key theo vòng xoay,
+   key lỗi (429/400/403, lỗi mạng, phản hồi rỗng) thì chuyển key kế tiếp. */
+function eduAI(promptText){
+  return new Promise(function(resolve, reject){
+    var keys = eduAiKeys();
+    if (!keys.length){
+      eduAiToast('⚠️ Thầy chưa nhập key Gemini — bấm nút 🔑 Key Gemini ở thanh bên để nhập', 3500);
+      var e0 = new Error('NO_KEY'); e0.code = 'NO_KEY'; reject(e0); return;
+    }
+    var model = eduAiModelId();
+    var start = 0;
+    try { start = Math.abs(parseInt(eduAiLs('edumaster_key_rr') || '0', 10) || 0) % keys.length; } catch (e) {}
+    var lastErr = '';
+    function fail(){
+      eduAiToast('⚠️ AI chưa trả lời được' + (lastErr ? ' (' + lastErr + ')' : '') + ' — thầy kiểm tra lại key / mạng rồi bấm lại nhé', 4000);
+      var e1 = new Error('AI_FAIL'); e1.code = 'AI_FAIL'; reject(e1);
+    }
+    function tryKey(i){
+      if (i >= keys.length){ fail(); return; }
+      var key = keys[(start + i) % keys.length];
+      var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key);
+      var body = { contents: [{ parts: [{ text: String(promptText || '') }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 8192 } };
+      var ctrl = null, timer = null;
+      try {
+        if (typeof AbortController !== 'undefined'){
+          ctrl = new AbortController();
+          timer = setTimeout(function(){ try { ctrl.abort(); } catch (x) {} }, 120000);
+        }
+      } catch (e) {}
+      var opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+      if (ctrl) opts.signal = ctrl.signal;
+      fetch(url, opts).then(function(resp){
+        if (timer) clearTimeout(timer);
+        if (!resp.ok){ lastErr = 'HTTP ' + resp.status; tryKey(i + 1); return null; }
+        return resp.json();
+      }).then(function(data){
+        if (!data) return;
+        var cand = (data.candidates || [])[0] || {};
+        var parts = ((cand.content || {}).parts) || [];
+        var text = parts.map(function(p){ return p.text || ''; }).join('');
+        if (!text){
+          var fb = (data.promptFeedback || {}).blockReason || '';
+          lastErr = fb ? ('nội dung bị chặn: ' + fb) : 'phản hồi rỗng';
+          tryKey(i + 1); return;
+        }
+        try { localStorage.setItem('edumaster_key_rr', String((start + i + 1) % 1000000)); } catch (e) {}
+        resolve(text);
+      }).catch(function(err){
+        if (timer) clearTimeout(timer);
+        lastErr = (err && err.name === 'AbortError') ? 'quá thời gian chờ' : 'lỗi mạng';
+        tryKey(i + 1);
+      });
+    }
+    tryKey(0);
+  });
+}
+/* Tách phản hồi KHBD theo các mốc khối [MUC_TIEU] [THIET_BI] [HD1] [HD2_GVHS] [HD2_DKSP] [HD3] [HD4] [PHU_LUC_1] */
+function eduAiParseBlocks(text){
+  var out = {};
+  var src = String(text || '');
+  var re = /\[MUC_TIEU\]|\[THIET_BI\]|\[HD1\]|\[HD2_GVHS\]|\[HD2_DKSP\]|\[HD3\]|\[HD4\]|\[PHU_LUC_1\]/g;
+  var hits = [], m;
+  while ((m = re.exec(src)) !== null) hits.push({ tag: m[0].slice(1, -1), at: m.index, end: m.index + m[0].length });
+  for (var i = 0; i < hits.length; i++){
+    var from = hits[i].end, to = (i + 1 < hits.length) ? hits[i + 1].at : src.length;
+    out[hits[i].tag] = src.slice(from, to).trim();
+  }
+  return out;
+}
+/* Tách phản hồi Slide theo các mốc [SLIDE n] -> { soSlide: [cac dong noi dung] } */
+function eduAiParseSlides(text){
+  var out = {};
+  var src = String(text || '');
+  var re = /\[SLIDE\s+(\d+)\]/g;
+  var hits = [], m;
+  while ((m = re.exec(src)) !== null) hits.push({ n: parseInt(m[1], 10), at: m.index, end: m.index + m[0].length });
+  for (var i = 0; i < hits.length; i++){
+    var from = hits[i].end, to = (i + 1 < hits.length) ? hits[i + 1].at : src.length;
+    out[hits[i].n] = src.slice(from, to).split(/\r?\n/).map(function(s){ return s.trim(); }).filter(function(s){ return s; });
+  }
+  return out;
+}
+/* == EDU_AI_END == */
 /* ================= ĐIỀU HƯỚNG ================= */
 var MODULES = [
   {sec:'sec-khbd',    ic:'📝', t:'1. Tạo KHBD 5512',       d:'Sinh khung Kế hoạch bài dạy chuẩn Công văn 5512 từ thông tin bài học.'},
@@ -1564,6 +1747,25 @@ function khbdRefreshList(){
   if (!monEl || !khoiEl || !dl) return;
   var cards = khbdCardsOf(khbdBoName(monEl.value, khoiEl.value));
   dl.innerHTML = cards.map(function(c){ return '<option value="Bài ' + c.bai + ': ' + esc(c.ten_bai) + '">'; }).join('');
+  fillBaiPick('kBaiPick', cards);
+}
+/* Dự phòng khi datalist của trình duyệt không xổ xuống: select chọn nhanh bài trong kho
+   (dùng chung cho Module KHBD và Module Slide) */
+function fillBaiPick(pickId, cards){
+  var pick = document.getElementById(pickId);
+  if (!pick) return;
+  var cur = pick.value;
+  pick.innerHTML = '<option value="">— hoặc chọn nhanh bài trong kho SGK —</option>' + (cards || []).map(function(c){
+    var v = 'Bài ' + c.bai + ': ' + c.ten_bai;
+    return '<option value="' + esc(v) + '">' + esc(v) + '</option>';
+  }).join('');
+  pick.value = cur;
+}
+function pickBaiInto(sel, inputId){
+  if (!sel || !sel.value) return;
+  var inp = document.getElementById(inputId);
+  if (inp) inp.value = sel.value;
+  sel.selectedIndex = 0;
 }
 function khbdStripNo(s){ return String(s || '').replace(/^\s*\d+\.\s*/, ''); }
 function khbdTopics(card){
@@ -1808,6 +2010,59 @@ function khbdRestoreText(text){
   if (out) out.textContent = t;
 }
 khbdRefreshList();
+/* --- V10: AI viết nội dung KHBD thật bằng key Gemini của thầy --- */
+function khbdAiPrompt(){
+  var m = _khbdMeta || {};
+  var card = null;
+  try { card = khbdFindCard(document.getElementById('kMon').value, document.getElementById('kKhoi').value, document.getElementById('kBai').value); } catch (e) {}
+  var outline = '(dàn ý theo SGK của bài)';
+  if (card){
+    outline = (card.muc_lon || []).map(function(ml, i){
+      var subs = ((card.moi_muc_lon || [])[i] || []).join('; ');
+      return ml + (subs ? ' — gồm: ' + subs : '');
+    }).join('\n');
+  }
+  return 'Bạn là giáo viên ' + m.mon + ' giàu kinh nghiệm ở Việt Nam, soạn Kế hoạch bài dạy (KHBD) theo Công văn 5512 và quy chuẩn bản v5.\n' +
+    'Bài: ' + (m.baiNo ? 'Bài ' + m.baiNo + ': ' : '') + m.tenBai + ' — Môn ' + m.mon + ', Khối ' + m.khoi + ', Lớp ' + m.lop + ', Thời lượng ' + m.tiet + ' tiết.\n' +
+    'Mã năng lực số (NLS) của bài: ' + m.nls + '. Chủ đề năng lực AI của bài: ' + m.ai + '.\n' +
+    'Dàn ý kiến thức theo SGK (bắt buộc bám đúng thứ tự và thuật ngữ):\n' + outline + '\n\n' +
+    'QUY TẮC BẢN V5 (rút gọn):\n' +
+    '- Cấu trúc 4 hoạt động, mỗi hoạt động gồm 4 bước (Bước 1: Chuyển giao nhiệm vụ; Bước 2: Thực hiện nhiệm vụ; Bước 3: Báo cáo, thảo luận; Bước 4: Kết luận, nhận định).\n' +
+    '- DỰ KIẾN SẢN PHẨM (khối HD2_DKSP) phải là KIẾN THỨC CỤ THỂ học sinh dự kiến đạt được, trình bày theo đúng đề mục SGK: mục lớn kiểu "I. ..." đứng riêng một dòng; mỗi ý kiến thức bắt đầu bằng "N. <tên đề mục>: " với N đánh số lại từ 1 trong mỗi mục lớn.\n' +
+    '- Hoạt động 3 (khối HD3) đủ 3 dạng: "Dạng 1: Trắc nghiệm nhiều lựa chọn" gồm 4 câu, mỗi câu có 4 phương án A. B. C. D. và kết thúc bằng một dòng riêng "(Đáp án đúng: X)" (X là chữ cái của đáp án đúng); "Dạng 2: Câu hỏi Đúng/Sai" gồm 1 câu có 4 ý a) b) c) d), cuối mỗi ý ghi rõ "(Đúng)" hoặc "(Sai)"; "Dạng 3: Câu hỏi trả lời ngắn" (ghi đúng tiêu đề này) gồm các câu có đáp án là MỘT SỐ tối đa 4 chữ số, mỗi câu kết thúc bằng một dòng riêng "Đáp án: <số>". Câu hỏi chỉ nằm trong phạm vi kiến thức của bài.\n' +
+    '- Nội dung tích hợp năng lực số / AI / tích hợp khác phải nằm TRONG các bước hoạt động của GV–HS bằng dòng bắt đầu "👉 [Tích hợp ...]", không viết thành đoạn riêng; không đặt cả NLS và AI trong cùng một hoạt động.\n' +
+    '- Văn phong sư phạm, tiếng Việt chuẩn, bám yêu cầu cần đạt; không bịa kiến thức ngoài dàn ý SGK.\n\n' +
+    'Viết nội dung KHBD và trả về ĐÚNG định dạng sau — mỗi khối bắt đầu bằng một dòng chứa đúng mốc khối, không thêm lời dẫn, không bọc markdown:\n' +
+    '[MUC_TIEU]\n(nội dung I. Mục tiêu: 1. Kiến thức — liệt kê theo dàn ý SGK; 2. Năng lực (năng lực chung và năng lực đặc thù); 2.3 Năng lực số — dùng đúng mã NLS của bài; 2.4 Năng lực AI — dùng đúng chủ đề AI của bài; 3. Phẩm chất; 4. Tích hợp khác)\n' +
+    '[THIET_BI]\n(nội dung II. Thiết bị và học liệu)\n' +
+    '[HD1]\n(Hoạt động 1 — Mở đầu: 4 bước GV–HS, cuối khối có dòng "* DỰ KIẾN SẢN PHẨM" và sản phẩm dự kiến)\n' +
+    '[HD2_GVHS]\n(Hoạt động 2 — cột Hoạt động của GV và HS: 4 bước, có dòng 👉 tích hợp nằm trong bước phù hợp)\n' +
+    '[HD2_DKSP]\n(Hoạt động 2 — DỰ KIẾN SẢN PHẨM: kiến thức cụ thể theo đề mục SGK như quy tắc trên)\n' +
+    '[HD3]\n(Hoạt động 3 — Luyện tập đủ 3 dạng theo đúng quy ước đáp án ở trên)\n' +
+    '[HD4]\n(Hoạt động 4 — Vận dụng: 4 bước GV–HS, cuối khối có dòng "* DỰ KIẾN SẢN PHẨM" và sản phẩm dự kiến)\n' +
+    '[PHU_LUC_1]\n(Phụ lục 1 — Phiếu học tập: câu hỏi/bài tập ngắn cho học sinh thực hiện trong Hoạt động 2)';
+}
+function khbdAiWrite(btn){
+  if (!khbdGenerated){ try { genKHBD(); } catch (e) {} }
+  if (!khbdGenerated){ showToast('⚠️ Thầy bấm "✨ Tạo kế hoạch bài dạy" trước đã nhé'); return; }
+  eduAiSetBusy(btn, true);
+  eduAI(khbdAiPrompt()).then(function(text){
+    var blocks = eduAiParseBlocks(text);
+    var tags = Object.keys(blocks).filter(function(t){ return blocks[t]; });
+    var map = { MUC_TIEU: 'kbMucTieu', THIET_BI: 'kbThietBi', HD1: 'kbHD1', HD2_GVHS: 'kbHD2GV', HD2_DKSP: 'kbHD2SP', HD3: 'kbHD3', HD4: 'kbHD4', PHU_LUC_1: 'kbPL1' };
+    if (tags.length >= 3){
+      tags.forEach(function(t){ var el = document.getElementById(map[t]); if (el) el.value = blocks[t]; });
+      if (typeof khbdAssembleText === 'function') khbdAssembleText();
+      showToast('✅ AI đã viết nội dung vào ' + tags.length + ' khối — thầy kiểm tra và sửa trong các khung xem trước nhé', 3500);
+    } else {
+      var sp = document.getElementById('kbHD2SP');
+      if (sp) sp.value = (sp.value ? sp.value + '\n\n' : '') + '----- Nội dung AI trả về (chưa chia đúng khối) -----\n' + text;
+      if (typeof khbdAssembleText === 'function') khbdAssembleText();
+      showToast('⚠️ AI trả về chưa đúng định dạng khối — em đã đặt toàn văn ở cuối khối DỰ KIẾN SẢN PHẨM (không xoá nội dung cũ). Thầy bấm lại nút 🤖 AI để AI chia khối chuẩn hơn nhé', 4500);
+    }
+  }).catch(function(){ /* eduAI đã toast rõ lý do */ }).then(function(){ eduAiSetBusy(btn, false); });
+}
+
 
 /* ================= MODULE 2: MA TRẬN ĐỀ ================= */
 var MX_RATE = {1: 0.25, 2: 1.0, 3: 0.5};
@@ -2142,6 +2397,29 @@ function bankImportAdd(){
   mixWarnShow('bankQcWarn', '');
   alert('✅ Đã thêm ' + n + ' câu hỏi (bài: ' + topic + ') vào ngân hàng. Tổng ngân hàng hiện có ' + QUESTIONS.length + ' câu.');
 }
+/* --- V10: AI sinh câu hỏi cho Ngân hàng bằng key Gemini của thầy ---
+   Kết quả đi qua ĐÚNG luồng kiểm tra trực quan (qcAnalyze 'bank') để thầy duyệt rồi mới lưu. */
+function bankAiGen(btn){
+  var topicEl = document.getElementById('bankAiTopic');
+  var topic = (topicEl && topicEl.value.trim()) || (document.getElementById('bankImportTopic').value || '').trim();
+  if (!topic){ showToast('⚠️ Thầy ghi chủ đề / tên bài cho các câu AI sắp sinh nhé'); if (topicEl) topicEl.focus(); return; }
+  var nEl = document.getElementById('bankAiCount');
+  var n = parseInt(nEl && nEl.value, 10) || 10;
+  if (n < 1) n = 1; if (n > 30) n = 30;
+  var prompt = 'Bạn là giáo viên Việt Nam giàu kinh nghiệm. Hãy sinh đúng ' + n + ' câu hỏi trắc nghiệm 4 lựa chọn bám sát chủ đề: "' + topic + '" (Chương trình GDPT 2018, SGK Kết nối tri thức với cuộc sống).\n' +
+    'Định dạng bắt buộc cho mỗi câu (chỉ trả về các câu hỏi, không thêm lời dẫn, không bọc markdown):\n' +
+    'Câu <số>. <thân câu hỏi>\nA. <phương án>\nB. <phương án>\nC. <phương án>\nD. <phương án>\nĐáp án: <chữ cái của đáp án đúng>\n' +
+    'Yêu cầu: nội dung đúng kiến thức, các phương án nhiễu hợp lý, đáp án đúng phân bố đều giữa A/B/C/D, độ khó trải đều nhận biết – thông hiểu – vận dụng.';
+  eduAiSetBusy(btn, true);
+  eduAI(prompt).then(function(text){
+    document.getElementById('bankImport').value = text;
+    var tEl = document.getElementById('bankImportTopic');
+    if (tEl && !tEl.value.trim()) tEl.value = topic;
+    qcAnalyze('bank');
+    showToast('✅ AI đã sinh câu hỏi — thầy kiểm tra bảng đáp án bên dưới rồi bấm "✅ Thêm các câu đã chọn vào ngân hàng"', 4000);
+  }).catch(function(){ /* eduAI đã toast rõ lý do */ }).then(function(){ eduAiSetBusy(btn, false); });
+}
+
 
 /* ================= TRỘN ĐỀ WORD (.docx) & PPTX — LÕI THUẦN (không dùng DOM, dùng chung cho trang và bản kiểm thử) ================= */
 /* == EDU_DOCX_PURE_BEGIN == */
@@ -3041,6 +3319,7 @@ function deckRefreshList(){
   if (!monEl || !khoiEl || !dl) return;
   var cards = khbdCardsOf(khbdBoName(monEl.value, khoiEl.value));
   dl.innerHTML = cards.map(function(c){ return '<option value="Bài ' + c.bai + ': ' + esc(c.ten_bai) + '">'; }).join('');
+  fillBaiPick('dkBaiPick', cards);
 }
 function deckChartSlide(){
   var s = deckSlide('chart', 'SỐ LIỆU — ĐỒ THỊ MINH HOẠ',
@@ -3152,6 +3431,48 @@ function deckBuild(){
   }
   document.getElementById('deckWrap').style.display = 'block';
   deckRender();
+}
+
+/* --- V10: AI điền nội dung thật cho bộ slide bằng key Gemini của thầy ---
+   Chỉ áp vào slide loại content / ask / practice; các loại khác giữ nguyên. */
+function deckAiFill(btn){
+  if (!DECK || !DECK.slides || !DECK.slides.length){ showToast('⚠️ Thầy bấm "✨ Dựng bộ slide" trước đã nhé'); return; }
+  deckSyncFromDOM();
+  var targets = [];
+  DECK.slides.forEach(function(s, i){ if (s.type === 'content' || s.type === 'ask' || s.type === 'practice') targets.push(i); });
+  if (!targets.length){ showToast('⚠️ Bộ slide chưa có slide nội dung / câu hỏi / luyện tập để AI điền'); return; }
+  var m = DECK.meta || {};
+  var prompt = 'Bạn là giáo viên ' + m.mon + ' giàu kinh nghiệm ở Việt Nam, soạn slide bài giảng theo SGK Kết nối tri thức.\n' +
+    'Bài: ' + (m.baiNo ? 'Bài ' + m.baiNo + ': ' : '') + m.tenBai + ' — Môn ' + m.mon + ', Khối ' + m.khoi + ', Lớp ' + m.lop + '.\n' +
+    'Dưới đây là các slide cần viết nội dung (số là vị trí của slide trong cả bộ):\n\n' +
+    targets.map(function(i){
+      var s = DECK.slides[i];
+      return 'Slide ' + (i + 1) + ' [' + s.type + '] — Tiêu đề: ' + s.title + '\nÝ hiện tại: ' + ((s.lines || []).join(' / ') || '(trống)');
+    }).join('\n\n') +
+    '\n\nHãy viết nội dung THẬT, đúng kiến thức SGK cho từng slide — không để lại dấu [...], không ghi "thầy điền". ' +
+    'Trả về cho mỗi slide một phần bắt đầu bằng một dòng đúng dạng "[SLIDE <số>]" rồi đến các dòng nội dung, mỗi dòng một ý ngắn gọn, súc tích kiểu slide (tối đa 6 dòng mỗi slide). ' +
+    'Với slide câu hỏi tương tác và luyện tập: viết đầy đủ thân câu cùng các phương án (A. B. C. D. hoặc các ý a) b) c) d)) và kết thúc phần của slide đó bằng một dòng "Đáp án: ..." ghi rõ đáp án đúng kèm giải thích rất ngắn. ' +
+    'Chỉ trả về các phần [SLIDE <số>], không thêm lời dẫn.';
+  eduAiSetBusy(btn, true);
+  eduAI(prompt).then(function(text){
+    var got = eduAiParseSlides(text);
+    var applied = 0;
+    targets.forEach(function(i){
+      var lines = got[i + 1];
+      if (!lines || !lines.length) return;
+      var s = DECK.slides[i];
+      var ans = '', body = [];
+      lines.forEach(function(ln){
+        var mm = ln.match(/^Đáp án\s*:\s*(.+)$/i);
+        if (mm && (s.type === 'ask' || s.type === 'practice')) ans = mm[1].trim(); else body.push(ln);
+      });
+      if (body.length){ s.lines = body; applied++; }
+      if (ans) s.answer = ans;
+    });
+    deckRender();
+    if (applied) showToast('✅ AI đã điền nội dung cho ' + applied + ' slide — thầy kiểm tra trong khung xem trước nhé', 3500);
+    else showToast('⚠️ AI trả về chưa đúng định dạng [SLIDE <số>] — nội dung cũ được giữ nguyên, thầy bấm lại nút 🤖 AI nhé', 4000);
+  }).catch(function(){ /* eduAI đã toast rõ lý do */ }).then(function(){ eduAiSetBusy(btn, false); });
 }
 /* --- Vẽ khung xem trước & chỉnh sửa từng slide --- */
 function deckRender(){
@@ -4159,11 +4480,11 @@ function fbParseConfig(txt){
 
 /* ===== CẤU HÌNH FIREBASE NHÚNG SẴN — CHỖ CẮM DUY NHẤT =====
    Thầy Khải đã chốt (10/11/2026): NHÚNG SẴN cấu hình Firebase vào web để học sinh quét QR là thi ngay.
-   👉 Cắm firebaseConfig của thầy vào đây (dạng object hoặc chuỗi JSON đều đọc được), ví dụ:
-      var FIREBASE_EMBEDDED_CONFIG = { apiKey: '...', authDomain: '...', databaseURL: 'https://...', projectId: '...' };
+   ✅ ĐÃ CẮM firebaseConfig thật của thầy (project edumaster-pro-36063) — đây là thông tin kết nối
+      CÔNG KHAI phía máy khách của Firebase, không phải mật khẩu hay key Gemini.
    Thứ tự ưu tiên khi kết nối: (1) config thầy dán trong mục Cài đặt (localStorage edumaster_firebase_config);
    (2) cấu hình nhúng sẵn ở dòng dưới đây. Cả hai đều trống thì phòng thi hiện hướng dẫn 5 bước như trước. */
-var FIREBASE_EMBEDDED_CONFIG = null;
+var FIREBASE_EMBEDDED_CONFIG = { apiKey: "AIzaSyBaPDTez8vHqjM6LaAHPcr9YTzSPKusY8U", authDomain: "edumaster-pro-36063.firebaseapp.com", databaseURL: "https://edumaster-pro-36063-default-rtdb.firebaseio.com", projectId: "edumaster-pro-36063", storageBucket: "edumaster-pro-36063.firebasestorage.app", messagingSenderId: "1006540412361", appId: "1:1006540412361:web:9f7e45f2c2b8f4d8650418" };
 function fbNormalizeEmbedded(){
   if (!FIREBASE_EMBEDDED_CONFIG) return null;
   try { return fbParseConfig(typeof FIREBASE_EMBEDDED_CONFIG === 'string' ? FIREBASE_EMBEDDED_CONFIG : JSON.stringify(FIREBASE_EMBEDDED_CONFIG)); } catch(e){ return null; }
@@ -4176,7 +4497,7 @@ function fbActiveConfig(){
 function fbHasConfig(){ return !!fbActiveConfig(); }
 
 /* ================= FIREBASE: NẠP SDK KHI CẦN ================= */
-var FB = { ready: false, db: null, loading: null, offset: 0 };
+var FB = { ready: false, db: null, auth: null, loading: null, offset: 0 };
 function fbLoadScript(src){
   return new Promise(function(res, rej){
     var s = document.createElement('script');
@@ -4191,9 +4512,11 @@ function fbEnsure(){
   if (FB.loading) return FB.loading;
   FB.loading = fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js')
     .then(function(){ return fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js'); })
+    .then(function(){ return fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js'); })
     .then(function(){
       if (!firebase.apps.length) firebase.initializeApp(cfg);
       FB.db = firebase.database();
+      try { FB.auth = (typeof firebase.auth === 'function') ? firebase.auth() : null; } catch(e){ FB.auth = null; }
       FB.db.ref('.info/serverTimeOffset').on('value', function(snap){ FB.offset = snap.val() || 0; });
       FB.ready = true; FB.loading = null;
       return true;
@@ -4233,6 +4556,141 @@ function roomPaneInit(){
       : (getFbConfigRaw() ? 'Đang dùng cấu hình Firebase thầy đã dán trong mục Cài đặt.' : 'Phòng thi chạy qua Firebase — nếu chưa có cấu hình, thầy xem hướng dẫn 5 bước ngay bên dưới.');
   }
 }
+
+/* == EDU_AUTH_BEGIN == */
+/* ================= V11: CỔNG ĐĂNG NHẬP CHỦ SỞ HỮU + ĐƯỜNG RIÊNG HỌC SINH =================
+   Yêu cầu cứng của thầy Khải: "chỉ mình thầy sử dụng được, tài khoản khác không được".
+   - Chỉ email OWNER_EMAIL đăng nhập Google mới mở khoá được toàn bộ nền tảng.
+   - Học sinh KHÔNG cần tài khoản: đi đường ?hs=1 (nút ở cổng khoá hoặc QR/link phòng thi). */
+var OWNER_EMAIL = 'khaibcmtchina@gmail.com';
+var AUTH = { user: null, resolved: false, hsMode: false, welcomed: false };
+
+function authIsOwner(u){ return !!u && String(u.email || '').toLowerCase() === OWNER_EMAIL; }
+
+/* Link dành cho học sinh: quét QR là vào thẳng ô nhập tên, mã phòng điền sẵn */
+function studentLink(code){
+  var base = location.href.split('?')[0].split('#')[0];
+  return base + '?hs=1' + (code ? '&room=' + code : '');
+}
+function hsParse(search){
+  var s = String(search || '');
+  var m = s.match(/[?&]room=([A-Za-z0-9]{6})/);
+  return { hs: /[?&]hs=1/.test(s), room: m ? m[1].toUpperCase() : '' };
+}
+
+/* Vẽ lại hộp tài khoản ở thanh bên theo trạng thái hiện tại */
+function authRenderBox(){
+  var box = document.getElementById('authBox'); if (!box) return;
+  var html;
+  if (AUTH.hsMode){
+    html = '🎓 Đang ở <b>chế độ học sinh</b>';
+  } else if (!fbHasConfig()){
+    html = '🔓 <b>Chế độ offline</b> — chưa có cấu hình Firebase nên web không khoá đăng nhập.';
+  } else if (authIsOwner(AUTH.user)){
+    html = '✅ Đã đăng nhập: <b>' + esc(AUTH.user.email) + '</b> (chủ sở hữu)' +
+      '<button type="button" class="abtn" onclick="ownerSignOut()">Đăng xuất</button>';
+  } else {
+    html = '🔐 <b>Chưa đăng nhập</b> — chỉ tài khoản của thầy mới mở khoá được.' +
+      '<button type="button" class="abtn" onclick="ownerSignIn()">🔐 Đăng nhập bằng Google</button>';
+  }
+  box.innerHTML = html;
+}
+
+/* Quyết định hiện/ẩn cổng khoá theo trạng thái */
+function authGateApply(){
+  var gate = document.getElementById('authGate');
+  authRenderBox();
+  if (!gate) return;
+  if (AUTH.hsMode){ gate.style.display = 'none'; return; }
+  if (!fbHasConfig()){ gate.style.display = 'none'; return; }   /* không cấu hình nào -> chạy như cũ, không khoá */
+  gate.style.display = authIsOwner(AUTH.user) ? 'none' : 'flex';
+}
+
+/* Xử lý mỗi khi trạng thái đăng nhập thay đổi */
+function authHandleState(user){
+  AUTH.resolved = true;
+  if (user && !authIsOwner(user)){
+    AUTH.user = null;
+    showToast('⚠️ Tài khoản này không được cấp quyền — chỉ thầy Hồ Tấn Khải mới dùng được nền tảng');
+    if (FB.auth){ try { FB.auth.signOut(); } catch(e){} }
+    authGateApply();
+    return;
+  }
+  AUTH.user = user || null;
+  if (authIsOwner(user) && !AUTH.welcomed){
+    AUTH.welcomed = true;
+    showToast('✅ Xin chào thầy Khải! Đã mở khoá EduMaster Pro');
+  }
+  if (!user) AUTH.welcomed = false;
+  authGateApply();
+}
+
+function ownerSignIn(){
+  fbEnsure().then(function(ok){
+    if (!ok || !FB.auth){ showToast('⚠️ Chưa kết nối được Firebase — thầy kiểm tra mạng rồi thử lại nhé'); return; }
+    var provider = new firebase.auth.GoogleAuthProvider();
+    FB.auth.signInWithPopup(provider).catch(function(err){
+      if (err && err.code === 'auth/popup-blocked'){
+        FB.auth.signInWithRedirect(provider).catch(function(){ showToast('⚠️ Đăng nhập thất bại — thầy thử lại nhé'); });
+      } else if (err && err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){
+        showToast('⚠️ Đăng nhập thất bại: ' + (err.message || err));
+      }
+    });
+  });
+}
+function ownerSignOut(){
+  if (FB.auth){ FB.auth.signOut().then(function(){ showToast('Đã đăng xuất — hẹn gặp lại thầy!'); }); }
+  AUTH.user = null; AUTH.welcomed = false;
+  authGateApply();
+}
+
+/* ===== Chế độ học sinh: chỉ hiện thẻ Vào phòng thi + màn hình thi ===== */
+function enterStudentMode(roomCode){
+  AUTH.hsMode = true;
+  try { document.body.classList.add('hs-mode'); } catch(e){}
+  authGateApply();
+  showSec('sec-game');
+  gameTab('room');
+  if (roomCode){
+    var rc = document.getElementById('rsCode'); if (rc) rc.value = roomCode;
+    var nm = document.getElementById('rsName'); if (nm) nm.focus();
+  }
+  if (!fbHasConfig()){
+    var jm = document.getElementById('rsJoinMsg');
+    if (jm) jm.innerHTML = '<p class="warnbox" style="display:block">⚠️ Phòng thi chưa sẵn sàng — em báo thầy mở phòng giúp em nhé.</p>';
+  }
+}
+function exitStudentMode(){
+  location.href = location.href.split('?')[0].split('#')[0];
+}
+
+/* Khởi động cổng: học sinh đi đường riêng; còn lại kiểm tra đăng nhập chủ sở hữu */
+function authGateBoot(){
+  authGateApply();
+  if (!fbHasConfig()) return;
+  fbEnsure().then(function(ok){
+    if (!ok || !FB.auth){
+      var gm = document.getElementById('authGateMsg');
+      if (gm && !AUTH.hsMode) gm.textContent = '⚠️ Chưa kết nối được Firebase (mạng yếu?) — thầy kiểm tra mạng rồi tải lại trang.';
+      return;
+    }
+    try { var p = FB.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); if (p && p.catch) p.catch(function(){}); } catch(e){}
+    FB.auth.onAuthStateChanged(authHandleState);
+  });
+}
+function authBoot(){
+  var p = hsParse(location.search);
+  if (p.hs){ enterStudentMode(p.room); return; }
+  var m = location.search.match(/[?&]room=([A-Za-z0-9]{6})/);
+  if (m){
+    gameTab('room');
+    showSec('sec-game');
+    var rc = document.getElementById('rsCode'); if (rc) rc.value = m[1].toUpperCase();
+    var nm = document.getElementById('rsName'); if (nm) nm.focus();
+  }
+  authGateBoot();
+}
+/* == EDU_AUTH_END == */
 
 /* ================= PHÒNG THI: GIÁO VIÊN ================= */
 var T = null;
@@ -4360,7 +4818,7 @@ function rtCreateRoom(){
       document.getElementById('rtDetailCard').style.display = 'none';
       document.getElementById('rtFinal').innerHTML = '';
       document.getElementById('rtCodeBig').textContent = code;
-      var link = location.href.split('?')[0].split('#')[0] + '?room=' + code;
+      var link = studentLink(code);
       document.getElementById('rtLink').textContent = link;
       T.link = link;
       var qrEl = document.getElementById('rtQR');
@@ -5025,14 +5483,7 @@ refreshFbSettings();
   if (fcEl && fc) fcEl.value = fc;
 })();
 (function(){
-  var m = location.search.match(/[?&]room=([A-Za-z0-9]{6})/);
-  if (m){
-    gameTab('room');
-    showSec('sec-game');
-    document.getElementById('rsCode').value = m[1].toUpperCase();
-    var nm = document.getElementById('rsName');
-    if (nm) nm.focus();
-  }
+  try { authBoot(); } catch(e){ /* cổng đăng nhập lỗi thì web vẫn chạy như cũ */ }
 })();
 </script>
 </body>
