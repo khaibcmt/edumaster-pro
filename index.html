@@ -766,6 +766,7 @@ body.hs-mode #roomEntry .row2>.card:first-child{display:none!important}
       <div class="kb-block"><label class="kb-label" for="kbRubric">Phụ lục 2 &amp; 3 — Rubric năng lực số / AI (bảng đầy đủ tự sinh khi tải .docx)</label><textarea class="kb-ta" id="kbRubric" rows="4"></textarea></div>
       <div class="btnrow">
         <button class="btn" onclick="khbdDownloadDocx()">📄 Tải .docx ĐÚNG MẪU</button>
+        <button class="btn alt" onclick="khbdCheckPlaceholders()">🔍 Kiểm tra chỗ cần điền</button>
         <button class="btn alt" onclick="khbdCopyAll()">📋 Sao chép toàn văn</button>
         <button class="btn alt" onclick="khbdDownloadTxt()">⬇️ Tải .txt</button>
       </div>
@@ -895,9 +896,12 @@ D. Nhân tế bào
 Đáp án: A</textarea>
       <div class="btnrow">
         <button class="btn alt" onclick="qcAnalyze('mix')">🔍 Phân tích &amp; kiểm tra đáp án</button>
+        <span style="display:inline-flex;align-items:center;gap:6px"><b>Số mã đề:</b>
+          <select id="mixCodes"><option value="1">1 mã</option><option value="2">2 mã</option><option value="3">3 mã</option><option value="4" selected>4 mã</option><option value="5">5 mã</option><option value="6">6 mã</option><option value="7">7 mã</option><option value="8">8 mã</option></select></span>
         <button class="btn" id="mixGoBtn" onclick="mixExam()" disabled>🔀 Trộn đề</button>
         <button class="btn alt" onclick="copyText('mixOut')">📋 Sao chép kết quả</button>
         <button class="btn alt" onclick="mixTextDownloadDocx()">📄 Tải đề đã trộn (.docx)</button>
+        <button class="btn alt" onclick="saveMixToVault()">💾 Lưu đề đã trộn vào kho</button>
       </div>
       <div class="warnbox" id="mixWarn"></div>
       <div id="mixCheck"></div>
@@ -1160,6 +1164,8 @@ D. Nhân tế bào
         <b>🎞️ Bộ slide của bài — xem trước &amp; chỉnh sửa từng slide:</b>
         <button class="btn" onclick="deckPresent()">▶️ Trình chiếu bộ slide</button>
         <button class="btn" onclick="deckDownloadPptx()">📥 Xuất PowerPoint (.pptx)</button>
+        <button class="btn alt" onclick="deckCheckShow()">✅ Kiểm tra bộ slide</button>
+        <button class="btn alt" onclick="saveDeckToVault()">💾 Lưu bộ slide vào kho</button>
       </div>
       <div class="warnbox" id="deckWarn"></div>
       <div id="deckList" style="margin-top:10px"></div>
@@ -1241,8 +1247,8 @@ IV. Axit nucleic</textarea>
   <!-- ============ 10. THƯ VIỆN TÀI LIỆU ============ -->
   <section class="page" id="sec-library">
     <h2 class="ptitle">📚 Module 10 — Thư viện tài liệu</h2>
-    <p class="pdesc">Bấm "Mở tài liệu" để mở thư mục EduMaster Pro trên Google Drive của thầy — nơi lưu các gói KHBD, phiếu học tập và tài liệu tham chiếu (thầy tải các gói .zip lên thư mục này một lần là xem/tải được ở mọi thiết bị).</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Bấm nút <b>Mở tài liệu</b> ở từng thẻ để mở thư mục EduMaster Pro trên Google Drive của thầy — xem và tải kho KHBD, phiếu học tập, ma trận &amp; rubric và tài liệu tham chiếu.</p></div>
+    <p class="pdesc">Bấm "Mở tài liệu" để mở thư mục EduMaster Pro trên Google Drive của thầy — nơi lưu các gói KHBD, phiếu học tập và tài liệu tham chiếu (thầy tải các gói .zip lên thư mục này một lần là xem/tải được ở mọi thiết bị). Ở cuối mục còn có thẻ <b>Tra cứu 167 bài SGK</b> để tìm nhanh từng bài và chuyển thẳng sang soạn KHBD hoặc dựng slide cho bài đó.</p>
+    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Bấm nút <b>Mở tài liệu</b> ở từng thẻ để mở thư mục EduMaster Pro trên Google Drive của thầy — xem và tải kho KHBD, phiếu học tập, ma trận &amp; rubric và tài liệu tham chiếu. Muốn tìm một bài cụ thể: dùng thẻ <b>🔎 Tra cứu 167 bài SGK</b> ở cuối mục — gõ từ khoá hoặc chọn bộ sách, rồi bấm <b>📝 Soạn KHBD</b> / <b>🎞️ Dựng slide</b> ngay trên dòng của bài.</p></div>
     <div class="grid">
       <div class="card mod-card" onclick="showSec('sec-khbd')">
         <div class="ic">📚</div><h3>Kho KHBD — 227 file</h3>
@@ -1265,17 +1271,32 @@ IV. Axit nucleic</textarea>
         <div class="btnrow"><a class="btn lib-open" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener">📂 Mở tài liệu</a></div>
       </div>
     </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin:0 0 8px">🔎 Tra cứu 167 bài SGK</h3>
+      <p class="note">Tra nhanh bài học trong kho thẻ SGK của cả 6 bộ sách (Sinh học 10/11/12, Công nghệ nông nghiệp 10, Công nghệ 11, Công nghệ nông nghiệp 12). Bấm <b>📝 Soạn KHBD</b> hoặc <b>🎞️ Dựng slide</b> ở từng dòng để chuyển thẳng sang module tương ứng với Môn / Khối / Tên bài đã điền sẵn.</p>
+      <div class="row2">
+        <div><label class="fl" style="margin-top:0">Từ khoá (tên bài hoặc số bài)</label><input type="text" id="libQ" placeholder="Ví dụ: DNA — hoặc gõ số bài: 5" oninput="renderLibSgk()"></div>
+        <div><label class="fl" style="margin-top:0">Bộ sách</label>
+          <select id="libBo" onchange="renderLibSgk()">
+            <option value="">Tất cả các bộ</option>
+            <option>Sinh học 10</option><option>Sinh học 11</option><option>Sinh học 12</option>
+            <option>Công nghệ nông nghiệp 10</option><option>Công nghệ 11</option><option>Công nghệ nông nghiệp 12</option>
+          </select></div>
+      </div>
+      <div class="btnrow"><button class="btn" onclick="renderLibSgk()">🔎 Tra cứu</button></div>
+      <div id="libResults" style="margin-top:10px"><p class="note">Bấm "🔎 Tra cứu" để liệt kê các bài (để trống từ khoá sẽ hiện 60 bài đầu của bộ đã chọn).</p></div>
+    </div>
   </section>
 
   <!-- ============ 11. KHO LƯU TRỮ ============ -->
   <section class="page" id="sec-storage">
     <h2 class="ptitle">💾 Module 11 — Kho lưu trữ</h2>
-    <p class="pdesc">Lưu trữ bản nháp và dữ liệu của nền tảng. Kho cục bộ (trên trình duyệt) dùng được ngay; Google Drive sẽ được nối ở giai đoạn sau.</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Bấm lưu ở các nút trong mục này để cất bản nháp KHBD / ngân hàng câu hỏi vào kho cục bộ, mở lại khi cần → dùng <b>Key sao lưu</b> để mang dữ liệu sang máy khác (key sao lưu không chứa API key hay thông tin đăng nhập).</p></div>
+    <p class="pdesc">Lưu trữ bản nháp và dữ liệu của nền tảng: <b>kho cục bộ</b> trên trình duyệt (bản nháp KHBD, ngân hàng câu hỏi, đề đã trộn, bộ slide), <b>danh mục tài liệu Google Drive</b> chạy ngay trên trình duyệt (thêm link, tìm kiếm, mở nhanh) và <b>thư mục Drive thật "EduMaster Pro"</b> của thầy để mở file gốc.</p>
+    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Bấm lưu ở các nút trong mục này (hoặc nút "Lưu vào kho" ngay trong từng module) để cất KHBD / ngân hàng câu hỏi / đề đã trộn / bộ slide vào kho cục bộ, mở lại khi cần → đăng ký link tài liệu Drive vào <b>Danh mục tài liệu</b> bên dưới để tra cứu nhanh → dùng <b>Key sao lưu</b> để mang dữ liệu (gồm cả danh mục Drive) sang máy khác (key sao lưu không chứa API key hay thông tin đăng nhập).</p></div>
 
     <div class="card" style="margin-bottom:14px">
       <h3 style="margin:0 0 8px">☁️ Google Drive</h3>
-      <p class="note" style="margin:0 0 6px">Trạng thái: <b id="drvStatus">Chưa kết nối Google Drive</b></p>
+      <p class="note" style="margin:0 0 6px">Trạng thái: <b id="drvStatus">Danh mục tài liệu dùng ngay trên trình duyệt — thư mục gốc trên Drive: EduMaster Pro</b></p>
       <p class="note">Thư mục gốc của dự án trên Google Drive: <b>EduMaster Pro</b> — toàn bộ file đồng bộ của nền tảng sẽ nằm trong thư mục này.</p>
       <div class="btnrow">
         <button class="btn" onclick="connectDrive()">🔗 Kết nối Google Drive</button>
@@ -1290,6 +1311,8 @@ IV. Axit nucleic</textarea>
       <div class="btnrow">
         <button class="btn" onclick="saveKHBDToVault()">💾 Lưu bản nháp KHBD vào kho</button>
         <button class="btn alt" onclick="saveBankToVault()">💾 Lưu ngân hàng câu hỏi vào kho</button>
+        <button class="btn alt" onclick="saveMixToVault()">💾 Lưu đề đã trộn vào kho</button>
+        <button class="btn alt" onclick="saveDeckToVault()">💾 Lưu bộ slide vào kho</button>
       </div>
       <div id="vaultMsg"></div>
       <h4 style="margin:16px 0 8px">Dữ liệu đã lưu trong kho</h4>
@@ -1298,7 +1321,7 @@ IV. Axit nucleic</textarea>
 
     <div class="card" style="margin-bottom:14px">
       <h3 style="margin:0 0 8px">🔑 Key sao lưu đa máy</h3>
-      <p class="note">Đóng gói toàn bộ dữ liệu cục bộ (kho lưu trữ, ngân hàng câu hỏi, sổ điểm, luật chơi game) thành <b>một đoạn mã văn bản</b> để thầy mang sang máy khác: tạo key ở máy này → sang máy kia dán key vào ô khôi phục là có đủ dữ liệu. <b>Key sao lưu TUYỆT ĐỐI KHÔNG chứa</b> API key, Client ID hay Firebase config (vì lý do bảo mật — các thông tin đó thầy nhập riêng trên từng máy).</p>
+      <p class="note">Đóng gói toàn bộ dữ liệu cục bộ (kho lưu trữ, ngân hàng câu hỏi, sổ điểm, luật chơi game, danh mục tài liệu Drive) thành <b>một đoạn mã văn bản</b> để thầy mang sang máy khác: tạo key ở máy này → sang máy kia dán key vào ô khôi phục là có đủ dữ liệu. <b>Key sao lưu TUYỆT ĐỐI KHÔNG chứa</b> API key, Client ID hay Firebase config (vì lý do bảo mật — các thông tin đó thầy nhập riêng trên từng máy).</p>
       <div class="btnrow">
         <button class="btn" onclick="backupCreate()">🔑 Tạo key sao lưu</button>
         <button class="btn alt" onclick="copyText('bkOut')">📋 Sao chép key</button>
@@ -1316,11 +1339,24 @@ IV. Axit nucleic</textarea>
     </div>
 
     <div class="card">
-      <h3 style="margin:0 0 8px">📁 File trên Google Drive</h3>
-      <div style="border:2px dashed #b9c2e8;border-radius:12px;padding:22px;text-align:center;color:var(--mut);font-size:14px;line-height:1.6">
-        ☁️ Sẽ hiển thị file trong thư mục <b>EduMaster Pro</b> trên Google Drive sau khi kết nối.<br>
-        (Tính năng đồng bộ Drive thật sẽ được bật ở giai đoạn sau.)
+      <h3 style="margin:0 0 8px">📁 Danh mục tài liệu Google Drive</h3>
+      <p class="note">Danh mục này <b>chạy ngay trên trình duyệt</b>: thầy dán link từng tài liệu trên Drive (KHBD, phiếu học tập, đề &amp; ma trận...) vào đây để tra cứu và mở nhanh ở mọi lần dùng sau; danh mục được lưu trong trình duyệt và đi theo Key sao lưu. File gốc vẫn nằm trong thư mục Drive thật của thầy:</p>
+      <div class="btnrow">
+        <a class="btn" href="https://drive.google.com/drive/folders/1MoYDepZjrZNy6A2Gnvkf4KN7NPKDav-f" target="_blank" rel="noopener">📂 Mở thư mục EduMaster Pro</a>
       </div>
+      <div class="row2" style="margin-top:6px">
+        <div><label class="fl" style="margin-top:0">Tên tài liệu</label><input type="text" id="drvName" placeholder="Ví dụ: Gói KHBD Sinh học 12 (227 file)"></div>
+        <div><label class="fl" style="margin-top:0">Loại tài liệu</label>
+          <select id="drvKind"><option>KHBD</option><option>Phiếu học tập</option><option>Đề &amp; ma trận</option><option>Tài liệu khác</option></select></div>
+      </div>
+      <label class="fl">Link Google Drive của tài liệu</label>
+      <input type="text" id="drvUrl" placeholder="https://drive.google.com/...">
+      <label class="fl">Ghi chú (không bắt buộc)</label>
+      <input type="text" id="drvNote" placeholder="Ví dụ: Bản đã chuẩn hoá DKSP, nộp BGH">
+      <div class="btnrow"><button class="btn" onclick="addDriveDoc()">➕ Thêm vào danh mục</button></div>
+      <label class="fl">Tìm trong danh mục</label>
+      <input type="text" id="drvSearch" placeholder="🔎 Gõ tên tài liệu, loại hoặc ghi chú..." oninput="filterDriveRegistry(this.value)">
+      <div id="drvList" style="margin-top:10px"><p class="note">Chưa có tài liệu nào trong danh mục.</p></div>
     </div>
   </section>
 
@@ -1337,13 +1373,13 @@ IV. Axit nucleic</textarea>
       <li>Thầy chỉ cần đăng nhập <b>một lần trên mỗi máy</b> — các lần sau web tự nhớ. Muốn khoá lại, bấm <b>Đăng xuất</b> ở hộp tài khoản trên thanh bên.</li>
       <li><b>Học sinh không cần tài khoản:</b> quét mã QR trên màn hình phòng thi (hoặc mở link phòng — link có dạng <i>?hs=1&room=MÃ-PHÒNG</i>) là vào thẳng ô nhập tên để thi; học sinh không thấy và không dùng được các phần của giáo viên.</li></ul></div>
     <div class="guide-step"><h3>📝 1. Tạo KHBD 5512</h3>
-      <p>Chỉ ghi 4 thông tin: <b>tên bài, khối, lớp, môn</b> → bấm <b>Tạo kế hoạch bài dạy</b> (số tiết, mạch SGK, mã năng lực số/AI hệ thống tự tra kho thẻ bài học SGK) → sửa trực tiếp trong các khung xem trước → bấm <b>Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5 (bảng 2 cột Hoạt động 2, màu NLS/AI, đáp án gạch chân tô đỏ); cũng có nút sao chép toàn văn và tải .txt. Bấm <b>🤖 AI viết nội dung</b> (cần key Gemini của thầy, nhập ở mục Cài đặt hoặc nút 🔑 ở thanh bên) để AI viết nội dung thật theo dàn ý SGK vào các khung xem trước.</p></div>
+      <p>Chỉ ghi 4 thông tin: <b>tên bài, khối, lớp, môn</b> → bấm <b>Tạo kế hoạch bài dạy</b> (số tiết, mạch SGK, mã năng lực số/AI hệ thống tự tra kho thẻ bài học SGK) → sửa trực tiếp trong các khung xem trước → bấm <b>Tải .docx ĐÚNG MẪU</b> để lấy file Word chuẩn v5 (bảng 2 cột Hoạt động 2, màu NLS/AI, đáp án gạch chân tô đỏ); cũng có nút sao chép toàn văn và tải .txt. Phần Mục tiêu có đủ thẻ tích hợp: NLS (tô xanh dương) ở mục 2.3 và AI (tô đỏ) ở mục 2.4. Trước khi xuất file, bấm <b>🔍 Kiểm tra chỗ cần điền</b> ở hàng nút dưới các khung để đếm các chỗ [...] / (nội dung: ...) còn trống theo từng khối — nếu bấm xuất khi vẫn còn chỗ trống, web vẫn xuất file nhưng sẽ cảnh báo số chỗ còn lại. Bấm <b>🤖 AI viết nội dung</b> (cần key Gemini của thầy, nhập ở mục Cài đặt hoặc nút 🔑 ở thanh bên) để AI viết nội dung thật theo dàn ý SGK vào các khung xem trước.</p></div>
     <div class="guide-step"><h3>🧮 2. Ma trận đề</h3>
       <p>Nhập số câu theo 4 phần × 3 mức độ, hệ thống tự tính tổng điểm thang 10. Muốn nhanh: bấm preset <b>Chuẩn 7991</b> (12 – 4 – 6 câu) hoặc <b>Mẫu 24 câu (10 điểm)</b> là ra ngay ma trận đúng 10 điểm; Phần II Đúng/Sai chấm lũy tiến 0,10 – 0,25 – 0,50 – 1,00 theo số ý đúng. Nếu đề có phần tự luận, thầy nhập thêm ở <b>Phần IV — Tự luận</b> và đặt điểm mỗi câu (mặc định 1,0đ/câu, chỉnh được 0,25–3đ) — tổng điểm toàn đề tính cả Phần IV, nên thầy giảm bớt các phần trắc nghiệm cho tổng vẫn đủ 10 điểm (hai preset chưa gồm Tự luận, Phần IV luôn bắt đầu từ 0 câu).</p></div>
     <div class="guide-step"><h3>🗃️ 3. Ngân hàng câu hỏi</h3>
       <p>Lọc câu hỏi theo bài để xem. Bấm <b>Nhập nhiều câu</b> để dán hàng loạt — hệ thống tự nhận đáp án đúng theo nhiều kiểu ghi: dòng <b>"Đáp án: X"</b>, dấu <b>***</b> trước phương án đúng, phương án bọc trong <b>[ ]</b>, hoặc <b>bảng đáp án ở cuối</b> ("1B 2A 3C..." — nhận cả khi không có dòng "Đáp án:" đứng trước). Kiểm tra lại ở <b>bảng kiểm tra trực quan</b>: bấm vào phương án bất kỳ để đặt lại đáp án đúng trước khi lưu. Hoặc bấm <b>🤖 AI sinh câu hỏi</b>: ghi chủ đề và số câu, AI sinh câu đưa vào đúng bảng kiểm tra trực quan đó để thầy duyệt trước khi lưu.</p></div>
     <div class="guide-step"><h3>🔀 4. Trộn đề</h3>
-      <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → bấm trộn → nhận đề đã xáo trộn kèm bảng đáp án mới, xuất được cả .docx và .txt.</li>
+      <ul><li><b>Chế độ dán văn bản:</b> dán đề theo mẫu "Câu n." + 4 dòng A. B. C. D. + đáp án (nhận đa kiểu như Ngân hàng) → xem bảng kiểm tra → chọn <b>Số mã đề (1–8, mặc định 4)</b> ở ô cạnh nút trộn → bấm trộn → nhận đủ các mã đề (mỗi mã xáo trộn thứ tự câu và phương án riêng, kèm <b>bảng đáp án riêng của từng mã</b>), tải .docx hoặc bấm <b>💾 Lưu đề đã trộn vào kho</b> để cất vào Kho lưu trữ.</li>
       <li><b>Chế độ file Word (.docx):</b> nạp thẳng file đề Word — trộn ngay trên cấu trúc tài liệu nên <b>hình ảnh và công thức giữ nguyên vẹn</b>. Câu nào không đọc được đáp án sẽ bị báo và giữ nguyên vị trí (không đoán đáp án). Xem <b>bảng đối chiếu đáp án</b>, bấm xác nhận rồi tải 1–8 mã đề.</li></ul></div>
     <div class="guide-step"><h3>✍️ 5. Ôn tập trắc nghiệm</h3>
       <p>Học sinh chọn bài (hoặc Tất cả) → làm từng câu, đúng/sai tô màu và giải thích ngay → cuối bài có tổng kết điểm /10. Dữ liệu lấy từ Ngân hàng câu hỏi.</p></div>
@@ -1353,19 +1389,19 @@ IV. Axit nucleic</textarea>
     <div class="guide-step"><h3>🧾 7. Phiếu học tập</h3>
       <p>Trang giới thiệu kho 465 file phiếu (155 bài × 3 bản: Học sinh / Học sinh có đáp án / Giáo viên) làm từ hình SGK — file Word lấy từ gói phiếu học tập kèm theo của thầy.</p></div>
     <div class="guide-step"><h3>🎞️ 8. Tạo slide</h3>
-      <p><b>Cách chính — dựng bài giảng theo SGK:</b> chọn Môn – Khối – Lớp – Tên bài → bấm <b>Dựng bộ slide</b>: hệ thống sinh đủ bộ slide theo mạch SGK của bài (bìa, mục tiêu, khởi động, nội dung từng mục có khung chèn hình/sơ đồ/ảnh, đồ thị, video kèm mã QR, câu hỏi tương tác, luyện tập 3 phần, củng cố bằng sơ đồ khối, dặn dò). <b>Sửa từng slide</b> trong khung xem trước (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) → <b>trình chiếu</b> ngay trên web (đáp án chỉ hiện khi bấm nút) hoặc <b>xuất file .pptx</b> đúng mẫu để mở bằng PowerPoint. Cách nhanh cũ (gõ tên bài + các mục, thêm dòng "Đáp án:"), chỉnh cỡ chữ A−/A+, <b>quay số học sinh 1–50</b> và <b>hẹn giờ thảo luận</b> vẫn còn nguyên bên dưới. Bấm <b>🤖 AI điền nội dung</b> (cần key Gemini của thầy) để AI viết nội dung thật cho các slide nội dung, câu hỏi tương tác và luyện tập.</p></div>
+      <p><b>Cách chính — dựng bài giảng theo SGK:</b> chọn Môn – Khối – Lớp – Tên bài → bấm <b>Dựng bộ slide</b>: hệ thống sinh đủ bộ slide theo mạch SGK của bài (bìa, mục tiêu, khởi động, nội dung từng mục có khung chèn hình/sơ đồ/ảnh, đồ thị, video kèm mã QR, câu hỏi tương tác, luyện tập 3 phần, củng cố bằng sơ đồ khối, dặn dò). <b>Sửa từng slide</b> trong khung xem trước (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) → bấm <b>✅ Kiểm tra bộ slide</b> để web rà soát: slide câu hỏi/luyện tập chưa có đáp án, slide nội dung chưa có hình, slide video chưa có link, slide còn chỗ [...] chưa điền — kết quả liệt kê theo từng slide → bấm <b>💾 Lưu bộ slide vào kho</b> để cất bản nháp vào Kho lưu trữ → <b>trình chiếu</b> ngay trên web (đáp án chỉ hiện khi bấm nút) hoặc <b>xuất file .pptx</b> đúng mẫu để mở bằng PowerPoint. Cách nhanh cũ (gõ tên bài + các mục, thêm dòng "Đáp án:"), chỉnh cỡ chữ A−/A+, <b>quay số học sinh 1–50</b> và <b>hẹn giờ thảo luận</b> vẫn còn nguyên bên dưới. Bấm <b>🤖 AI điền nội dung</b> (cần key Gemini của thầy) để AI viết nội dung thật cho các slide nội dung, câu hỏi tương tác và luyện tập.</p></div>
     <div class="guide-step"><h3>📊 9. Sổ điểm</h3>
       <p>Nhập điểm miệng, 15 phút, 1 tiết — điểm trung bình tự tính theo (Miệng + 15 phút + 1 tiết × 2) / 4 và xếp loại Giỏi/Khá/Trung bình/Yếu, có tổng kết số học sinh theo từng loại.</p></div>
     <div class="guide-step"><h3>📚 10. Thư viện tài liệu</h3>
-      <p>Tra cứu nhanh các kho tài liệu của thầy: 227 KHBD, 465 phiếu học tập, ma trận & rubric, tài liệu tham chiếu PPCT/SGK.</p></div>
+      <p>Bốn thẻ kho tài liệu (227 KHBD, 465 phiếu học tập, ma trận & rubric, tài liệu tham chiếu PPCT/SGK) đều mở thư mục <b>EduMaster Pro</b> trên Google Drive của thầy. Bên dưới là thẻ <b>🔎 Tra cứu 167 bài SGK</b>: gõ từ khoá (tên bài hoặc số bài) hoặc chọn bộ sách để liệt kê các bài khớp — bấm <b>📝 Soạn KHBD</b> / <b>🎞️ Dựng slide</b> ở từng dòng là chuyển thẳng sang module tương ứng với Môn / Khối / Tên bài đã điền sẵn.</p></div>
     <div class="guide-step"><h3>💾 11. Kho lưu trữ</h3>
-      <ul><li><b>Kho cục bộ:</b> lưu bản nháp KHBD và ngân hàng câu hỏi vào trình duyệt, tải lại khi cần.</li>
-      <li><b>Key sao lưu đa máy:</b> bấm Tạo key để đóng gói dữ liệu thành một đoạn mã → sang máy khác dán vào ô Khôi phục là có đủ dữ liệu. Key sao lưu <b>không chứa</b> API key hay thông tin kết nối (an toàn).</li>
-      <li><b>Google Drive:</b> thư mục gốc "EduMaster Pro" trên Drive của thầy đã sẵn sàng; đồng bộ Drive thật sẽ bật ở giai đoạn sau.</li></ul></div>
+      <ul><li><b>Kho cục bộ:</b> lưu bản nháp KHBD, ngân hàng câu hỏi, <b>đề đã trộn</b> và <b>bộ slide</b> vào trình duyệt (bấm nút Lưu trong từng module hoặc ngay tại mục Kho), tải lại khi cần — đề đã trộn tải lại vào Module Trộn đề, bộ slide tải lại vào Module Tạo slide để sửa tiếp.</li>
+      <li><b>Danh mục tài liệu Drive:</b> đăng ký link từng tài liệu trên Drive (tên, loại, link, ghi chú) vào danh mục chạy ngay trên trình duyệt — tìm kiếm theo từ khoá, bấm <b>Mở</b> là tới thẳng file; nút <b>📂 Mở thư mục EduMaster Pro</b> mở thư mục gốc trên Drive thật.</li>
+      <li><b>Key sao lưu đa máy:</b> bấm Tạo key để đóng gói dữ liệu (gồm cả danh mục tài liệu Drive) thành một đoạn mã → sang máy khác dán vào ô Khôi phục là có đủ dữ liệu. Key sao lưu <b>không chứa</b> API key hay thông tin kết nối (an toàn).</li></ul></div>
     <div class="guide-step"><h3>⚙️ 12. Cài đặt</h3>
       <ul><li><b>Gemini API key:</b> dán nhiều key (mỗi dòng 1 key), hệ thống tự xoay vòng khi gọi AI; chọn mô hình mặc định: Flash-Lite (nhanh nhất), Flash (cân bằng), Pro (chuyên sâu). Đây là khung chuẩn bị cho đợt nối AI.</li>
       <li><b>Firebase config:</b> dán đoạn firebaseConfig của project Firebase miễn phí để mở phòng thi trực tuyến.</li>
-      <li><b>Google OAuth Client ID:</b> dùng cho kết nối Drive ở giai đoạn sau.</li>
+      <li><b>Google OAuth Client ID:</b> để dành cho đợt đồng bộ Drive tự động sau này — hiện tại mục Kho lưu trữ đã dùng được ngay bằng Danh mục tài liệu Drive (đăng ký link) và nút mở thư mục Drive, không cần Client ID.</li>
       <li>Mọi thông tin chỉ lưu trong trình duyệt của chính thầy — đừng chia sẻ key cho người khác.</li></ul></div>
     <div class="guide-step"><h3>💡 Mẹo hay</h3>
       <ul><li>Trước khi trộn đề, luôn liếc qua <b>bảng kiểm tra/đối chiếu đáp án</b> — 10 giây kiểm tra đổi lấy một bảng đáp án chắc chắn đúng.</li>
@@ -1413,7 +1449,7 @@ IV. Axit nucleic</textarea>
 
     <div class="card">
       <h3 style="margin:0 0 4px">☁️ Google OAuth Client ID</h3>
-      <p class="note">Dùng để kết nối Google Drive (Module Kho lưu trữ) ở giai đoạn sau. Client ID do thầy tự tạo trong Google Cloud Console của mình rồi dán vào đây.</p>
+      <p class="note">Để dành cho đợt đồng bộ Google Drive tự động sau này. Hiện tại Module Kho lưu trữ đã dùng được ngay: Danh mục tài liệu Drive (đăng ký link từng tài liệu) và nút mở thư mục EduMaster Pro trên Drive thật — chưa cần Client ID. Khi nào làm đợt đồng bộ tự động, Client ID do thầy tự tạo trong Google Cloud Console của mình rồi dán vào đây.</p>
       <label class="fl">Google OAuth Client ID</label>
       <input type="text" id="setGClient" placeholder="Ví dụ: 1234567890-abc...apps.googleusercontent.com" autocomplete="off">
       <div class="btnrow">
@@ -1425,7 +1461,7 @@ IV. Axit nucleic</textarea>
     </div>
   </section>
 
-  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v11 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
+  <footer>EduMaster Pro — 10 trong 1 • Phiên bản v12 • Sản phẩm hỗ trợ giảng dạy của GV Hồ Tấn Khải — Trường THPT Mang Thít • Các module cơ bản chạy offline; Phòng thi trực tuyến cần mạng (Firebase đã tích hợp sẵn, chỉ thầy đăng nhập mới dùng được).</footer>
 </main>
 
 <!-- ============ HỘP THOẠI NHẬP KEY NHANH ============ -->
@@ -1682,7 +1718,7 @@ var MODULES = [
   {sec:'sec-slide',   ic:'🎞️', t:'8. Tạo slide',           d:'Sinh dàn ý slide từ tên bài và các mục nội dung.'},
   {sec:'sec-grade',   ic:'📊', t:'9. Sổ điểm',             d:'Nhập điểm, tự tính điểm trung bình và xếp loại học lực.'},
   {sec:'sec-library', ic:'📚', t:'10. Thư viện tài liệu',  d:'Kho 227 KHBD, phiếu học tập, ma trận và rubric đi kèm.'},
-  {sec:'sec-storage', ic:'💾', t:'11. Kho lưu trữ',        d:'Lưu bản nháp vào kho cục bộ; sẵn sàng nối Google Drive.'},
+  {sec:'sec-storage', ic:'💾', t:'11. Kho lưu trữ',        d:'Lưu KHBD, đề đã trộn, bộ slide vào kho cục bộ; danh mục tài liệu Drive dùng ngay trên trình duyệt.'},
   {sec:'sec-settings',ic:'⚙️', t:'12. Cài đặt',            d:'Tự nhập Gemini API key và Google Client ID của riêng thầy.'},
   {sec:'sec-guide',   ic:'📖', t:'13. Hướng dẫn sử dụng',  d:'Cách dùng từng module, luật chơi game và các mẹo hay.'}
 ];
@@ -1817,6 +1853,7 @@ function genKHBD(){
 '2.3. Năng lực số (NLS ' + nls + '): Học sinh sử dụng thiết bị số và phần mềm để tra cứu thông tin, hình ảnh của bài và trình bày sản phẩm học tập.\n' +
 '👉 [Tích hợp năng lực số: NLS ' + nls + ' — HS tra cứu tư liệu số của bài và trình chiếu kết quả thảo luận ở Hoạt động 2].\n' +
 '2.4. Năng lực AI (' + ai + '): Học sinh bước đầu biết dùng công cụ AI hỗ trợ học tập có trách nhiệm: biết đặt câu hỏi, biết đối chiếu kết quả AI với SGK trước khi sử dụng.\n' +
+'👉 [Tích hợp năng lực AI: ' + ai + ' — HS dùng công cụ AI hỗ trợ học tập có trách nhiệm, đối chiếu SGK ở Hoạt động 4].\n' +
 '3. Phẩm chất: Chăm chỉ (chủ động thực hiện nhiệm vụ học tập); trung thực (báo cáo đúng kết quả quan sát, thảo luận); trách nhiệm (có ý thức vận dụng kiến thức của bài vào bảo vệ sức khoẻ, môi trường và sản xuất).\n' +
 '4. Tích hợp khác: 👉 [Tích hợp giáo dục bảo vệ môi trường và phát triển bền vững — liên hệ nội dung bài với thực tiễn địa phương].');
 
@@ -1954,9 +1991,53 @@ function khbdDownloadTxt(){
   khbdAssembleText();
   downloadTxt('khbdOut', khbdFileBase() + '.txt');
 }
+/* --- Đếm chỗ trống còn phải điền trong các khối KHBD (thuần dữ liệu) ---
+   Chỗ trống gồm: "[...]", "(nội dung: ..." và dòng chỉ gồm "..." → { perBlock: {id: số}, total } */
+function khbdPlaceholderScan(blocks){
+  var perBlock = {}, total = 0;
+  Object.keys(blocks || {}).forEach(function(id){
+    var text = String((blocks || {})[id] || '');
+    var n = 0, mm;
+    var re1 = /\[\.\.\.\]/g;
+    while ((mm = re1.exec(text)) !== null) n++;
+    var re2 = /\(nội dung:/g;
+    while ((mm = re2.exec(text)) !== null) n++;
+    text.split(/\r?\n/).forEach(function(ln){ if (/^\s*\.\.\.\s*$/.test(ln)) n++; });
+    perBlock[id] = n;
+    total += n;
+  });
+  return { perBlock: perBlock, total: total };
+}
+var KHBD_BLOCK_LABELS = { kbMucTieu: 'I. Mục tiêu', kbThietBi: 'II. Thiết bị và học liệu', kbHD1: 'Hoạt động 1 — Mở đầu', kbHD2GV: 'Hoạt động 2 — cột GV–HS', kbHD2SP: 'Hoạt động 2 — Dự kiến sản phẩm', kbHD3: 'Hoạt động 3 — Luyện tập', kbHD4: 'Hoạt động 4 — Vận dụng', kbPL1: 'Phụ lục 1 — Phiếu học tập', kbRubric: 'Phụ lục 2 & 3 — Rubric' };
+function khbdCollectBlocks(){
+  var blocks = {};
+  Object.keys(KHBD_BLOCK_LABELS).forEach(function(id){
+    var el = document.getElementById(id);
+    blocks[id] = el ? el.value : '';
+  });
+  return blocks;
+}
+/* Bấm "🔍 Kiểm tra chỗ cần điền": rà các khung xem trước, liệt kê khối còn chỗ trống vào #khbdNote */
+function khbdCheckPlaceholders(){
+  if (!khbdGenerated){ showToast('⚠️ Thầy bấm "Tạo kế hoạch bài dạy" trước đã nhé'); return null; }
+  var res = khbdPlaceholderScan(khbdCollectBlocks());
+  var note = document.getElementById('khbdNote');
+  if (note){
+    if (!res.total){
+      note.innerHTML = '<div class="okbox" style="display:block">✅ Không còn chỗ trống nào dạng [...] / (nội dung: ...) trong các khung xem trước — KHBD đã điền đầy đủ, sẵn sàng xuất .docx.</div>';
+    } else {
+      var items = Object.keys(res.perBlock).filter(function(id){ return res.perBlock[id] > 0; })
+        .map(function(id){ return '• <b>' + (KHBD_BLOCK_LABELS[id] || id) + '</b>: ' + res.perBlock[id] + ' chỗ'; }).join('<br>');
+      note.innerHTML = '<div class="warnbox" style="display:block">🔍 <b>Còn ' + res.total + ' chỗ cần điền</b> trong các khung xem trước:<br>' + items + '<br><span class="note">Thầy điền các chỗ [...] / (nội dung: ...) rồi kiểm tra lại — vẫn xuất .docx được nhưng file sẽ còn nguyên các chỗ trống này.</span></div>';
+    }
+  }
+  return res;
+}
 /* Xuất .docx ĐÚNG MẪU v5 từ chính các khối đã sửa trong khung xem trước */
 function khbdDownloadDocx(){
   if (!khbdGenerated || !_khbdMeta){ showToast('⚠️ Thầy bấm "Tạo kế hoạch bài dạy" trước đã nhé'); return; }
+  var scanDl = khbdPlaceholderScan(khbdCollectBlocks());
+  if (scanDl.total > 0) showToast('⚠️ KHBD còn ' + scanDl.total + ' chỗ trống [...] chưa điền — em vẫn xuất .docx, thầy nhớ điền nốt nhé', 4200);
   var m = _khbdMeta;
   var gv = function(id){ var el = document.getElementById(id); return el ? el.value : ''; };
   var data = {
@@ -2347,6 +2428,21 @@ function qcToggleUse(kind, qi, cb){
   st.used[qi] = !!cb.checked;
   qcRender(kind);
 }
+/* --- Logic thuần trộn nhiều mã đề: mỗi mã xáo trộn thứ tự câu VÀ phương án độc lập ---
+   qs: [{q, opts[4], ans}] → [{code, items:[{q, opts, ans}], key:[chữ cái đáp án theo thứ tự câu]}] */
+function mixBuildCodes(qs, nCodes){
+  var letters = ['A','B','C','D'];
+  var n = Math.max(1, Math.min(8, parseInt(nCodes, 10) || 1));
+  var codes = [];
+  for (var c = 0; c < n; c++){
+    var mixed = shuffle(qs).map(function(x){
+      var order = shuffle([0,1,2,3]);
+      return { q: x.q, opts: order.map(function(i){ return x.opts[i]; }), ans: order.indexOf(x.ans) };
+    });
+    codes.push({ code: c + 1, items: mixed, key: mixed.map(function(x){ return letters[x.ans]; }) });
+  }
+  return codes;
+}
 function mixExam(){
   window._mixTextOut = '';
   var ta = document.getElementById('mixIn');
@@ -2362,18 +2458,35 @@ function mixExam(){
   mixWarnShow('mixWarn', '');
   var letters = ['A','B','C','D'];
   var sel = st.qs.filter(function(q, i){ return st.used[i]; }).map(function(q){ return { q: q.q, opts: q.opts.slice(0, 4), ans: q.ans }; });
-  var mixed = shuffle(sel).map(function(x){
-    var order = shuffle([0,1,2,3]);
-    return { q: x.q, opts: order.map(function(i){ return x.opts[i]; }), ans: order.indexOf(x.ans) };
-  });
-  var out = 'ĐỀ SAU KHI TRỘN (' + mixed.length + ' câu)\n———————————————————————————————\n\n';
-  mixed.forEach(function(x, i){
-    out += 'Câu ' + (i + 1) + '. ' + x.q + '\n';
-    x.opts.forEach(function(op, j){ out += letters[j] + '. ' + op + '\n'; });
-    out += '\n';
-  });
-  out += '———————————————————————————————\nBẢNG ĐÁP ÁN\n';
-  mixed.forEach(function(x, i){ out += 'Câu ' + (i + 1) + ': ' + letters[x.ans] + (i < mixed.length - 1 ? '   |   ' : ''); if ((i + 1) % 5 === 0) out += '\n'; });
+  var mcEl = document.getElementById('mixCodes');
+  var nCodes = mcEl ? (parseInt(mcEl.value, 10) || 1) : 1;
+  var codes = mixBuildCodes(sel, nCodes);
+  window._mixCount = sel.length;
+  window._mixCodeCount = codes.length;
+  var out;
+  if (codes.length === 1){
+    var mixed = codes[0].items;
+    out = 'ĐỀ SAU KHI TRỘN (' + mixed.length + ' câu)\n———————————————————————————————\n\n';
+    mixed.forEach(function(x, i){
+      out += 'Câu ' + (i + 1) + '. ' + x.q + '\n';
+      x.opts.forEach(function(op, j){ out += letters[j] + '. ' + op + '\n'; });
+      out += '\n';
+    });
+    out += '———————————————————————————————\nBẢNG ĐÁP ÁN\n';
+    mixed.forEach(function(x, i){ out += 'Câu ' + (i + 1) + ': ' + letters[x.ans] + (i < mixed.length - 1 ? '   |   ' : ''); if ((i + 1) % 5 === 0) out += '\n'; });
+  } else {
+    out = codes.map(function(cd){
+      var s = '═══ MÃ ĐỀ ' + cd.code + ' ═══\nĐỀ THI — MÃ ĐỀ ' + cd.code + ' (' + cd.items.length + ' câu)\n———————————————————————————————\n\n';
+      cd.items.forEach(function(x, i){
+        s += 'Câu ' + (i + 1) + '. ' + x.q + '\n';
+        x.opts.forEach(function(op, j){ s += letters[j] + '. ' + op + '\n'; });
+        s += '\n';
+      });
+      s += '———————————————————————————————\nBẢNG ĐÁP ÁN MÃ ' + cd.code + '\n';
+      cd.items.forEach(function(x, i){ s += 'Câu ' + (i + 1) + ': ' + letters[x.ans] + (i < cd.items.length - 1 ? '   |   ' : ''); if ((i + 1) % 5 === 0) s += '\n'; });
+      return s;
+    }).join('\n\n');
+  }
   document.getElementById('mixOut').textContent = out;
   window._mixTextOut = out;
 }
@@ -3534,6 +3647,48 @@ function deckSyncFromDOM(){
     }
   }
 }
+/* --- Kiểm tra độ hoàn thiện của bộ slide (thuần dữ liệu, không chạm DOM) ---
+   Nhận deck dạng {slides:[...]} (hoặc mảng slide). Trả về mảng cảnh báo tiếng Việt,
+   mỗi cảnh báo ghi rõ số slide + tiêu đề rút gọn. */
+function deckChecklist(deck){
+  var slides = !deck ? [] : (Array.isArray(deck) ? deck : (deck.slides || []));
+  var warns = [];
+  slides.forEach(function(s, i){
+    var no = i + 1;
+    var tt = String((s && s.title) || '').replace(/\s+/g, ' ').trim();
+    var short = tt.length > 42 ? tt.slice(0, 42) + '…' : tt;
+    var tag = 'Slide ' + no + (short ? ' (' + short + ')' : '') + ': ';
+    if (!s) return;
+    var text = [s.title || ''].concat(s.lines || []).join('\n');
+    if ((s.type === 'ask' || s.type === 'practice') && !String(s.answer || '').trim())
+      warns.push(tag + 'chưa có đáp án (ô Đáp án đang trống).');
+    if (s.type === 'content' && !s.img)
+      warns.push(tag + 'chưa có hình / sơ đồ / ảnh thật (khung hình đang trống).');
+    if (s.type === 'video' && !String(s.video || '').trim())
+      warns.push(tag + 'chưa có link video.');
+    if (text.indexOf('[...]') !== -1 || text.indexOf('A. ...') !== -1)
+      warns.push(tag + 'còn nội dung chờ điền ([...] hoặc phương án "A. ...").');
+  });
+  return warns;
+}
+/* --- Bấm "✅ Kiểm tra bộ slide": đồng bộ khung sửa rồi hiện kết quả rà soát vào #deckWarn --- */
+function deckCheckShow(){
+  var el = document.getElementById('deckWarn');
+  if (!DECK || !DECK.slides || !DECK.slides.length){
+    if (el){ el.className = 'warnbox'; mixWarnShow('deckWarn', '⚠️ Thầy bấm "✨ Dựng bộ slide" trước đã nhé.'); }
+    return;
+  }
+  deckSyncFromDOM();
+  var warns = deckChecklist(DECK);
+  if (!el) return;
+  if (!warns.length){
+    el.className = 'okbox'; el.style.display = 'block';
+    el.innerHTML = '✅ Bộ slide đã đầy đủ: slide câu hỏi / luyện tập đều có đáp án, slide nội dung đã có hình, slide video đã có link, không còn chỗ [...] chờ điền.';
+  } else {
+    el.className = 'warnbox'; el.style.display = 'block';
+    el.innerHTML = '⚠️ <b>Còn ' + warns.length + ' điểm cần bổ sung:</b><br>' + warns.map(function(w){ return '• ' + esc(w); }).join('<br>');
+  }
+}
 function deckMove(i, d){
   if (!DECK) return;
   deckSyncFromDOM();
@@ -3695,6 +3850,61 @@ function calcGrades(){
 document.getElementById('gradeBody').addEventListener('input', calcGrades);
 [['Nguyễn Văn An', 8, 7, 9], ['Trần Thị Bình', 9, 8, 8], ['Lê Văn Cường', 6, 6, 5], ['Phạm Thị Dung', 7, 9, 8], ['Hoàng Văn Em', 5, 4, 6]].forEach(function(s){ addGradeRow(s); });
 
+/* ================= MODULE 10: THƯ VIỆN — TRA CỨU KHO THẺ SGK ================= */
+/* Lọc kho SGK_CARDS theo từ khoá (không dấu, theo tên bài hoặc số bài) và bộ sách — thuần dữ liệu */
+function libSgkRows(kw, boName){
+  var cards = (typeof SGK_CARDS !== 'undefined' && SGK_CARDS) ? SGK_CARDS : [];
+  var f = khbdFold(kw || '');
+  return cards.filter(function(c){
+    if (boName && c.bo !== boName) return false;
+    if (!f) return true;
+    return khbdFold(c.ten_bai).indexOf(f) !== -1 || String(c.bai) === f || ('bai ' + c.bai) === f || khbdFold('bai ' + c.bai + ': ' + c.ten_bai).indexOf(f) !== -1;
+  });
+}
+/* Suy Môn + Khối từ tên bộ sách: Sinh học k → Sinh học/khối k; CNNN 10, 12 → Công nghệ nông nghiệp; Công nghệ 11 → Công nghệ/11 */
+function libBoToMonKhoi(bo){
+  var s = String(bo || '');
+  var m = s.match(/^Sinh học (\d+)$/);
+  if (m) return { mon: 'Sinh học', khoi: m[1] };
+  if (s === 'Công nghệ 11') return { mon: 'Công nghệ', khoi: '11' };
+  var m2 = s.match(/^Công nghệ nông nghiệp (\d+)$/);
+  if (m2) return { mon: 'Công nghệ nông nghiệp', khoi: m2[1] };
+  return { mon: 'Sinh học', khoi: '12' };
+}
+function libOpenKhbd(bo, bai, tenBai){
+  var mk = libBoToMonKhoi(bo);
+  var monEl = document.getElementById('kMon'), khoiEl = document.getElementById('kKhoi'), baiEl = document.getElementById('kBai');
+  if (monEl) monEl.value = mk.mon;
+  if (khoiEl) khoiEl.value = mk.khoi;
+  khbdRefreshList();
+  if (baiEl) baiEl.value = 'Bài ' + bai + ': ' + tenBai;
+  showSec('sec-khbd');
+}
+function libOpenDeck(bo, bai, tenBai){
+  var mk = libBoToMonKhoi(bo);
+  var monEl = document.getElementById('dkMon'), khoiEl = document.getElementById('dkKhoi'), baiEl = document.getElementById('dkBai');
+  if (monEl) monEl.value = mk.mon;
+  if (khoiEl) khoiEl.value = mk.khoi;
+  deckRefreshList();
+  if (baiEl) baiEl.value = 'Bài ' + bai + ': ' + tenBai;
+  showSec('sec-slide');
+}
+function renderLibSgk(){
+  var box = document.getElementById('libResults');
+  if (!box) return;
+  var qEl = document.getElementById('libQ'), boEl = document.getElementById('libBo');
+  var rows = libSgkRows(qEl ? qEl.value : '', boEl ? boEl.value : '');
+  if (!rows.length){ box.innerHTML = '<p class="note">Không tìm thấy bài nào khớp — thầy thử từ khoá khác hoặc chọn "Tất cả các bộ".</p>'; return; }
+  var shown = rows.slice(0, 60);
+  box.innerHTML = '<p class="note" style="margin:0 0 8px">Tìm thấy <b>' + rows.length + '</b> bài' + (rows.length > 60 ? ' — đang hiện 60 bài đầu, thầy gõ thêm từ khoá để thu hẹp' : '') + ':</p>' +
+    shown.map(function(c){
+      var tenEsc = esc(String(c.ten_bai).replace(/'/g, '’'));
+      return '<div class="qitem"><p style="margin:0 0 6px"><b>Bài ' + c.bai + ': ' + esc(c.ten_bai) + '</b> <span class="note">(' + esc(c.bo) + ' • ' + (c.so_tiet || 2) + ' tiết)</span></p>' +
+        '<button class="btn sm" onclick="libOpenKhbd(\'' + esc(c.bo) + '\',' + c.bai + ',\'' + tenEsc + '\')">📝 Soạn KHBD</button> ' +
+        '<button class="btn alt sm" onclick="libOpenDeck(\'' + esc(c.bo) + '\',' + c.bai + ',\'' + tenEsc + '\')">🎞️ Dựng slide</button></div>';
+    }).join('');
+}
+
 /* ================= MODULE 11: KHO LƯU TRỮ ================= */
 function loadVault(){ try { return JSON.parse(localStorage.getItem(LS_VAULT) || '[]'); } catch(e){ return []; } }
 function storeVault(v){ try { localStorage.setItem(LS_VAULT, JSON.stringify(v)); } catch(e){ alert('Trình duyệt không lưu thêm được (có thể đã đầy bộ nhớ cục bộ).'); } }
@@ -3706,14 +3916,10 @@ function vaultMsg(txt, ok){
 function connectDrive(){
   var el = document.getElementById('drvMsg');
   el.style.display = 'block'; el.style.marginTop = '12px';
-  if (!getGClientId()){
-    el.className = 'warnbox'; el.style.display = 'block';
-    el.innerHTML = '⚠️ Chưa có Google OAuth Client ID — thầy vào mục <b>Cài đặt</b> để nhập Client ID của mình trước nhé. Đây là cơ chế tự nhập giống API key: web tuyệt đối không nhúng sẵn thông tin đăng nhập nào. Khi đã có Client ID, kết nối Drive thật sẽ dùng chính Client ID đó ở giai đoạn sau.';
-  } else {
-    el.className = 'okbox';
-    el.innerHTML = '✅ Đã có Google OAuth Client ID trong mục Cài đặt. Bản v1 hiện ở mức sẵn sàng kết nối — việc đăng nhập Google và đồng bộ thư mục <b>EduMaster Pro</b> trên Drive sẽ được bật ở giai đoạn sau.';
-    document.getElementById('drvStatus').textContent = 'Đã sẵn sàng kết nối (đã có Client ID) — chờ bật đồng bộ Drive ở giai đoạn sau';
-  }
+  el.className = 'okbox';
+  el.innerHTML = '☁️ <b>Danh mục tài liệu Drive</b> ở thẻ cuối mục này đã <b>dùng được ngay trên trình duyệt</b> — thầy thêm link tài liệu, tìm kiếm và bấm mở là tới thẳng file trên Drive, không cần kết nối thêm. File gốc của thầy nằm trong thư mục <b>EduMaster Pro</b> trên Google Drive: bấm nút <b>📂 Mở thư mục EduMaster Pro</b> trong thẻ Danh mục để mở.' +
+    (getGClientId() ? ' Google OAuth Client ID trong mục Cài đặt đã được lưu sẵn trên máy này.' : '');
+  document.getElementById('drvStatus').textContent = 'Danh mục tài liệu chạy ngay trên trình duyệt; thư mục Drive "EduMaster Pro" mở trực tiếp bằng nút trong thẻ Danh mục';
 }
 function saveKHBDToVault(){
   if (!khbdGenerated){ vaultMsg('⚠️ Chưa có bản nháp KHBD — thầy hãy sang Module 1. Tạo KHBD 5512 và bấm "Tạo kế hoạch bài dạy" trước nhé!', false); return; }
@@ -3726,6 +3932,33 @@ function saveKHBDToVault(){
   storeVault(v); renderVault();
   vaultMsg('✅ Đã lưu bản nháp KHBD vào kho cục bộ.', true);
 }
+function saveMixToVault(){
+  if (!window._mixTextOut){ vaultMsg('⚠️ Chưa có đề đã trộn — thầy sang Module 4. Trộn đề, bấm "🔀 Trộn đề" trước nhé!', false); showToast('⚠️ Chưa có đề đã trộn — thầy bấm "🔀 Trộn đề" trước nhé'); return; }
+  var nQ = window._mixCount || 0;
+  if (!nQ){ var mm = String(window._mixTextOut).match(/Câu \d+\./g); nQ = mm ? mm.length : 0; }
+  var nC = window._mixCodeCount || 1;
+  var v = loadVault();
+  v.unshift({ id: Date.now() + 2, type: 'mix',
+    name: 'Đề đã trộn — ' + nQ + ' câu, ' + nC + ' mã đề',
+    time: new Date().toLocaleString('vi-VN'),
+    data: window._mixTextOut });
+  storeVault(v); renderVault();
+  vaultMsg('✅ Đã lưu đề đã trộn (' + nQ + ' câu, ' + nC + ' mã đề) vào kho cục bộ.', true);
+  showToast('✅ Đã lưu đề đã trộn vào kho', 2200);
+}
+function saveDeckToVault(){
+  if (!DECK || !DECK.slides || !DECK.slides.length){ vaultMsg('⚠️ Chưa có bộ slide — thầy sang Module 8. Tạo slide và bấm "✨ Dựng bộ slide" trước nhé!', false); showToast('⚠️ Chưa có bộ slide — thầy bấm "✨ Dựng bộ slide" trước nhé'); return; }
+  deckSyncFromDOM();
+  var tenBai = (DECK.meta && DECK.meta.tenBai) ? DECK.meta.tenBai : 'Chưa đặt tên bài';
+  var v = loadVault();
+  v.unshift({ id: Date.now() + 3, type: 'deck',
+    name: 'Bộ slide — ' + tenBai,
+    time: new Date().toLocaleString('vi-VN'),
+    data: JSON.stringify(DECK) });
+  storeVault(v); renderVault();
+  vaultMsg('✅ Đã lưu bộ slide "' + tenBai + '" vào kho cục bộ.', true);
+  showToast('✅ Đã lưu bộ slide vào kho', 2200);
+}
 function saveBankToVault(){
   var v = loadVault();
   v.unshift({ id: Date.now() + 1, type: 'bank',
@@ -3735,11 +3968,67 @@ function saveBankToVault(){
   storeVault(v); renderVault();
   vaultMsg('✅ Đã lưu ngân hàng câu hỏi (' + QUESTIONS.length + ' câu) vào kho cục bộ.', true);
 }
+/* --- Danh mục tài liệu Google Drive: đăng ký link tài liệu, chạy ngay trên trình duyệt ---
+   Lưu ở localStorage 'edumaster_drive_registry': [{id, name, kind, url, note}] — chỉ là link + ghi chú, KHÔNG chứa thông tin nhạy cảm. */
+var LS_DRVREG = 'edumaster_drive_registry';
+function drvRegLoad(){ try { return JSON.parse(localStorage.getItem(LS_DRVREG) || '[]'); } catch(e){ return []; } }
+function drvRegStore(list){ try { localStorage.setItem(LS_DRVREG, JSON.stringify(list || [])); } catch(e){ alert('Trình duyệt không lưu thêm được (có thể đã đầy bộ nhớ cục bộ).'); } }
+/* Thuần dữ liệu: thêm một tài liệu vào danh mục (bỏ qua khi thiếu tên/link), không sửa mảng gốc */
+function drvRegAdd(list, entry){
+  var out = (list || []).slice();
+  if (!entry || !String(entry.name || '').trim() || !String(entry.url || '').trim()) return out;
+  out.unshift({ id: entry.id != null ? entry.id : Date.now(),
+    name: String(entry.name).trim(),
+    kind: entry.kind || 'Tài liệu khác',
+    url: String(entry.url).trim(),
+    note: String(entry.note || '').trim() });
+  return out;
+}
+/* Thuần dữ liệu: tìm theo từ khoá không dấu trên tên + loại + ghi chú; từ khoá rỗng → trả toàn bộ */
+function drvRegSearch(list, kw){
+  var arr = (list || []).slice();
+  var f = khbdFold(kw || '');
+  if (!f) return arr;
+  return arr.filter(function(e){ return khbdFold((e.name || '') + ' ' + (e.kind || '') + ' ' + (e.note || '')).indexOf(f) !== -1; });
+}
+function renderDriveRegistry(){
+  var el = document.getElementById('drvList');
+  if (!el) return;
+  var kwEl = document.getElementById('drvSearch');
+  var list = drvRegSearch(drvRegLoad(), kwEl ? kwEl.value : '');
+  if (!list.length){
+    el.innerHTML = '<p class="note">' + (kwEl && kwEl.value ? 'Không có tài liệu nào trong danh mục khớp từ khoá tìm kiếm.' : 'Chưa có tài liệu nào trong danh mục.') + '</p>';
+    return;
+  }
+  el.innerHTML = list.map(function(e){
+    return '<div class="qitem"><p style="margin:0 0 4px"><b>📄 ' + esc(e.name) + '</b> <span class="badge">' + esc(e.kind || 'Tài liệu khác') + '</span></p>' +
+      (e.note ? '<p class="note" style="margin:0 0 9px">' + esc(e.note) + '</p>' : '') +
+      '<a class="btn sm" href="' + esc(e.url) + '" target="_blank" rel="noopener">📂 Mở</a> ' +
+      '<button class="btn alt sm" onclick="delDriveDoc(' + e.id + ')">🗑️ Xoá</button></div>';
+  }).join('');
+}
+function addDriveDoc(){
+  var nameEl = document.getElementById('drvName'), urlEl = document.getElementById('drvUrl');
+  var kindEl = document.getElementById('drvKind'), noteEl = document.getElementById('drvNote');
+  var name = nameEl ? nameEl.value.trim() : '', url = urlEl ? urlEl.value.trim() : '';
+  if (!name || !url){ showToast('⚠️ Thầy nhập Tên tài liệu và Link Drive trước nhé'); return; }
+  drvRegStore(drvRegAdd(drvRegLoad(), { name: name, kind: kindEl ? kindEl.value : 'Tài liệu khác', url: url, note: noteEl ? noteEl.value : '' }));
+  if (nameEl) nameEl.value = '';
+  if (urlEl) urlEl.value = '';
+  if (noteEl) noteEl.value = '';
+  renderDriveRegistry();
+  showToast('✅ Đã thêm tài liệu vào danh mục Drive', 2200);
+}
+function delDriveDoc(id){
+  drvRegStore(drvRegLoad().filter(function(e){ return String(e.id) !== String(id); }));
+  renderDriveRegistry();
+}
+function filterDriveRegistry(kw){ renderDriveRegistry(); }
 function renderVault(){
   var v = loadVault(), el = document.getElementById('vaultList');
   if (!v.length){ el.innerHTML = '<p class="note">Chưa có dữ liệu nào trong kho.</p>'; return; }
   el.innerHTML = v.map(function(it){
-    return '<div class="qitem"><p style="margin:0 0 4px"><b>' + (it.type === 'khbd' ? '📝 ' : '🗃️ ') + esc(it.name) + '</b></p>' +
+    return '<div class="qitem"><p style="margin:0 0 4px"><b>' + (it.type === 'khbd' ? '📝 ' : it.type === 'bank' ? '🗃️ ' : it.type === 'mix' ? '🔀 ' : it.type === 'deck' ? '🎞️ ' : '📄 ') + esc(it.name) + '</b></p>' +
       '<p class="note" style="margin:0 0 9px">Đã lưu lúc: ' + esc(it.time) + '</p>' +
       '<button class="btn sm" onclick="loadFromVault(' + it.id + ')">⬆️ Tải lại</button> ' +
       '<button class="btn alt sm" onclick="deleteFromVault(' + it.id + ')">🗑️ Xoá</button></div>';
@@ -3749,7 +4038,18 @@ function loadFromVault(id){
   var it = null;
   loadVault().forEach(function(x){ if (x.id === id) it = x; });
   if (!it) return;
-  if (it.type === 'khbd'){
+  if (it.type === 'mix'){
+    window._mixTextOut = it.data;
+    var mo = document.getElementById('mixOut');
+    if (mo) mo.textContent = it.data;
+    showSec('sec-mix');
+  } else if (it.type === 'deck'){
+    try { DECK = JSON.parse(it.data); } catch(e){ vaultMsg('⚠️ Dữ liệu bộ slide trong kho bị lỗi, không tải lại được.', false); return; }
+    var dw = document.getElementById('deckWrap');
+    if (dw) dw.style.display = 'block';
+    deckRender();
+    showSec('sec-slide');
+  } else if (it.type === 'khbd'){
     document.getElementById('khbdOut').textContent = it.data;
     khbdGenerated = true;
     if (typeof khbdRestoreText === 'function') khbdRestoreText(it.data); /* đổ lại vào các khung xem trước để sửa tiếp */
@@ -3767,6 +4067,7 @@ function deleteFromVault(id){
   renderVault();
 }
 renderVault();
+renderDriveRegistry();
 
 /* --- Key sao lưu đa máy: đóng gói dữ liệu cục bộ thành 1 đoạn mã mang sang máy khác.
        TUYỆT ĐỐI không đưa API key / Client ID / Firebase config vào key sao lưu. --- */
@@ -3792,13 +4093,14 @@ function backupCollect(){
     vault: loadVault(),
     bank: JSON.parse(JSON.stringify(QUESTIONS)),
     grades: grades,
-    rules: rules };
+    rules: rules,
+    driveRegistry: drvRegLoad() };
 }
 function backupCreate(){
   var data = backupCollect();
   var code = 'EDUMASTER-BACKUP:' + btoa(unescape(encodeURIComponent(JSON.stringify(data))));
   document.getElementById('bkOut').value = code;
-  bkMsgShow('✅ Đã tạo key sao lưu (' + code.length + ' ký tự) gồm: kho lưu trữ ' + data.vault.length + ' mục • ngân hàng ' + data.bank.length + ' câu • sổ điểm ' + data.grades.length + ' học sinh • luật chơi game. Key KHÔNG chứa API key / Client ID / Firebase config.', true);
+  bkMsgShow('✅ Đã tạo key sao lưu (' + code.length + ' ký tự) gồm: kho lưu trữ ' + data.vault.length + ' mục • ngân hàng ' + data.bank.length + ' câu • sổ điểm ' + data.grades.length + ' học sinh • luật chơi game • danh mục Drive ' + (data.driveRegistry || []).length + ' tài liệu. Key KHÔNG chứa API key / Client ID / Firebase config.', true);
 }
 function backupInspect(){
   _bkParsed = null;
@@ -3817,6 +4119,7 @@ function backupInspect(){
     '• Ngân hàng câu hỏi: <b>' + ((data.bank || []).length) + '</b> câu<br>' +
     '• Sổ điểm: <b>' + ((data.grades || []).length) + '</b> học sinh<br>' +
     '• Luật chơi game: <b>' + (data.rules ? 'có' : 'không') + '</b><br>' +
+    '• Danh mục tài liệu Drive: <b>' + ((data.driveRegistry || []).length) + '</b> tài liệu<br>' +
     '<span class="note">Bấm nút "Xác nhận khôi phục" sẽ GHI ĐÈ dữ liệu tương ứng hiện tại trên máy này.</span></div>';
   document.getElementById('bkRestoreBtn').disabled = false;
   bkMsgShow('', true);
@@ -3841,6 +4144,7 @@ function backupRestore(){
     applyRulesToPanels(data.rules);
     try { localStorage.setItem('edumaster_rules_saved', JSON.stringify(data.rules)); } catch(e){}
   }
+  if (Array.isArray(data.driveRegistry)){ drvRegStore(data.driveRegistry); renderDriveRegistry(); }
   bkMsgShow('✅ Đã khôi phục xong dữ liệu từ key sao lưu!', true);
 }
 function applyRulesToPanels(R){
