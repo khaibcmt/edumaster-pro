@@ -545,6 +545,14 @@ section.page>.card{margin-bottom:22px}
 .slide-mini{border:0;border-left:4px solid;background:transparent;padding:10px 4px 10px 16px;margin-bottom:14px}
 .slide-mini h4{font-size:17px}
 .slide-mini ul{font-size:16px;line-height:1.6}
+/* V9: Bộ dựng bài giảng theo SGK — khung xem trước & sửa từng slide (phẳng, vệt trái màu module) */
+.deck-item{border:0;border-left:4px solid var(--mc,#d97706);background:transparent;padding:12px 4px 14px 16px;margin-bottom:16px}
+.deck-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.deck-type{font-size:12.5px;font-weight:700;background:#fef3c7;color:var(--mcd,#92400e);border-radius:20px;padding:2px 10px}
+.deck-head .sp{flex:1}
+.deck-item label.fl{margin-top:9px}
+.deck-thumb{max-width:230px;max-height:160px;border-radius:8px;display:block;margin:6px 0;border:1px solid #e5e7eb}
+.deck-imgrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .guide-step{background:transparent;border:0;border-left:4px solid #6366f1;padding:10px 4px 10px 18px;margin-bottom:18px}
 .guide-step h3{font-size:18.5px}
 .guide-step p,.guide-step li{font-size:16.5px;line-height:1.6}
@@ -1071,10 +1079,46 @@ D. Nhân tế bào
 
   <!-- ============ 8. TẠO SLIDE ============ -->
   <section class="page" id="sec-slide">
-    <h2 class="ptitle">🎞️ Module 8 — Tạo slide (dàn ý)</h2>
-    <p class="pdesc">Nhập tên bài và các mục nội dung (mỗi dòng một mục) — hệ thống sinh dàn ý slide: 1 slide tiêu đề + mỗi mục 1 slide kèm gạch đầu dòng gợi ý để thầy hoàn thiện.</p>
-    <div class="guidebox"><p>📌 <b>Chỉ dẫn:</b> Ghi tên bài và các mục nội dung (mỗi dòng một mục) → bấm tạo slide → xem trước bên dưới, chỉnh cỡ chữ nếu cần → tải file .pptx hoặc bấm trình chiếu để dạy ngay.</p></div>
+    <h2 class="ptitle">🎞️ Module 8 — Tạo slide bài giảng</h2>
+    <p class="pdesc"><b>Cách chính:</b> chọn Môn – Khối – Lớp – Tên bài, hệ thống tự dựng <b>bộ slide bài giảng theo đúng mạch SGK</b> (bìa, mục tiêu, khởi động, nội dung từng mục có khung hình, đồ thị, video, câu hỏi tương tác, luyện tập 3 phần, củng cố, dặn dò) để thầy xem trước, sửa từng slide rồi xuất .pptx. Bên dưới vẫn còn cách tạo dàn ý nhanh từ văn bản và các công cụ lớp học.</p>
+    <div class="guidebox">
+      <p>📌 <b>Chỉ dẫn:</b> ① Chọn <b>Môn – Khối – Lớp</b> và <b>Tên bài</b> → ② Bấm <b>✨ Dựng bộ slide</b>: bộ slide hiện ra bên dưới theo đúng mạch SGK.</p>
+      <p>③ <b>Sửa từng slide</b> ngay trong khung xem trước: sửa tiêu đề và nội dung, <b>thả ảnh</b> vào khung hình của slide nội dung, <b>dán link YouTube</b> vào slide video, <b>sửa nhãn + số</b> ở slide đồ thị — ④ Bấm <b>▶️ Trình chiếu bộ slide</b> để dạy ngay (slide câu hỏi bấm "Hiện đáp án" mới lộ đáp án) hoặc <b>📥 Xuất PowerPoint (.pptx)</b> để lấy file về máy.</p>
+    </div>
     <div id="aiNote-slide"></div>
+    <div class="card">
+      <span class="mode-tag">🎓 DỰNG BÀI GIẢNG THEO SGK</span>
+      <div class="row3">
+        <div><label class="fl" style="margin-top:0">Môn</label>
+          <select id="dkMon" onchange="deckRefreshList()">
+            <option value="Sinh học" selected>Sinh học</option>
+            <option value="Công nghệ nông nghiệp">Công nghệ nông nghiệp</option>
+            <option value="Công nghệ">Công nghệ</option>
+          </select></div>
+        <div><label class="fl" style="margin-top:0">Khối</label>
+          <select id="dkKhoi" onchange="deckRefreshList()">
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12" selected>12</option>
+          </select></div>
+        <div><label class="fl" style="margin-top:0">Lớp</label><input type="text" id="dkLop" value="12A1"></div>
+      </div>
+      <label class="fl">Tên bài (chọn từ kho SGK hoặc gõ "Bài n")</label>
+      <input type="text" id="dkBai" list="dkBaiList" placeholder="Ví dụ: Bài 1: DNA và cơ chế tái bản">
+      <datalist id="dkBaiList"></datalist>
+      <div class="btnrow"><button class="btn" onclick="deckBuild()">✨ Dựng bộ slide</button></div>
+      <p class="note" id="deckNote" style="margin:8px 0 0">Bộ slide gồm đủ: slide bìa → mục tiêu → câu hỏi khởi động → từng mục nội dung (có khung chèn hình/sơ đồ/ảnh thật) → slide đồ thị → slide video (dán link, tự sinh mã QR) → câu hỏi tương tác giữa bài → luyện tập 3 phần → củng cố bằng sơ đồ tóm tắt → dặn dò.</p>
+    </div>
+    <div id="deckWrap" style="display:none;margin-top:14px">
+      <div class="btnrow" style="align-items:center">
+        <b>🎞️ Bộ slide của bài — xem trước &amp; chỉnh sửa từng slide:</b>
+        <button class="btn" onclick="deckPresent()">▶️ Trình chiếu bộ slide</button>
+        <button class="btn" onclick="deckDownloadPptx()">📥 Xuất PowerPoint (.pptx)</button>
+      </div>
+      <div class="warnbox" id="deckWarn"></div>
+      <div id="deckList" style="margin-top:10px"></div>
+      <div class="btnrow"><button class="btn alt" onclick="deckAdd()">➕ Thêm slide trống</button></div>
+    </div>
     <div class="card">
       <label class="fl" style="margin-top:0">Tên bài</label>
       <input type="text" id="sBai" value="Bài 5: Các phân tử sinh học">
@@ -1259,7 +1303,7 @@ IV. Axit nucleic</textarea>
     <div class="guide-step"><h3>🧾 7. Phiếu học tập</h3>
       <p>Trang giới thiệu kho 465 file phiếu (155 bài × 3 bản: Học sinh / Học sinh có đáp án / Giáo viên) làm từ hình SGK — file Word lấy từ gói phiếu học tập kèm theo của thầy.</p></div>
     <div class="guide-step"><h3>🎞️ 8. Tạo slide</h3>
-      <p>Nhập tên bài + mỗi mục một dòng → sinh dàn ý; thêm dòng con bắt đầu bằng <b>"Đáp án:"</b> để gắn đáp án cho slide của mục đó. Có chỉnh cỡ chữ A−/A+, <b>trình chiếu toàn màn hình</b> (phím mũi tên/Cách để chuyển, nút Hiện/Ẩn đáp án), <b>quay số học sinh 1–50</b>, <b>hẹn giờ thảo luận</b> và nút <b>tải file .pptx</b> mở PowerPoint chỉnh tiếp.</p></div>
+      <p><b>Cách chính — dựng bài giảng theo SGK:</b> chọn Môn – Khối – Lớp – Tên bài → bấm <b>Dựng bộ slide</b>: hệ thống sinh đủ bộ slide theo mạch SGK của bài (bìa, mục tiêu, khởi động, nội dung từng mục có khung chèn hình/sơ đồ/ảnh, đồ thị, video kèm mã QR, câu hỏi tương tác, luyện tập 3 phần, củng cố bằng sơ đồ khối, dặn dò). <b>Sửa từng slide</b> trong khung xem trước (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) → <b>trình chiếu</b> ngay trên web (đáp án chỉ hiện khi bấm nút) hoặc <b>xuất file .pptx</b> đúng mẫu để mở bằng PowerPoint. Cách nhanh cũ (gõ tên bài + các mục, thêm dòng "Đáp án:"), chỉnh cỡ chữ A−/A+, <b>quay số học sinh 1–50</b> và <b>hẹn giờ thảo luận</b> vẫn còn nguyên bên dưới.</p></div>
     <div class="guide-step"><h3>📊 9. Sổ điểm</h3>
       <p>Nhập điểm miệng, 15 phút, 1 tiết — điểm trung bình tự tính theo (Miệng + 15 phút + 1 tiết × 2) / 4 và xếp loại Giỏi/Khá/Trung bình/Yếu, có tổng kết số học sinh theo từng loại.</p></div>
     <div class="guide-step"><h3>📚 10. Thư viện tài liệu</h3>
@@ -2496,7 +2540,161 @@ var EduDocx = (function(){
     return { '[Content_Types].xml': ct, '_rels/.rels': rels, 'word/document.xml': doc };
   }
 
-  return { shuffleDocumentXml: shuffleDocumentXml, parseDocument: parseDocument, buildMinimalDocxFiles: buildMinimalDocxFiles, buildDeck: buildDeck, fitFontSize: fitFontSize, buildKhbdDocxFiles: buildKhbdDocxFiles, _paraText: paraText };
+  /* --- BÀI GIẢNG SGK (V9): dựng .pptx từ MÔ HÌNH BỘ SLIDE (thuần, không DOM) ---
+     data = { meta:{mon,khoi,lop,baiNo,tenBai}, fontScale,
+              slides:[{type,title,lines,answer,img,chart:{labels,values},video,qrData,branches}] }
+     Mẫu thống nhất 16:9, chữ to: bìa nền tím thương hiệu + dải cam; chương mục nền cam module Slide;
+     nội dung thanh tiêu đề cam, thân 20–24pt; slide câu hỏi được nối NGAY SAU bằng slide đáp án nền nhạt;
+     củng cố vẽ sơ đồ khối thật bằng shape (hộp trung tâm + hộp nhánh + đường nối);
+     chân trang các slide nội dung: "Bài n: Tên bài — EduMaster Pro" + số trang. */
+  function buildLessonDeck(P, data){
+    var pptx = new P();
+    pptx.defineLayout({ name: 'EDU_WIDE', width: 13.33, height: 7.5 });
+    pptx.layout = 'EDU_WIDE';
+    var meta = data.meta || {};
+    pptx.author = 'Hồ Tấn Khải — Trường THPT Mang Thít';
+    pptx.title = (meta.baiNo ? 'Bài ' + meta.baiNo + ': ' : '') + (meta.tenBai || 'Bài giảng');
+    var FS = data.fontScale || 1;
+    function FZ(v){ return Math.max(10, Math.round(v * FS)); }
+    var BRAND = '6A11CB', BAND = 'EA580C', MOD = 'D97706', MODD = '92400E', DARK = '1C2340',
+        CREAM = 'FFF7ED', ANSBG = 'FEF3C7', OKC = '15803D', GREY = '6B7280', GRID = 'E5E7EB';
+    var slides = data.slides || [];
+    var total = 0;
+    slides.forEach(function(s){ total += 1 + (((s.type === 'ask' || s.type === 'practice') && s.answer) ? 1 : 0); });
+    var pageNo = 0;
+    var footTxt = 'Bài ' + (meta.baiNo || '') + ': ' + (meta.tenBai || '') + ' — EduMaster Pro';
+    function footer(s){
+      s.addText(footTxt, { x: 0.5, y: 7.12, w: 10.5, h: 0.3, fontFace: 'Arial', fontSize: 10.5, color: GREY });
+      s.addText(pageNo + ' / ' + total, { x: 12.15, y: 7.12, w: 0.85, h: 0.3, fontFace: 'Arial', fontSize: 10.5, color: GREY, align: 'right' });
+    }
+    function headBar(s, title, barColor){
+      s.addShape('rect', { x: 0, y: 0, w: 13.33, h: 1.15, fill: { color: barColor || MOD }, line: { type: 'none' } });
+      s.addText(String(title || ''), { x: 0.5, y: 0.1, w: 12.33, h: 0.95, fontFace: 'Arial', fontSize: FZ(fitFontSize(title, 28, 15)), bold: true, color: 'FFFFFF', valign: 'middle' });
+    }
+    function bullets(s, lines, x, y, w, h, fs){
+      var txt = (lines || []).map(function(line){ return { text: String(line), options: { bullet: true, breakLine: true } }; });
+      if (!txt.length) txt = [{ text: '...', options: { breakLine: true } }];
+      s.addText(txt, { x: x, y: y, w: w, h: h, fontFace: 'Arial', fontSize: FZ(fs), color: DARK, lineSpacingMultiple: 1.25, valign: 'top' });
+    }
+    function fsFor(lines, base){
+      var L = (lines || []).join('').length;
+      return L > 340 ? Math.min(base, 20) : (L > 200 ? Math.min(base, 22) : base);
+    }
+    function answerSlide(src){
+      pageNo++;
+      var s = pptx.addSlide();
+      s.background = { color: ANSBG };
+      headBar(s, '✅ ĐÁP ÁN — ' + String(src.title || '').replace(/^LUYỆN TẬP\s*—\s*/, ''), OKC);
+      s.addText(String(src.answer || ''), { x: 0.7, y: 1.6, w: 11.93, h: 5.1, fontFace: 'Arial', fontSize: FZ(22), bold: true, color: OKC, lineSpacingMultiple: 1.3, valign: 'top' });
+      footer(s);
+    }
+    slides.forEach(function(sl){
+      pageNo++;
+      var s = pptx.addSlide();
+      if (sl.type === 'title'){
+        s.background = { color: BRAND };
+        s.addShape('rect', { x: 0, y: 5.35, w: 13.33, h: 2.15, fill: { color: BAND }, line: { type: 'none' } });
+        s.addText(String(sl.title || '').toUpperCase(), { x: 0.7, y: 1.0, w: 11.93, h: 3.5, fontFace: 'Arial', fontSize: FZ(fitFontSize(sl.title, 40, 20)), bold: true, color: 'FFFFFF', align: 'center', valign: 'middle' });
+        s.addText((sl.lines || []).join('\n'), { x: 0.7, y: 5.6, w: 11.93, h: 1.65, fontFace: 'Arial', fontSize: FZ(18), color: 'FFFFFF', align: 'center', valign: 'middle' });
+        return;
+      }
+      if (sl.type === 'section'){
+        s.background = { color: MOD };
+        s.addText(String(sl.title || ''), { x: 0.9, y: 2.1, w: 11.53, h: 2.7, fontFace: 'Arial', fontSize: FZ(fitFontSize(sl.title, 36, 20)), bold: true, color: 'FFFFFF', align: 'center', valign: 'middle' });
+        s.addText('— ' + footTxt + ' —', { x: 0.9, y: 5.15, w: 11.53, h: 0.5, fontFace: 'Arial', fontSize: FZ(14), color: 'FDE68A', align: 'center' });
+        return;
+      }
+      if (sl.type === 'chart'){
+        headBar(s, sl.title);
+        var ch = sl.chart || { labels: [], values: [] };
+        var ct = 'bar';
+        try {
+          if (pptx.ChartType && pptx.ChartType.bar) ct = pptx.ChartType.bar;
+          else if (pptx.charts && pptx.charts.BAR) ct = pptx.charts.BAR;
+          else if (pptx.CHART_TYPE && pptx.CHART_TYPE.BAR) ct = pptx.CHART_TYPE.BAR;
+        } catch (e) {}
+        s.addChart(ct, [{ name: 'Số liệu', labels: ch.labels || [], values: ch.values || [] }],
+          { x: 0.7, y: 1.45, w: 11.93, h: 4.9, barDir: 'col', chartColors: [MOD], showValue: true, showTitle: false,
+            catAxisLabelFontSize: 14, valAxisLabelFontSize: 12, valGridLine: { color: GRID, size: 0.75 } });
+        if ((sl.lines || []).length) s.addText(sl.lines.join(' '), { x: 0.7, y: 6.45, w: 11.93, h: 0.5, fontFace: 'Arial', fontSize: FZ(13), italic: true, color: GREY });
+        footer(s);
+        return;
+      }
+      if (sl.type === 'video'){
+        headBar(s, sl.title);
+        s.addText('▶', { x: 0.6, y: 1.7, w: 2.2, h: 2.2, fontFace: 'Arial', fontSize: FZ(90), bold: true, color: MOD, align: 'center', valign: 'middle' });
+        var vx = 3.1, vw = sl.qrData ? 6.3 : 9.5;
+        if (sl.video){
+          s.addText('Video minh hoạ của bài — mở đường link dưới đây hoặc quét mã QR để xem:', { x: vx, y: 1.85, w: vw, h: 0.65, fontFace: 'Arial', fontSize: FZ(18), color: DARK });
+          s.addText(String(sl.video), { x: vx, y: 2.55, w: vw, h: 1.2, fontFace: 'Arial', fontSize: FZ(16), color: '1D4ED8', valign: 'top' });
+        } else {
+          var vlines = (sl.lines && sl.lines.length) ? sl.lines : ['Chưa có link video — thầy dán link YouTube vào ô "Link video" trong khung sửa slide rồi xuất lại file.'];
+          s.addText(vlines.join('\n'), { x: vx, y: 1.85, w: vw, h: 2.7, fontFace: 'Arial', fontSize: FZ(18), color: DARK, lineSpacingMultiple: 1.3 });
+        }
+        if (sl.qrData) s.addImage({ data: sl.qrData, x: 10.0, y: 1.6, w: 2.55, h: 2.55 });
+        footer(s);
+        return;
+      }
+      if (sl.type === 'summary'){
+        headBar(s, sl.title);
+        var br = (sl.branches && sl.branches.length ? sl.branches : (sl.lines || []).map(function(l){ return String(l).replace(/^\s*[IVXLCDM]+\.\s*/, ''); })).slice(0, 6);
+        s.addShape('roundRect', { x: 4.17, y: 1.45, w: 5.0, h: 1.0, fill: { color: MOD }, line: { color: MODD, width: 1 }, rectRadius: 0.12 });
+        s.addText('BÀI ' + (meta.baiNo || '') + ': ' + String(meta.tenBai || ''), { x: 4.32, y: 1.53, w: 4.7, h: 0.85, fontFace: 'Arial', fontSize: FZ(fitFontSize(meta.tenBai, 17, 11)), bold: true, color: 'FFFFFF', align: 'center', valign: 'middle' });
+        if (br.length){
+          var cols = Math.min(3, br.length), bw = 3.95, bh = 0.95, gap = 0.28;
+          var rowW = cols * bw + (cols - 1) * gap, x0 = (13.33 - rowW) / 2, centers = [], ci;
+          for (ci = 0; ci < cols; ci++) centers.push(x0 + ci * (bw + gap) + bw / 2);
+          s.addShape('rect', { x: 6.64, y: 2.45, w: 0.045, h: 0.38, fill: { color: MOD }, line: { type: 'none' } });
+          if (cols > 1) s.addShape('rect', { x: centers[0], y: 2.8, w: centers[cols - 1] - centers[0], h: 0.045, fill: { color: MOD }, line: { type: 'none' } });
+          br.forEach(function(b, bi){
+            var r = Math.floor(bi / cols), c2 = bi % cols;
+            var bx = x0 + c2 * (bw + gap), by = 3.15 + r * 1.55;
+            if (r === 0) s.addShape('rect', { x: centers[c2] - 0.022, y: 2.82, w: 0.045, h: 0.33, fill: { color: MOD }, line: { type: 'none' } });
+            s.addShape('roundRect', { x: bx, y: by, w: bw, h: bh, fill: { color: 'FFFFFF' }, line: { color: MOD, width: 1.5 }, rectRadius: 0.1 });
+            s.addText(String(b), { x: bx + 0.12, y: by + 0.06, w: bw - 0.24, h: bh - 0.12, fontFace: 'Arial', fontSize: FZ(fitFontSize(b, 15, 10)), bold: true, color: MODD, align: 'center', valign: 'middle' });
+          });
+        }
+        footer(s);
+        return;
+      }
+      if (sl.type === 'ask'){
+        headBar(s, sl.title);
+        var lines = sl.lines || [];
+        s.addText(String(lines[0] || ''), { x: 0.7, y: 1.45, w: 11.93, h: 2.2, fontFace: 'Arial', fontSize: FZ(26), bold: true, color: DARK, lineSpacingMultiple: 1.25, valign: 'top' });
+        if (lines.length > 1)
+          s.addText(lines.slice(1).map(function(l){ return { text: String(l), options: { breakLine: true, paraSpaceAfter: 8 } }; }),
+            { x: 0.9, y: 3.8, w: 11.7, h: 3.0, fontFace: 'Arial', fontSize: FZ(22), color: DARK, lineSpacingMultiple: 1.3, valign: 'top' });
+        footer(s);
+        if (sl.answer) answerSlide(sl);
+        return;
+      }
+      if (sl.type === 'practice'){
+        headBar(s, sl.title, MODD);
+        var plines = sl.lines || [];
+        var runs = plines.map(function(line){
+          return { text: String(line), options: { bold: /^Câu\s*\d/.test(line), breakLine: true, paraSpaceAfter: 6 } };
+        });
+        if (!runs.length) runs = [{ text: '...', options: { breakLine: true } }];
+        s.addText(runs, { x: 0.7, y: 1.5, w: 11.93, h: 5.3, fontFace: 'Arial', fontSize: FZ(plines.length > 8 ? 20 : 22), color: DARK, lineSpacingMultiple: 1.3, valign: 'top' });
+        footer(s);
+        if (sl.answer) answerSlide(sl);
+        return;
+      }
+      /* goal / content / homework và các loại còn lại: bố cục nội dung chuẩn */
+      s.background = { color: sl.type === 'homework' ? CREAM : 'FFFFFF' };
+      headBar(s, sl.title);
+      if (sl.img){
+        bullets(s, sl.lines, 0.6, 1.5, 7.15, 5.4, fsFor(sl.lines, 22));
+        s.addImage({ data: sl.img, x: 8.0, y: 1.5, w: 4.75, h: 5.35, sizing: { type: 'contain', w: 4.75, h: 5.35 } });
+      } else {
+        bullets(s, sl.lines, 0.6, 1.5, 12.13, 5.4, fsFor(sl.lines, 24));
+      }
+      footer(s);
+    });
+    return pptx;
+  }
+
+  return { shuffleDocumentXml: shuffleDocumentXml, parseDocument: parseDocument, buildMinimalDocxFiles: buildMinimalDocxFiles, buildDeck: buildDeck, buildLessonDeck: buildLessonDeck, fitFontSize: fitFontSize, buildKhbdDocxFiles: buildKhbdDocxFiles, _paraText: paraText };
 })();
 /* == EDU_DOCX_PURE_END == */
 
@@ -2781,8 +2979,10 @@ function genSlides(){
 /* --- Trình chiếu toàn màn hình --- */
 var _pres = { idx: 0, slides: [] };
 function presentStart(){
-  var data = buildSlideData();
-  _pres.slides = data.preview; _pres.idx = 0;
+  presentOpen(buildSlideData().preview);
+}
+function presentOpen(slidesArr){
+  _pres.slides = slidesArr; _pres.idx = 0;
   var ov = document.getElementById('presentOverlay');
   ov.classList.add('open'); ov.setAttribute('aria-hidden', 'false');
   ov.style.setProperty('--pfs', _slideFs);
@@ -2823,6 +3023,279 @@ function presentEnd(){
   ov.classList.remove('open'); ov.setAttribute('aria-hidden', 'true');
   document.removeEventListener('keydown', presentKey);
 }
+
+/* ================= BỘ DỰNG BÀI GIẢNG THEO SGK (V9) =================
+   Trình tự: chọn Môn – Khối – Lớp – Tên bài → deckBuildModel tra thẻ SGK_CARDS
+   → xem trước & sửa từng slide (deckRender) → trình chiếu (deckPresent)
+   hoặc xuất .pptx đúng mẫu (EduDocx.buildLessonDeck qua deckDownloadPptx). */
+var DECK = null;
+var DECK_TYPE_LABEL = { title: 'Slide bìa', goal: 'Mục tiêu', ask: 'Câu hỏi tương tác', section: 'Chương mục', content: 'Nội dung', chart: 'Đồ thị', video: 'Video', practice: 'Luyện tập', summary: 'Củng cố — sơ đồ tóm tắt', homework: 'Dặn dò' };
+function deckSlide(type, title, lines, answer){
+  return { type: type, title: title, lines: lines || [], answer: answer || '', img: null, chart: null, video: null, qrData: null, branches: null };
+}
+function deckCleanTitle(s){ return String(s || '').replace(/^\s*[IVXLCDM]+\.\s*/, '').trim(); }
+function deckAttr(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+/* Gợi ý tên bài theo bộ đã chọn — dùng chung kho SGK và hàm tra cứu với Module KHBD */
+function deckRefreshList(){
+  var monEl = document.getElementById('dkMon'), khoiEl = document.getElementById('dkKhoi'), dl = document.getElementById('dkBaiList');
+  if (!monEl || !khoiEl || !dl) return;
+  var cards = khbdCardsOf(khbdBoName(monEl.value, khoiEl.value));
+  dl.innerHTML = cards.map(function(c){ return '<option value="Bài ' + c.bai + ': ' + esc(c.ten_bai) + '">'; }).join('');
+}
+function deckChartSlide(){
+  var s = deckSlide('chart', 'SỐ LIỆU — ĐỒ THỊ MINH HOẠ',
+    ['Số liệu mẫu để minh hoạ cách đọc đồ thị — thầy sửa nhãn và số liệu trong khung sửa slide cho khớp nội dung bài.']);
+  s.chart = { labels: ['Nhóm 1', 'Nhóm 2', 'Nhóm 3', 'Nhóm 4'], values: [12, 19, 8, 15] };
+  return s;
+}
+function deckVideoSlide(){
+  return deckSlide('video', 'VIDEO MINH HOẠ',
+    ['Dán link YouTube vào ô "Link video" trong khung sửa slide này — khi xuất .pptx, slide sẽ có đường link kèm mã QR để học sinh quét xem ngay trên điện thoại.']);
+}
+/* --- Dựng MÔ HÌNH bộ slide từ thẻ SGK (thuần dữ liệu, không chạm DOM) --- */
+function deckBuildModel(mon, khoi, lop, baiTxt){
+  var card = (typeof khbdFindCard === 'function') ? khbdFindCard(mon, khoi, baiTxt) : null;
+  var baiNo, tenBai;
+  if (card){ baiNo = card.bai; tenBai = card.ten_bai; }
+  else {
+    var mNum = String(baiTxt || '').match(/(\d{1,2})/);
+    baiNo = mNum ? parseInt(mNum[1], 10) : 0;
+    tenBai = (String(baiTxt || '').replace(/^\s*(?:bài|bai)?\s*\d{1,2}\s*[:.)\-–]?\s*/i, '') || 'BÀI HỌC MỚI').toUpperCase();
+  }
+  var mucLon = card ? (card.muc_lon || []) : [];
+  var moiMuc = card ? (card.moi_muc_lon || []) : [];
+  var topics = (typeof khbdTopics === 'function') ? khbdTopics(card) : [];
+  var topicAt = function(i){ return (typeof khbdTopicAt === 'function') ? khbdTopicAt(topics, i) : 'nội dung trọng tâm của bài'; };
+  var S = [];
+  /* 1) Slide bìa */
+  S.push(deckSlide('title', (baiNo ? 'Bài ' + baiNo + ': ' : '') + tenBai,
+    [mon + ' ' + khoi + ' — ' + lop, 'Giáo viên: Hồ Tấn Khải — Trường THPT Mang Thít']));
+  /* 2) Mục tiêu bài học (3–5 ý theo dàn ý thẻ) */
+  var goalLines = [];
+  mucLon.slice(0, 4).forEach(function(ml){ goalLines.push('Trình bày được nội dung: ' + deckCleanTitle(ml) + '.'); });
+  if (goalLines.length < 3) goalLines.push('Vận dụng được kiến thức của bài để giải thích hiện tượng, tình huống trong thực tiễn đời sống và sản xuất.');
+  if (goalLines.length < 3) goalLines.push('Rèn kĩ năng quan sát hình/sơ đồ SGK, thảo luận nhóm và trình bày kết quả học tập.');
+  S.push(deckSlide('goal', 'MỤC TIÊU BÀI HỌC', goalLines));
+  /* 3) Câu hỏi khởi động / tương tác mở bài */
+  S.push(deckSlide('ask', 'KHỞI ĐỘNG — CÂU HỎI TƯƠNG TÁC',
+    ['Quan sát hình ảnh / tình huống mở đầu trong SGK: em đã biết những gì về "' + topicAt(0) + '"? Hãy chia sẻ cùng cả lớp.'],
+    'Gợi ý: học sinh trả lời tự do theo hiểu biết ban đầu; giáo viên dẫn dắt vào bài mới — nội dung đầy đủ ở phần hình thành kiến thức.'));
+  /* 4) Nội dung theo từng mục lớn của SGK */
+  if (!mucLon.length){
+    [['I. (Tên mục lớn thứ nhất theo SGK)', ['1. (Tiểu mục): [ghi nội dung cốt lõi...]', '2. (Tiểu mục): [ghi nội dung cốt lõi...]']],
+     ['II. (Tên mục lớn thứ hai theo SGK)', ['1. (Tiểu mục): [ghi nội dung cốt lõi...]', '2. (Tiểu mục): [ghi nội dung cốt lõi...]']]].forEach(function(g, gi){
+      S.push(deckSlide('section', g[0], []));
+      S.push(deckSlide('content', deckCleanTitle(g[0]) || g[0], g[1]));
+      if (gi === 0){ S.push(deckChartSlide()); S.push(deckVideoSlide()); }
+    });
+  } else {
+    mucLon.forEach(function(ml, i){
+      S.push(deckSlide('section', ml, []));
+      var subs = (moiMuc[i] || []).slice();
+      if (!subs.length){
+        S.push(deckSlide('content', deckCleanTitle(ml), ['(Nội dung cốt lõi của mục: [thầy ghi các ý chính theo SGK...])']));
+      } else {
+        for (var c0 = 0; c0 < subs.length; c0 += 3){
+          var chunk = subs.slice(c0, c0 + 3);
+          var tt = deckCleanTitle(ml) + (subs.length > 3 ? ' (' + (c0 / 3 + 1) + '/' + Math.ceil(subs.length / 3) + ')' : '');
+          S.push(deckSlide('content', tt, chunk.map(function(sm){ return khbdStripNo(sm) + ': [...]'; })));
+        }
+      }
+      if (i === 0){ S.push(deckChartSlide()); S.push(deckVideoSlide()); }
+      if ((i + 1) % 2 === 0 && i < mucLon.length - 1){
+        S.push(deckSlide('ask', 'CÂU HỎI TƯƠNG TÁC',
+          ['[Câu hỏi về: ' + topicAt(i + 2) + ']', 'A. ...', 'B. ...', 'C. ...', 'D. ...'],
+          'Đáp án: ... (thầy điền đáp án đúng kèm giải thích ngắn trước khi dạy).'));
+      }
+    });
+  }
+  /* 5) Luyện tập đủ 3 phần */
+  S.push(deckSlide('practice', 'LUYỆN TẬP — PHẦN I: TRẮC NGHIỆM NHIỀU LỰA CHỌN',
+    ['Câu 1. [Câu hỏi về: ' + topicAt(1) + ']', 'A. ...', 'B. ...', 'C. ...', 'D. ...',
+     'Câu 2. [Câu hỏi về: ' + topicAt(2) + ']', 'A. ...', 'B. ...', 'C. ...', 'D. ...'],
+    'Câu 1: đáp án ... • Câu 2: đáp án ... (thầy điền chữ cái của đáp án đúng).'));
+  S.push(deckSlide('practice', 'LUYỆN TẬP — PHẦN II: ĐÚNG / SAI',
+    ['Câu 1. Xét các phát biểu sau về: ' + topicAt(3) + '.', 'a) ...', 'b) ...', 'c) ...', 'd) ...'],
+    'a) Đúng/Sai • b) Đúng/Sai • c) Đúng/Sai • d) Đúng/Sai (thầy điền Đúng hoặc Sai cho từng ý).'));
+  S.push(deckSlide('practice', 'LUYỆN TẬP — PHẦN III: CÂU HỎI TRẢ LỜI NGẮN',
+    ['Câu 1. [Câu hỏi trả lời ngắn về: ' + topicAt(4) + ']', 'Câu 2. [Câu hỏi trả lời ngắn về: ' + topicAt(5) + ']'],
+    'Câu 1: ... • Câu 2: ... (đáp án là một số hoặc một cụm từ ngắn).'));
+  /* 6) Củng cố — sơ đồ tóm tắt (xuất .pptx sẽ vẽ thành sơ đồ khối) */
+  var sum = deckSlide('summary', 'CỦNG CỐ — SƠ ĐỒ TÓM TẮT', mucLon.length ? mucLon.slice() : ['I. (Mục lớn thứ nhất)', 'II. (Mục lớn thứ hai)']);
+  sum.branches = mucLon.length ? mucLon.map(deckCleanTitle) : ['(Mục lớn thứ nhất)', '(Mục lớn thứ hai)'];
+  S.push(sum);
+  /* 7) Dặn dò */
+  var nextLine = 'Đọc trước bài tiếp theo trong SGK, ghi lại các câu hỏi thắc mắc để hỏi ở tiết sau.';
+  if (card){
+    var nx = null;
+    khbdCardsOf(khbdBoName(mon, khoi)).forEach(function(c){ if (c.bai === baiNo + 1) nx = c; });
+    if (nx) nextLine = 'Chuẩn bị bài ' + nx.bai + ': ' + nx.ten_bai + ' — đọc trước SGK và ghi lại câu hỏi thắc mắc.';
+  }
+  S.push(deckSlide('homework', 'DẶN DÒ',
+    ['Học và nắm vững kiến thức trọng tâm của bài: ' + tenBai + '.',
+     'Hoàn thành các câu hỏi và bài tập cuối bài trong SGK.',
+     nextLine]));
+  return { meta: { mon: mon, khoi: khoi, lop: lop, baiNo: baiNo, tenBai: tenBai, hasCard: !!card }, slides: S };
+}
+/* --- Bấm "Dựng bộ slide": đọc 4 ô nhập, dựng mô hình, hiện khung sửa --- */
+function deckBuild(){
+  var mon = document.getElementById('dkMon').value;
+  var khoi = document.getElementById('dkKhoi').value;
+  var lop = document.getElementById('dkLop').value.trim() || ('Lớp ' + khoi);
+  var baiTxt = document.getElementById('dkBai').value.trim();
+  DECK = deckBuildModel(mon, khoi, lop, baiTxt);
+  var note = document.getElementById('deckNote');
+  if (DECK.meta.hasCard){
+    note.innerHTML = '✅ Đã dựng <b>' + DECK.slides.length + ' slide</b> theo đúng mạch SGK của <b>Bài ' + DECK.meta.baiNo + ': ' + esc(DECK.meta.tenBai) + '</b>. Thầy sửa từng slide trong khung bên dưới (thả ảnh, dán link video, sửa số liệu đồ thị, điền đáp án) rồi trình chiếu hoặc xuất .pptx.';
+  } else {
+    note.innerHTML = '📌 Chưa tra thấy bài này trong kho SGK nên hệ thống dựng <b>khung bài giảng mẫu</b> (' + DECK.slides.length + ' slide) với dàn ý trống — thầy điền nội dung theo SGK trong khung sửa bên dưới. Mẹo: chọn bài từ danh sách gợi ý (gõ "Bài n" sẽ hiện) để tra trúng thẻ SGK.';
+  }
+  document.getElementById('deckWrap').style.display = 'block';
+  deckRender();
+}
+/* --- Vẽ khung xem trước & chỉnh sửa từng slide --- */
+function deckRender(){
+  var wrap = document.getElementById('deckList');
+  if (!wrap) return;
+  if (!DECK || !DECK.slides.length){ wrap.innerHTML = '<p class="note">Bộ slide đang trống — bấm "➕ Thêm slide trống" để thêm slide.</p>'; return; }
+  wrap.innerHTML = DECK.slides.map(function(s, i){
+    var h = '<div class="deck-item" data-di="' + i + '">';
+    h += '<div class="deck-head"><b>Slide ' + (i + 1) + '</b><span class="deck-type">' + (DECK_TYPE_LABEL[s.type] || s.type) + '</span><span class="sp"></span>' +
+      '<button class="btn alt sm" onclick="deckMove(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>⬆ Lên</button>' +
+      '<button class="btn alt sm" onclick="deckMove(' + i + ',1)"' + (i === DECK.slides.length - 1 ? ' disabled' : '') + '>⬇ Xuống</button>' +
+      '<button class="btn alt sm" onclick="deckDel(' + i + ')">🗑 Xoá</button></div>';
+    h += '<label class="fl" style="margin-top:0">Tiêu đề slide</label><input type="text" data-df="title" value="' + deckAttr(s.title || '') + '">';
+    h += '<label class="fl">Nội dung (mỗi dòng 1 ý)</label><textarea data-df="lines" rows="' + Math.min(9, Math.max(2, (s.lines || []).length + 1)) + '">' + esc((s.lines || []).join('\n')) + '</textarea>';
+    if (s.type === 'ask' || s.type === 'practice'){
+      h += '<label class="fl">Đáp án / gợi ý — khi trình chiếu chỉ hiện lúc bấm "Hiện đáp án"; khi xuất .pptx nằm ở slide đáp án ngay sau slide này</label><textarea data-df="answer" rows="2">' + esc(s.answer || '') + '</textarea>';
+    }
+    if (s.type === 'content'){
+      h += '<label class="fl">🖼️ Hình / sơ đồ / ảnh thật cho slide này (nằm ở khung bên phải khi xuất .pptx)</label>';
+      if (s.img) h += '<img class="deck-thumb" src="' + s.img + '" alt="Ảnh của slide">';
+      h += '<div class="deck-imgrow"><input type="file" accept="image/*" onchange="deckImgPick(' + i + ', this)">' +
+        (s.img ? '<button class="btn alt sm" onclick="deckImgClear(' + i + ')">✖ Bỏ ảnh</button>' : '<span class="note">Chọn ảnh từ máy của thầy (hình SGK chụp/scan, sơ đồ, ảnh thật...).</span>') + '</div>';
+    }
+    if (s.type === 'chart'){
+      var ch = s.chart || { labels: [], values: [] };
+      h += '<label class="fl">📊 Nhãn các cột (cách nhau bằng dấu phẩy)</label><input type="text" data-df="chartLabels" value="' + deckAttr((ch.labels || []).join(', ')) + '">';
+      h += '<label class="fl">Giá trị tương ứng (cách nhau bằng dấu phẩy)</label><input type="text" data-df="chartValues" value="' + deckAttr((ch.values || []).join(', ')) + '">';
+    }
+    if (s.type === 'video'){
+      h += '<label class="fl">▶ Link video (YouTube...)</label><input type="text" data-df="video" placeholder="https://www.youtube.com/watch?v=..." value="' + deckAttr(s.video || '') + '">';
+      h += '<p class="note" style="margin:6px 0 0">Khi xuất .pptx, mã QR của link được tự sinh và chèn vào slide để học sinh quét xem bằng điện thoại.</p>';
+    }
+    if (s.type === 'summary'){
+      h += '<p class="note" style="margin:6px 0 0">Các dòng nội dung ở trên là các nhánh của sơ đồ — khi xuất .pptx, slide này được vẽ thành sơ đồ khối (hộp trung tâm là tên bài, các hộp nhánh là từng mục lớn).</p>';
+    }
+    h += '</div>';
+    return h;
+  }).join('');
+}
+/* --- Đọc lại mọi ô sửa trong khung vào mô hình (trước khi di chuyển/xoá/trình chiếu/xuất) --- */
+function deckSyncFromDOM(){
+  if (!DECK) return;
+  var items = document.querySelectorAll('#deckList .deck-item');
+  for (var k = 0; k < items.length; k++){
+    var it = items[k], i = parseInt(it.getAttribute('data-di'), 10), s = DECK.slides[i];
+    if (!s) continue;
+    var t = it.querySelector('[data-df="title"]'); if (t) s.title = t.value;
+    var ln = it.querySelector('[data-df="lines"]');
+    if (ln) s.lines = ln.value.split(/\r?\n/).map(function(x){ return x.trim(); }).filter(function(x){ return x; });
+    if (s.type === 'summary') s.branches = s.lines.map(deckCleanTitle);
+    var an = it.querySelector('[data-df="answer"]'); if (an) s.answer = an.value.trim();
+    var vd = it.querySelector('[data-df="video"]');
+    if (vd){ var nv = vd.value.trim(); if (nv !== (s.video || '')){ s.video = nv || null; s.qrData = null; } }
+    var cl = it.querySelector('[data-df="chartLabels"]'), cv = it.querySelector('[data-df="chartValues"]');
+    if (cl && cv){
+      if (!s.chart) s.chart = { labels: [], values: [] };
+      s.chart.labels = cl.value.split(',').map(function(x){ return x.trim(); }).filter(function(x){ return x; });
+      s.chart.values = cv.value.split(',').map(function(x){ var n = parseFloat(x); return isNaN(n) ? 0 : n; });
+    }
+  }
+}
+function deckMove(i, d){
+  if (!DECK) return;
+  deckSyncFromDOM();
+  var j = i + d;
+  if (j < 0 || j >= DECK.slides.length) return;
+  var tmp = DECK.slides[i]; DECK.slides[i] = DECK.slides[j]; DECK.slides[j] = tmp;
+  deckRender();
+}
+function deckDel(i){ if (!DECK) return; deckSyncFromDOM(); DECK.slides.splice(i, 1); deckRender(); }
+function deckAdd(){
+  if (!DECK) DECK = { meta: { mon: '', khoi: '', lop: '', baiNo: 0, tenBai: '', hasCard: false }, slides: [] };
+  deckSyncFromDOM();
+  DECK.slides.push(deckSlide('content', 'Slide mới', ['[Nội dung...]']));
+  document.getElementById('deckWrap').style.display = 'block';
+  deckRender();
+}
+function deckImgPick(i, input){
+  var f = input.files && input.files[0];
+  if (!f || !DECK || !DECK.slides[i]) return;
+  deckSyncFromDOM();
+  var rd = new FileReader();
+  rd.onload = function(){ if (DECK && DECK.slides[i]){ DECK.slides[i].img = String(rd.result); deckRender(); } };
+  rd.readAsDataURL(f);
+}
+function deckImgClear(i){ if (!DECK) return; deckSyncFromDOM(); if (DECK.slides[i]) DECK.slides[i].img = null; deckRender(); }
+/* --- Trình chiếu bộ slide SGK bằng chính chế độ trình chiếu hiện có --- */
+function deckToPres(){
+  return (DECK ? DECK.slides : []).map(function(s){
+    var b = (s.lines || []).slice();
+    if (s.type === 'chart' && s.chart) b = s.chart.labels.map(function(l, j){ return l + ': ' + (s.chart.values[j] != null ? s.chart.values[j] : ''); }).concat(b);
+    if (s.type === 'video') b = [s.video ? ('▶ Link video: ' + s.video) : '▶ (Chưa gắn link video — thầy dán link trong khung sửa slide)'].concat(b);
+    if (s.type === 'section') b = ['—'];
+    return { t: s.title, b: b, a: s.answer || '' };
+  });
+}
+function deckPresent(){
+  if (!DECK || !DECK.slides.length){ alert('Thầy hãy bấm "✨ Dựng bộ slide" trước nhé!'); return; }
+  deckSyncFromDOM();
+  presentOpen(deckToPres());
+}
+/* --- Sinh mã QR (dataURL) của link video bằng thư viện QR sẵn có của web --- */
+function deckQrDataUrl(text){
+  return loadQRCodeLib().then(function(has){
+    if (!has || !text) return null;
+    return new Promise(function(resolve){
+      var holder = null;
+      try {
+        holder = document.createElement('div');
+        holder.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:220px;height:220px;overflow:hidden';
+        document.body.appendChild(holder);
+        new QRCode(holder, { text: text, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
+        setTimeout(function(){
+          var url = null, cv = holder.querySelector('canvas');
+          if (cv){ try { url = cv.toDataURL('image/png'); } catch (e) {}
+          }
+          if (!url){ var im = holder.querySelector('img'); if (im && im.src) url = im.src; }
+          if (holder.parentNode) holder.parentNode.removeChild(holder);
+          resolve(url);
+        }, 80);
+      } catch (e) {
+        if (holder && holder.parentNode) holder.parentNode.removeChild(holder);
+        resolve(null);
+      }
+    });
+  }).catch(function(){ return null; });
+}
+/* --- Xuất .pptx ĐÚNG MẪU từ mô hình bộ slide (đã gồm các sửa trong khung) --- */
+function deckDownloadPptx(){
+  if (!DECK || !DECK.slides.length){ mixWarnShow('deckWarn', '⚠️ Thầy hãy bấm "✨ Dựng bộ slide" trước.'); return; }
+  deckSyncFromDOM();
+  mixWarnShow('deckWarn', '');
+  var jobs = DECK.slides.filter(function(s){ return s.type === 'video' && s.video && !s.qrData; })
+    .map(function(s){ return deckQrDataUrl(s.video).then(function(u){ s.qrData = u; }); });
+  Promise.all(jobs).then(function(){ return loadPptxGen(); }).then(function(){
+    var pptx = EduDocx.buildLessonDeck(window.PptxGenJS, { meta: DECK.meta, slides: DECK.slides, fontScale: _slideFs });
+    var fname = 'Bai_giang_' + khbdFold(DECK.meta.mon || 'bai giang').replace(/\s+/g, '_') + '_' + (DECK.meta.khoi || '') + '_Bai' + (DECK.meta.baiNo || 0) + '.pptx';
+    return pptx.writeFile({ fileName: fname });
+  }).catch(function(err){
+    mixWarnShow('deckWarn', '⚠️ Chưa xuất được file .pptx: ' + esc(err && err.message ? err.message : String(err)) + ' Tính năng này cần tải thư viện PptxGenJS từ CDN — thầy kiểm tra kết nối mạng rồi thử lại.');
+  });
+}
+try { deckRefreshList(); } catch (e) {}
+
 /* --- Quay số học sinh 1–50 --- */
 var _spinTimer = null;
 function spinStudent(){
