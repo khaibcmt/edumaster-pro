@@ -67,10 +67,39 @@ Chỉ cần **double-click vào file `index.html`** là dùng được ngay tron
 - Các module AI đọc key qua hàm dùng chung `getApiKey()`; nếu chưa có key sẽ hiện thông báo hướng dẫn vào Cài đặt. Khung kiểm tra key đã sẵn sàng — chưa gọi API thật.
 - **Firebase config cũng theo cùng nguyên tắc:** không nhúng sẵn trong mã nguồn; người dùng tự dán config của project Firebase của mình trong mục Cài đặt (lưu localStorage, key `edumaster_firebase_config`). Chưa có config thì Phòng thi trực tuyến hiện hướng dẫn từng bước, các module offline vẫn chạy bình thường.
 
+## Hệ màu chuẩn (áp dụng từ bản V4)
+
+Nguyên tắc: **mỗi chức năng một màu riêng đặc trưng, xuyên suốt từ đầu đến cuối section của nó** — nút điều hướng đang chọn, thẻ Trang chủ, tiêu đề + gạch chân, nút chính, đầu bảng, viền trên thẻ con, badge, viền focus ô nhập, khối kết quả và các điểm nhấn đều dùng đúng màu của module đó, không lẫn màu giữa các module. Mọi tông màu thuộc cùng một "gia đình" độ bão hoà/độ sáng (chính ≈ tông 600, nhạt ≈ tông 400, đậm ≈ tông 800) để đứng cạnh nhau vẫn hài hoà. Mỗi section khai báo 3 biến `--mc` (chính) / `--mc2` (nhạt-sáng) / `--mcd` (đậm):
+
+| Module | Màu đặc trưng | --mc | --mc2 | --mcd |
+|---|---|---|---|---|
+| Trang chủ | Tím thương hiệu | #6a11cb | #2575fc | #3a1c96 |
+| 1. Tạo KHBD | Violet | #7c3aed | #a855f7 | #5b21b6 |
+| 2. Ma trận đề | Xanh dương | #1d4ed8 | #0ea5e9 | #1e3a8a |
+| 3. Ngân hàng câu hỏi | Xanh lá | #15803d | #22c55e | #14532d |
+| 4. Trộn đề | Cam | #ea580c | #f59e0b | #9a3412 |
+| 5. Ôn tập trắc nghiệm | Hồng | #db2777 | #f472b6 | #9d174d |
+| 6. Game Rung chuông vàng | Đỏ | #dc2626 | #f59e0b (*) | #b91c1c |
+| 7. Phiếu học tập | Ngọc teal | #0e7490 | #14b8a6 | #155e75 |
+| 8. Tạo slide | Vàng amber | #d97706 | #fbbf24 | #92400e |
+| 9. Sổ điểm | Xanh mint | #047857 | #10b981 | #064e3b |
+| 10. Thư viện tài liệu | Nâu vàng | #92400e | #ca8a04 | #78350f |
+| 11. Kho lưu trữ | Chàm indigo | #4f46e5 | #818cf8 | #312e81 |
+| 12. Cài đặt | Xám slate | #475569 | #94a3b8 | #1e293b |
+| 13. Hướng dẫn sử dụng | Xanh sky | #0284c7 | #38bdf8 | #075985 |
+
+(*) Riêng Game: `--mc2` là vàng hổ phách — điểm nhấn "game show"; **4 nút đáp án giữ 4 màu theo vị trí kiểu Kahoot** (đỏ ▲ / xanh dương ◆ / vàng ● / xanh lá ■), không phải màu module.
+
+**Ngoại lệ có chủ đích (giữ nguyên, không chuẩn hoá về màu module):**
+- Màu ngữ nghĩa toàn trang: đúng = xanh lá, sai = đỏ, cảnh báo = vàng (ô báo lỗi, huy hiệu trạng thái...).
+- Nhận diện thương hiệu tím: logo, khung thông tin giáo viên, thanh topbar đầu trang, nút/hộp thoại nhập key nhanh.
+- Riêng Slide (vàng amber): chữ trắng trên các nền vàng chỉ đặt trên tông đậm (#b45309 trở xuống) ở nút chính và đầu bảng để dễ đọc.
+
+**Nút nhập key nhanh (V4):** nút **"🔑 Nhập key Gemini"** luôn hiển thị ở thanh bên (dưới khung thông tin giáo viên) và ở đầu Trang chủ. Chưa có key thì nút hiện nhãn "Chưa có key" kèm viền sáng nhắc nhở; đã có key thì nhãn hiện "🔑 Key Gemini (N)". Bấm nút mở hộp thoại dán nhiều key (mỗi dòng 1 key, nạp sẵn key đã lưu) — lưu vào **đúng cùng kho** `localStorage 'edumaster_gemini_keys'` với mục Cài đặt (cùng khử trùng lặp, cùng xoay vòng), đồng bộ ngược lại ô nhập và trạng thái trong Cài đặt; không tạo kho key thứ hai.
+
 ## Giao diện (bản "lung linh, nhiều màu sắc")
 
-- **Mỗi module một màu chủ đạo riêng**, áp đồng bộ cho thẻ ở Trang chủ, nút điều hướng đang chọn, tiêu đề, nút chính và đầu bảng của module đó: KHBD = tím, Ma trận đề = xanh dương, Ngân hàng câu hỏi = xanh lá, Trộn đề = cam, Ôn tập = hồng, Game = đỏ–cam (cầu vồng), Phiếu học tập = ngọc (cyan–teal), Tạo slide = vàng, Sổ điểm = xanh mint, Thư viện = nâu vàng, Kho lưu trữ = xám đá, Cài đặt = xám.
-- **Hiệu ứng:** nền pastel gradient chuyển động chậm; thanh hero đầu trang gradient cầu vồng chuyển động kèm vệt sáng quét; sidebar gradient chuyển động + hộp thông tin giáo viên kính mờ (glassmorphism); thẻ kính mờ, bo tròn mềm, nhấc lên và phát sáng đúng màu module khi di chuột.
+- **Hiệu ứng:** nền pastel thuộc gia đình tím–xanh chuyển động chậm; thanh topbar đầu trang gradient tím thương hiệu kèm vệt sáng quét; sidebar gradient chuyển động + hộp thông tin giáo viên kính mờ (glassmorphism); thẻ kính mờ, bo tròn mềm, nhấc lên và phát sáng đúng màu module khi di chuột.
 - **Màn hình Game kiểu game show:** 4 nút đáp án 4 màu Kahoot (đỏ ▲ / xanh dương ◆ / vàng ● / xanh lá ■), thanh đếm ngược chảy màu cầu vồng phát sáng, đồng hồ chữ gradient cam–đỏ đập nhịp, bảng xếp hạng có huy hiệu Vàng/Bạc/Đồng cho Top 1-2-3, bục vinh danh vàng–bạc–đồng, banner thông báo sự kiện (Gương thần kỳ, kill, hồi sinh, cứu trợ) cầu vồng nảy bật. Có hỗ trợ `prefers-reduced-motion` cho người dùng muốn tắt chuyển động.
 
 ## Mới trong bản v3
